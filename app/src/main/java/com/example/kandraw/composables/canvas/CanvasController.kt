@@ -11,20 +11,21 @@ class CanvasController(
     val redoPaths: MutableList<PathData>,
 ) {
 
-    fun getAllPaths(): SnapshotStateList<PathData> {
-        return allPaths
+    fun getAllPaths(): List<PathData> {
+        return allPaths.toList()
     }
 
-    fun addNewPath(offset: Offset, pathSettings: PenSettings) {
+    fun addNewPath(offset: Offset, penSettings: PenSettings) {
+        println("ASDASDSDADSASDA ${penSettings.strokeWidth}")
         allPaths.add(
             PathData(
-            points = mutableListOf(offset),
-            strokeWidth = pathSettings.strokeWidth,
-            alpha = pathSettings.alpha,
-            color = pathSettings.color,
-            style = pathSettings.style,
-            cap = pathSettings.cap
-        )
+                points = mutableListOf(offset),
+                alpha = penSettings.alpha,
+                color = penSettings.color,
+                style = penSettings.style,
+                cap = penSettings.cap,
+                strokeWidth = penSettings.strokeWidth
+            )
         )
         if (undoPaths.size == 63) {
             undoPaths.removeFirst()
