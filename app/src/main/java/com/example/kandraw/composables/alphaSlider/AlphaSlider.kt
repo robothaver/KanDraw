@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -37,6 +38,7 @@ import kotlin.math.roundToInt
 /**
  * @param alpha current value of the slider.
  * @param color the color used for the background gradient.
+ * @param padding the padding to be applied to the widget.
  * @param selectorColor the color of the selector.
  * @param selectorSize the size of the selector.
  * @param widthFraction sets the widgets size to the fraction of the max width.
@@ -49,6 +51,7 @@ import kotlin.math.roundToInt
 fun AlphaSlider(
     alpha: Float,
     color: Color,
+    padding: PaddingValues = PaddingValues(vertical = 6.dp),
     selectorColor: Color = Color.White,
     selectorSize: Dp = 40.dp,
     widthFraction: Float = 1f,
@@ -61,6 +64,7 @@ fun AlphaSlider(
     var selectorWidth by remember { mutableStateOf(0.dp) }
     val progress = remember { mutableFloatStateOf(alpha) }
     BoxWithConstraints(modifier = Modifier
+        .padding(padding)
         .fillMaxWidth(widthFraction)
         .clip(RoundedCornerShape(borderRadius))
         .border(borderWidth, Color.White, shape = RoundedCornerShape(borderRadius))
@@ -87,13 +91,34 @@ fun AlphaSlider(
             brush = Brush.horizontalGradient(colors = listOf(Color.Transparent, color))
         )
         .pointerInput(Unit) {
+            detectDragGestures { change, dragAmount ->
+                selectorPosition.floatValue =
+                    (change.position.x - dragAmount.x).coerceIn(
+                        0f,
+                        size.width - selectorWidth.value
+                    )
+                progress.floatValue =
+                    com.example.kandraw.composables.colorBrightnessSlider.getProgress(
+                        selectorPosition.floatValue,
+                        size.width,
+                        selectorWidth
+                    )
+                println(progress.floatValue)
+                onValueChanged(progress.floatValue)
+            }
+        }
+        .pointerInput(Unit) {
             detectTapGestures { offset ->
                 selectorPosition.floatValue = (offset.x - selectorWidth.value / 2).coerceIn(
                     0f,
                     size.width - selectorWidth.value
                 )
                 progress.floatValue =
-                    getProgress(selectorPosition.floatValue, size.width, selectorWidth)
+                    com.example.kandraw.composables.colorBrightnessSlider.getProgress(
+                        selectorPosition.floatValue,
+                        size.width,
+                        selectorWidth
+                    )
                 onValueChanged(progress.floatValue)
             }
         }, contentAlignment = Alignment.CenterStart
