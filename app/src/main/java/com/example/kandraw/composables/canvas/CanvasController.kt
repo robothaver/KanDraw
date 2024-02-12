@@ -21,7 +21,7 @@ class CanvasController(
             PathData(
                 points = mutableListOf(offset),
                 alpha = penSettings.alpha,
-                color = penSettings.color,
+                color = penSettings.penColor.color,
                 style = penSettings.style,
                 cap = penSettings.cap,
                 strokeWidth = penSettings.strokeWidth
@@ -86,8 +86,8 @@ class CanvasController(
         circle: Offset,
         radius: Float
     ): Int? {
-        for ((index, path) in allPath.withIndex()) {
-            for (point in path.points) {
+        for (index in allPath.lastIndex downTo 0) {
+            for (point in allPath[index].points) {
                 if (isInside(
                         circle.x,
                         circle.y,
