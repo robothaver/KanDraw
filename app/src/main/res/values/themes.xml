@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.CanvasTest" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.KanDraw" parent="android:Theme.Material.Light.NoActionBar"/>
+
+
+    <style name="Theme.SplashScreenTheme" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation
+        duration. -->
+        <item name="windowSplashScreenBackground">@color/background</item>
+
+        <!-- Use windowSplashScreenAnimatedIcon to add a drawable or an animated
+             drawable. One of these is required. -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+
+        <!-- Set the theme of the Activity that directly follows your splash
+        screen. This is required. -->
+        <item name="postSplashScreenTheme">@style/Theme.KanDraw</item>
+    </style>
+
 </resources>

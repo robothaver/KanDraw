@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
 
 data class PenSettings(
-    val color: Color = Color.Red,
+    val penColor: PenColor = PenColor(Color.Red, 1f, Color.Red),
     val cap: StrokeCap = StrokeCap.Round,
     val strokeWidth: Float = 20f,
     val style: DrawStyle = Stroke(

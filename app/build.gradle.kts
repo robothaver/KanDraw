@@ -9,7 +9,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.kandraw.dev"
+        applicationId = "com.example.kandraw.deve"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -51,16 +51,17 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.1")
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("com.github.skydoves:colorpicker-compose:1.0.6")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

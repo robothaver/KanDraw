@@ -46,7 +46,6 @@ fun ToolBar(
     canvasController: CanvasController,
     activeTool: MutableState<String>,
     isDialogVisible: MutableState<Boolean>,
-    penColor: Color,
     parentSize: IntSize
 ) {
     val offsetX = remember { mutableFloatStateOf(0f) }
@@ -121,7 +120,7 @@ fun ToolBar(
                     painter = painterResource(id = R.drawable.penbg),
                     contentDescription = null,
                     modifier = Modifier.size(32.dp),
-                    tint = penColor
+                    tint = canvasController.penSettings.value.penColor.color
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.penoutline),
