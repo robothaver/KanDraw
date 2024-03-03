@@ -1,4 +1,4 @@
-package com.example.kandraw.composables.toolBar
+package com.example.kandraw.composables.toolBar.composables
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
@@ -8,35 +8,30 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ToolBarActionItem(
-    activeTool: MutableState<String> = mutableStateOf("asd"),
-    toolName: String,
-    icon: Painter
-) {
+fun ToolBarItem(icon: ImageVector, enabled: Boolean = true, onClick: () -> Unit) {
     Button(
-        onClick = { activeTool.value = toolName },
         modifier = Modifier.clip(CircleShape),
+        onClick = { onClick() },
+        enabled = enabled,
         contentPadding = PaddingValues(12.dp),
         colors = ButtonDefaults.buttonColors(
-            if (activeTool.value == toolName) MaterialTheme.colorScheme.onPrimaryContainer
-            else Color.Transparent
+            containerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
         )
     ) {
         Icon(
-            painter = icon,
             modifier = Modifier.size(32.dp),
-            contentDescription = toolName,
-            tint = if (activeTool.value == toolName) MaterialTheme.colorScheme.primaryContainer
-            else MaterialTheme.colorScheme.onPrimaryContainer
+            imageVector = icon,
+            contentDescription = null
         )
     }
 }

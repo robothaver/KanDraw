@@ -1,11 +1,8 @@
 package com.example.kandraw.dialogs.penSettingsDialog
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kandraw.R
 import com.example.kandraw.composables.alphaSlider.AlphaSlider
+import com.example.kandraw.viewModel.Tools
 import com.example.kandraw.composables.colorBrightnessSlider.ColorBrightnessSlider
 import com.example.kandraw.utils.changeColorBrightness.changeColorBrightness
 import com.example.kandraw.viewModel.PenSettings
@@ -49,19 +47,20 @@ import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun VerticalSettingsLayout(
     colorPickerController: ColorPickerController,
     penSettings: MutableState<PenSettings>,
-) {
+    activeTool: MutableState<Tools>,
+    isDialogVisible: MutableState<Boolean>
+    ) {
     val color = remember {
         mutableStateOf(Color(penSettings.value.penColor.color.toArgb()))
     }
     val isOn = remember {
         mutableStateOf(false)
     }
-    val colors = listOf<Color>(
+    val colors = listOf(
         Color(0xFFE80101),
         Color(0xFFFE2738),
         Color(0xFFFE8101),
@@ -85,7 +84,7 @@ fun VerticalSettingsLayout(
                     ) {
                         for (i in 0..4) {
                             ColorItem(color = colors[i], penSettings.value.penColor.hue) {
-                                updateColor(penSettings, newColor = colors[i], newHue = colors[i])
+                                updateColor(penSettings, newHue = colors[i])
                             }
                         }
                     }
@@ -96,7 +95,7 @@ fun VerticalSettingsLayout(
                     ) {
                         for (i in 5..8) {
                             ColorItem(color = colors[i], penSettings.value.penColor.hue) {
-                                updateColor(penSettings, newColor = colors[i], newHue = colors[i])
+                                updateColor(penSettings, newHue = colors[i])
                             }
                         }
                         CustomColorButton(currentColor = penSettings.value.penColor.color) {
@@ -139,14 +138,31 @@ fun VerticalSettingsLayout(
                 }
             } else {
                 Column {
-                    Icon(
-                        Icons.Filled.ArrowBack,
-                        null,
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                        modifier = Modifier.clip(CircleShape).size(32.dp).clickable {
-                            isOn.value = !isOn.value
-                        }
-                    )
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            null,
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    isOn.value = !isOn.value
+                                }
+                        )
+                        Icon(
+                            painterResource(id = R.drawable.eye_dropper),
+                            null,
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    activeTool.value = Tools.ColorPicker
+                                    isDialogVisible.value = false
+                                }
+                        )
+                    }
                     HsvColorPicker(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -154,7 +170,7 @@ fun VerticalSettingsLayout(
                             .padding(10.dp),
                         controller = colorPickerController,
                         onColorChanged = { colorEnvelope: ColorEnvelope ->
-                            updateColor(penSettings, colorEnvelope.color, colorEnvelope.color)
+                            updateColor(penSettings, colorEnvelope.color)
                         },
                         initialColor = color.value
                     )
@@ -170,10 +186,6 @@ fun VerticalSettingsLayout(
             fadeIn() togetherWith fadeOut()
         }
     )
-
-
-//    Title(penSettings.value.strokeWidth.roundToInt().toString(), fontSize = 16.sp, fontWeight = FontWeight.Normal)
-
 }
 
 @Composable
@@ -182,13 +194,12 @@ fun Title(text: String, fontSize: TextUnit = 22.sp, fontWeight: FontWeight = Fon
         text = text,
         fontSize = fontSize,
         fontWeight = fontWeight,
-        color = MaterialTheme.colorScheme.onSecondaryContainer
+        color = MaterialTheme.colorScheme.onBackground
     )
 }
 
 fun updateColor(
     penSettings: MutableState<PenSettings>,
-    newColor: Color = penSettings.value.penColor.color,
     newHue: Color = penSettings.value.penColor.hue,
     brightness: Float = penSettings.value.penColor.brightness
 ) {

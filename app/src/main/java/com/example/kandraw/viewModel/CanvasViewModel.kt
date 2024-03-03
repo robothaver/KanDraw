@@ -3,12 +3,10 @@ package com.example.kandraw.viewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.ViewModel
-import com.example.kandraw.composables.canvas.PathData
 
 class CanvasViewModel : ViewModel() {
     val allPaths = mutableStateListOf<PathData>()
@@ -16,7 +14,7 @@ class CanvasViewModel : ViewModel() {
     val redoPaths = mutableStateListOf<PathData>()
     val visiblePaths = mutableStateListOf<PathData>()
     val penSettings = mutableStateOf(PenSettings())
-    val activeTool = mutableStateOf("pen")
+    val activeTool = mutableStateOf(Tools.Pen)
     val viewportPosition = mutableStateOf(Offset(0f, 0f))
     val backgroundColor by mutableStateOf(Color.DarkGray)
 

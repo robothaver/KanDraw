@@ -1,4 +1,4 @@
-package com.example.kandraw.composables.canvas
+package com.example.kandraw.viewModel
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -18,8 +18,6 @@ data class PathData(
         width = strokeWidth,
         cap = cap,
         join = StrokeJoin.Round
-//        pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 20f), 2f)
-//        pathEffect = PathEffect.cornerPathEffect(100f)
     ),
     val alpha: Float = 1f,
     val wasErased: Boolean = false,

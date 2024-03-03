@@ -1,17 +1,19 @@
-package com.example.kandraw.composables.canvas
+package com.example.kandraw.domain.canvasController
 
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import com.example.kandraw.viewModel.PathData
 import com.example.kandraw.viewModel.CanvasViewModel
-import kotlin.math.pow
+
 
 class CanvasController(
     canvasViewModel: CanvasViewModel
 ) {
     private val maxUndoSteps = 64
+    private val undoPaths = canvasViewModel.undoPaths
+    private val redoPaths = canvasViewModel.redoPaths
     val allPaths = canvasViewModel.allPaths
-    val undoPaths = canvasViewModel.undoPaths
-    val redoPaths = canvasViewModel.redoPaths
     val visiblePaths = canvasViewModel.visiblePaths
     val penSettings = canvasViewModel.penSettings
 
@@ -48,13 +50,17 @@ class CanvasController(
     }
 
     fun eraseSelectedPath(currentlySelectedPosition: Offset, eraserWidth: Float) {
-        val pathIndex = getSelectedPathIndex(currentlySelectedPosition, eraserWidth)
-        if (pathIndex != null) {
-            addUndoStep(visiblePaths[pathIndex].copy(wasErased = true, index = pathIndex))
+        val selectedPath = getSelectedPath(currentlySelectedPosition, eraserWidth)
+        if (selectedPath != null) {
+            addUndoStep(selectedPath.copy(wasErased = true, index = visiblePaths.indexOf(selectedPath)))
             redoPaths.clear()
-            allPaths.remove(visiblePaths[pathIndex])
-            visiblePaths.removeAt(pathIndex)
+            allPaths.remove(selectedPath)
+            visiblePaths.remove(selectedPath)
         }
+    }
+
+    fun getSelectedPathColor(currentlySelectedPosition: Offset): Color? {
+        return getSelectedPath(currentlySelectedPosition, 20f)?.color
     }
 
     fun addVisiblePaths(newVisiblePaths: List<PathData>) {
@@ -97,21 +103,24 @@ class CanvasController(
         undoPaths.add(path)
     }
 
-    private fun getSelectedPathIndex(
+    private fun getSelectedPath(
         circle: Offset,
         radius: Float
-    ): Int? {
-        for (index in visiblePaths.lastIndex downTo 0) {
-            for (point in visiblePaths[index].points) {
-                if (isInside(circle.x, circle.y, radius, point.x, point.y)) {
-                    return index
+    ): PathData? {
+        for (path in visiblePaths.reversed()) {
+            for (index in 0..path.points.lastIndex) {
+                val currentPoint = path.points[index]
+                if (index != path.points.lastIndex) {
+                    val nextPoint = path.points[index + 1]
+                    val collision = PathIntersectionChecker().lineCircle(currentPoint.x, currentPoint.y, nextPoint.x, nextPoint.y, circle.x, circle.y, path.strokeWidth + radius)
+                    if (collision) return path
+                } else {
+                    if (PathIntersectionChecker().pointCircle(circle.x, circle.y, currentPoint.x, currentPoint.y, path.strokeWidth)) {
+                        return path
+                    }
                 }
             }
         }
         return null
-    }
-
-    private fun isInside(circleX: Float,circleY: Float,radius: Float,x: Float,y: Float): Boolean {
-        return (circleX - x).pow(2) + (circleY - y).pow(2) <= radius.pow(2)
     }
 }
