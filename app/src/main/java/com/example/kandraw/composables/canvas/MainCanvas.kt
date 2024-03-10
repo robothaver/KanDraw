@@ -1,10 +1,15 @@
 package com.example.kandraw.composables.canvas
 
+import android.graphics.Paint
+import android.graphics.Paint.Style
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -15,11 +20,15 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StampedPathEffectStyle
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kandraw.composables.canvas.canvasCore.CanvasEventHandler
 import com.example.kandraw.composables.canvas.canvasCore.getPathsToDraw
@@ -70,26 +79,25 @@ fun MainCanvas(
         }
         .drawBehind {
             translate(left = viewPortPosition.value.x, top = viewPortPosition.value.y) {
-                val pathsToDraw =
-                    getPathsToDraw(
-                        activeTool,
-                        canvasController,
-                        viewPortPosition,
-                        size
-                    )
+                val pathsToDraw = getPathsToDraw(
+                    activeTool, canvasController, viewPortPosition, size
+                )
                 pathsToDraw.forEach { path ->
                     drawPath(
                         path = path.path,
                         color = path.color,
                         style = Stroke(
-                            width = path.strokeWidth * 2,
-                            cap = StrokeCap.Round,
+                            width = path.strokeWidth,
+                            cap = path.cap,
                             join = StrokeJoin.Round,
-//                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(70f, 50f), 1f)
+                            miter = 100f,
+                            pathEffect = path.style
                         ),
                         alpha = path.alpha
                     )
+//                    drawPoints(path.points, pointMode = PointMode.Points, Color.Red, path.strokeWidth)
                 }
+
             }
         }
     ) {
@@ -100,4 +108,55 @@ fun MainCanvas(
         }
         Text(text = "Paths rendered: ${canvasController.visiblePaths.size}", fontSize = 22.sp)
     }
+}
+
+@Composable
+fun test() {
+//    Star
+//    val path = Path().apply {
+//        lineTo(25f, 55f,)
+//        lineTo(75f, 65f,)
+//        lineTo(30f, 90f,)
+//        lineTo(45f, 145f,)
+//        lineTo(0f, 110f,)
+//        lineTo(-45f, 145f,)
+//        lineTo(-30f, 90f,)
+//        lineTo(-75f, 65f,)
+//        lineTo(-25f, 55f,)
+//        lineTo(0f, 0f,)
+//    }
+
+//    Triangle
+//    val path = Path().apply {
+//        lineTo(25f, 50f)
+//        lineTo(-25f, 50f)
+//        lineTo(0f, 0f)
+//    }
+
+//    Hexagon
+//    val path = Path().apply {
+//        lineTo(30f, 17f)
+//        lineTo(30f, 50f)
+//        lineTo(0f, 67f)
+//        lineTo(-30f, 50f)
+//        lineTo(-30f, 17f)
+//    }
+
+//    Arrow
+//    val path = Path().apply {
+//        lineTo(30f, 20f)
+//        lineTo(20f, 30f)
+//        lineTo(0f, 17f)
+//        lineTo(-20f, 30f)
+//        lineTo(-30f, 20f)
+//    }
+//    Canvas(modifier = Modifier.size(128.dp).background(Color.DarkGray)) {
+//        translate(left = size.width / 2, top = size.height / 2) {
+//            drawPath(
+//                path,
+//                Color.Red,
+//            )
+//        }
+//    }
+//    Text(text = "ASDASUIDHASKDJHASK")
 }

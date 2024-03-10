@@ -1,4 +1,4 @@
-package com.example.kandraw.dialogs.penSettingsDialog
+package com.example.kandraw.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -21,14 +21,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ColorItem(color: Color, currentColor: Color, onClick: () -> Unit) {
+fun ColorItem(color: Color, currentColor: Color, size: Dp, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(6.dp)
-            .size(42.dp)
+            .size(size)
             .border(
                 border = if (color == currentColor) {
                     BorderStroke(2.dp, color)

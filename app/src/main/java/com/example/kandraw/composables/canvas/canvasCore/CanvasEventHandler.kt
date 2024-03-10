@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.example.kandraw.domain.canvasController.CanvasController
+import com.example.kandraw.utils.changeColorBrightness.changeColorBrightness
 import com.example.kandraw.viewModel.Tools
 
 class CanvasEventHandler(
@@ -17,21 +18,18 @@ class CanvasEventHandler(
         when (activeTool.value) {
             Tools.Eraser -> {
                 selectedPosition.value = offset
-                canvasController.eraseSelectedPath(
-                    getOffset(offset), 20f
-                )
+                canvasController.eraseSelectedPath(getOffset(offset), 20f)
             }
 
             Tools.ColorPicker -> {
                 selectedPosition.value = offset
-                val color = canvasController.getSelectedPathColor(offset)
+                val color = canvasController.getSelectedPathColor(getOffset(offset))
                 setSelectedColor(canvasController, color)
+                activeTool.value = Tools.Pen
             }
 
             Tools.Pen -> {
-                canvasController.addNewPath(
-                    getOffset(offset)
-                )
+                canvasController.addNewPath(getOffset(offset), true)
             }
 
             else -> Unit
@@ -52,9 +50,7 @@ class CanvasEventHandler(
         when (activeTool.value) {
             Tools.Eraser -> {
                 selectedPosition.value = change
-                canvasController.eraseSelectedPath(
-                    getOffset(change), 20f
-                )
+                canvasController.eraseSelectedPath(getOffset(change), 20f)
             }
 
             Tools.ColorPicker -> {
@@ -81,23 +77,17 @@ class CanvasEventHandler(
     }
 
     private fun setSelectedColor(canvasController: CanvasController, selectedColor: Color?) {
+        var newColor = canvasController.backgroundColor
         if (selectedColor != null) {
-            canvasController.penSettings.value =
-                canvasController.penSettings.value.copy(
-                    penColor = canvasController.penSettings.value.penColor.copy(
-                        hue = selectedColor,
-                        color = selectedColor
-                    )
-                )
-        } else {
-            canvasController.penSettings.value =
-                canvasController.penSettings.value.copy(
-                    penColor = canvasController.penSettings.value.penColor.copy(
-                        hue = Color.DarkGray,
-                        color = Color.DarkGray
-                    )
-                )
+            newColor = selectedColor
         }
+        canvasController.penSettings.value = canvasController.penSettings.value.copy(
+            customColor = newColor,
+            penColor = canvasController.penSettings.value.penColor.copy(
+                color = changeColorBrightness(newColor, canvasController.penSettings.value.penColor.brightness),
+                hue = newColor
+            )
+        )
     }
 
     private fun getOffset(newPoint: Offset): Offset {

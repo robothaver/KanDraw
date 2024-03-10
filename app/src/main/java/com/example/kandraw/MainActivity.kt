@@ -18,11 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.kandraw.domain.canvasController.CanvasController
 import com.example.kandraw.composables.canvas.MainCanvas
 import com.example.kandraw.composables.toolBar.ToolBar
 import com.example.kandraw.dialogs.penSettingsDialog.PenSettingsDialog
-import com.example.kandraw.ui.customThemes.deepSeaTheme
+import com.example.kandraw.domain.canvasController.CanvasController
+import com.example.kandraw.ui.customThemes.dark
 import com.example.kandraw.ui.theme.CanvasTestTheme
 import com.example.kandraw.utils.windowInfo.getWindowInfo
 import com.example.kandraw.viewModel.CanvasViewModel
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CanvasTestTheme(dynamicColor = false, theme = deepSeaTheme) {
+            CanvasTestTheme(dynamicColor = false, theme = dark) {
                 val windowInfo = getWindowInfo()
                 val viewModel = viewModel<CanvasViewModel>()
                 val isEditing = remember { mutableStateOf(false) }
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                                 viewModel.redoPaths.isNotEmpty()
                             )
                         }
-                        PenSettingsDialog(isEditing, viewModel.penSettings, viewModel.activeTool)
+                        PenSettingsDialog(isEditing, viewModel.penSettings, viewModel.activeTool, windowInfo)
                     }
                 }
             }
