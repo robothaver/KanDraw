@@ -1,6 +1,5 @@
 package com.example.kandraw.viewModel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StampedPathEffectStyle
@@ -35,4 +34,20 @@ val defaultColors = listOf(
     Color(0xFF9B01B0),
     Color(0xFF00BB72),
     Color(0xFF00823A),
+)
+
+val secondaryDefaultColors = listOf(
+    Color(0xFFFF204E),
+    Color(0xFFA0153E),
+    Color(0xFF5D0E41),
+    Color(0xFF00224D),
+    Color(0xFF711DB0),
+    Color(0xFFC21292),
+    Color(0xFFEF4040),
+    Color(0xFFFFA732),
+    Color(0xFFE4F9F5),
+    Color(0xFF30E3CA),
+    Color(0xFF11999E),
+    Color(0xFF40514E),
+
 )

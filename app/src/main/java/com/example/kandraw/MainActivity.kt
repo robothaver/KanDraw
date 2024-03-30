@@ -5,18 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kandraw.composables.canvas.MainCanvas
 import com.example.kandraw.composables.toolBar.ToolBar
@@ -34,10 +36,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CanvasTestTheme(dynamicColor = false, theme = dark) {
+                val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+                windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
                 val windowInfo = getWindowInfo()
                 val viewModel = viewModel<CanvasViewModel>()
                 val isEditing = remember { mutableStateOf(false) }
                 val canvasController = CanvasController(viewModel)
+                val containerSize = remember {
+                    mutableStateOf(IntSize(0, 0))
+                }
 
 //                viewModel.setInitial(1..10000)
 
@@ -48,8 +56,12 @@ class MainActivity : ComponentActivity() {
                             .background(MaterialTheme.colorScheme.background)
                             .padding(innerPadding)
                     ) {
-                        Text(text = "All paths: ${viewModel.allPaths.size}", fontSize = 22.sp)
-                        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+//                        Text(text = "All paths: ${viewModel.allPaths.size}", fontSize = 22.sp)
+                        Box(modifier = Modifier
+                            .fillMaxSize()
+                            .onSizeChanged {
+                                containerSize.value = it
+                            }) {
                             MainCanvas(
                                 viewModel.backgroundColor,
                                 viewModel.activeTool,
@@ -60,12 +72,12 @@ class MainActivity : ComponentActivity() {
                                 canvasController,
                                 viewModel.activeTool,
                                 isEditing,
-                                IntSize(constraints.maxWidth, constraints.maxHeight),
+                                containerSize,
                                 viewModel.undoPaths.isNotEmpty(),
                                 viewModel.redoPaths.isNotEmpty()
                             )
                         }
-                        PenSettingsDialog(isEditing, viewModel.penSettings, viewModel.activeTool, windowInfo)
+                        PenSettingsDialog(isEditing, viewModel.penSettings, viewModel.activeTool, windowInfo, windowInsetsController)
                     }
                 }
             }

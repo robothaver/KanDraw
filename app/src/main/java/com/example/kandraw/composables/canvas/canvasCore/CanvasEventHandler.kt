@@ -64,7 +64,7 @@ class CanvasEventHandler(
             }
 
             else -> {
-                canvasController.expandPath(getOffset(change - offset))
+                canvasController.expandPath(getOffset(change))
             }
         }
     }

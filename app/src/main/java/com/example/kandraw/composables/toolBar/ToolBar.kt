@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -39,21 +39,26 @@ fun ToolBar(
     canvasController: CanvasController,
     activeTool: MutableState<Tools>,
     isDialogVisible: MutableState<Boolean>,
-    parentSize: IntSize,
+    parentSize: MutableState<IntSize>,
     undoPaths: Boolean,
     redoPaths: Boolean
 ) {
     val offsetX = remember { mutableFloatStateOf(0f) }
     val offsetY = remember { mutableFloatStateOf(0f) }
     var size by remember { mutableStateOf(IntSize(0, 0)) }
-
+    val hasBeenPositioned = remember {
+        mutableStateOf(false)
+    }
 
     Row(
         modifier = Modifier
-            .onSizeChanged {
-                offsetX.floatValue = (parentSize.width / 2f) - (it.width / 2)
-                offsetY.floatValue = parentSize.height - it.height.toFloat() - 25f
-                size = IntSize(it.width, it.height)
+            .onGloballyPositioned {
+                if (!hasBeenPositioned.value) {
+                    offsetX.floatValue = (parentSize.value.width / 2f) - (it.size.width / 2)
+                    offsetY.floatValue = parentSize.value.height - it.size.height.toFloat() - 25f
+                    size = IntSize(it.size.width, it.size.height)
+                    hasBeenPositioned.value = true
+                }
             }
             .offset { IntOffset(offsetX.floatValue.roundToInt(), offsetY.floatValue.roundToInt()) }
             .clip(RoundedCornerShape(50.dp))
@@ -63,11 +68,11 @@ fun ToolBar(
                 detectDragGestures { _, offset ->
                     offsetX.floatValue = (offsetX.floatValue + offset.x).coerceIn(
                         0f,
-                        parentSize.width - size.width.toFloat()
+                        parentSize.value.width - size.width.toFloat()
                     )
                     offsetY.floatValue = (offsetY.floatValue + offset.y).coerceIn(
                         0f,
-                        parentSize.height - size.height.toFloat()
+                        parentSize.value.height - size.height.toFloat()
                     )
                 }
             },

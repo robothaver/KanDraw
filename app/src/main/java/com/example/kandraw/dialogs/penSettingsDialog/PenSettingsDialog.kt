@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,9 +20,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.kandraw.composables.CustomColorPicker
 import com.example.kandraw.dialogs.penSettingsDialog.layouts.HorizontalLayout
-import com.example.kandraw.dialogs.penSettingsDialog.layouts.VerticalSettingsLayout
+import com.example.kandraw.dialogs.penSettingsDialog.layouts.VerticalLayout
 import com.example.kandraw.dialogs.penSettingsDialog.layouts.updateColor
 import com.example.kandraw.utils.windowInfo.WindowInfo
 import com.example.kandraw.viewModel.PenSettings
@@ -32,10 +35,14 @@ fun PenSettingsDialog(
     isVisible: MutableState<Boolean>,
     penSettings: MutableState<PenSettings>,
     activeTool: MutableState<Tools>,
-    windowInfo: WindowInfo
+    windowInfo: WindowInfo,
+    windowInsetsController: WindowInsetsControllerCompat
 ) {
     if (!isVisible.value) return
     val isColorPickingPage = remember { mutableStateOf(false) }
+
+    windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
 
     Dialog(
         onDismissRequest = { isVisible.value = false },
@@ -45,18 +52,41 @@ fun PenSettingsDialog(
             targetState = isColorPickingPage.value,
             content = { isPickingColor ->
                 if (!isPickingColor) {
-                    if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Compact) {
-                        VerticalSettingsLayout(penSettings, isColorPickingPage)
-                    } else {
-                        HorizontalLayout(
-                            penSettings = penSettings,
-                            isColorPickingPage = isColorPickingPage
-                        )
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
+                            .padding(16.dp)
+                    ) {
+                        if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Compact) {
+                            VerticalLayout(
+                                penSettings = penSettings,
+                                isColorPickingPage = isColorPickingPage
+                            )
+                        } else {
+                            HorizontalLayout(
+                                penSettings = penSettings,
+                                isColorPickingPage = isColorPickingPage
+                            )
+                        }
                     }
                 } else {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth(0.8f)
+                            .fillMaxHeight(
+                                if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Compact) {
+                                    0.55f
+                                } else {
+                                    0.85f
+                                }
+                            )
+                            .fillMaxWidth(
+                                if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Compact) {
+                                    0.8f
+                                } else {
+                                    0.85f
+                                }
+                            )
                             .clip(RoundedCornerShape(16.dp))
                             .background(MaterialTheme.colorScheme.background.copy(alpha = 0.9f))
                             .padding(16.dp)
@@ -65,6 +95,7 @@ fun PenSettingsDialog(
                             initialColor = penSettings.value.customColor,
                             penColor = penSettings.value.penColor,
                             onDismiss = { isColorPickingPage.value = false },
+                            layout = windowInfo.screenWidthInfo,
                             onBrightnessChanged = { updateColor(penSettings, brightness = it) },
                             onColorPickerActivated = {
                                 activeTool.value = Tools.ColorPicker

@@ -13,13 +13,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.kandraw.R
-import com.example.kandraw.dialogs.penSettingsDialog.layouts.Title
+import com.example.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.example.kandraw.viewModel.PenSettings
 
 @Composable
-fun PenEffectOptions(penSettings: MutableState<PenSettings>) {
+fun PenEffectOptions(penSettings: MutableState<PenSettings>, fontSize: TextUnit = 22.sp) {
     val isPreviewEnabled = remember {
         mutableStateOf(false)
     }
@@ -27,7 +29,7 @@ fun PenEffectOptions(penSettings: MutableState<PenSettings>) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Title("Pen effects")
+        Title("Pen effects",  fontSize = fontSize)
         Icon(
             if (isPreviewEnabled.value) painterResource(id = R.drawable.preview_off) else painterResource(
                 id = R.drawable.preview_on

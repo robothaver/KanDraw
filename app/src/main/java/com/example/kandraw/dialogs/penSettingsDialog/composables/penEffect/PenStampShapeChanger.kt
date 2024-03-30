@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kandraw.dialogs.penSettingsDialog.layouts.updateEffect
@@ -37,12 +38,13 @@ fun PenStampShapeChanger(penSettings: MutableState<PenSettings>) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { isExpended.value = !isExpended.value }
+            .clip(RoundedCornerShape(10.dp))
             .border(
                 width = 3.dp,
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(10.dp),
                 color = MaterialTheme.colorScheme.onBackground
             )
+            .clickable { isExpended.value = !isExpended.value }
             .padding(12.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {

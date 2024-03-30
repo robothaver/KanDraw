@@ -18,13 +18,11 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.kandraw.R
-import com.example.kandraw.dialogs.penSettingsDialog.layouts.Title
 import com.example.kandraw.viewModel.PenSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PenCapSettings(penSettings: MutableState<PenSettings>) {
-    Title("Pen cap")
     SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
         SegmentedButton(
             selected = penSettings.value.cap == StrokeCap.Round,

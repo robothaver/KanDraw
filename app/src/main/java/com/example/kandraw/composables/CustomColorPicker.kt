@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,22 +73,59 @@ fun CustomColorPicker(
             )
         }
         if (layout == WindowInfo.WindowType.Compact) {
-            Column {
+            Column(verticalArrangement = Arrangement.SpaceBetween) {
                 HsvColorPicker(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(275.dp)
-                        .padding(10.dp),
+                        .height(290.dp),
                     controller = colorPickerController,
                     onColorChanged = { colorEnvelope: ColorEnvelope ->
                         onColorSelected(colorEnvelope.color)
                     },
                     initialColor = color.value
                 )
+
+                Spacer(modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f))
+
                 ColorBrightnessSlider(
                     penColor = penColor
                 ) {
                     onBrightnessChanged(it)
+                }
+            }
+        } else {
+            Row {
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                )
+                {
+                    ColorBrightnessSlider(
+                        penColor = penColor
+                    ) {
+                        onBrightnessChanged(it)
+                    }
+                }
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)) {
+                    VerticalDivider(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier.padding(horizontal = 12.dp)
+                    )
+                    HsvColorPicker(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(285.dp)
+                            .padding(10.dp),
+                        controller = colorPickerController,
+                        onColorChanged = { colorEnvelope: ColorEnvelope ->
+                            onColorSelected(colorEnvelope.color)
+                        },
+                        initialColor = color.value
+                    )
                 }
             }
         }

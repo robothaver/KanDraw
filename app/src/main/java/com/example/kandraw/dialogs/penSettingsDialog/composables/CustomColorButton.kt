@@ -23,7 +23,6 @@ import com.example.kandraw.viewModel.PenSettings
 fun CustomColorButton(penSettings: MutableState<PenSettings>, size: Dp, onClick: () -> Unit) {
     val isSelected = penSettings.value.customColor == penSettings.value.penColor.hue
     Box(modifier = Modifier
-        .clip(CircleShape)
         .padding(6.dp)
         .size(size)
         .border(
@@ -31,6 +30,7 @@ fun CustomColorButton(penSettings: MutableState<PenSettings>, size: Dp, onClick:
             width = 2.dp,
             shape = CircleShape
         )
+        .clip(CircleShape)
         .padding(if (isSelected) 4.dp else 0.dp)
         .clickable {
             if (isSelected) {

@@ -3,11 +3,10 @@ package com.example.kandraw.domain.canvasController
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
 import com.example.kandraw.utils.penEffect.getPenEffect
 import com.example.kandraw.viewModel.CanvasViewModel
 import com.example.kandraw.viewModel.PathData
-import kotlin.math.absoluteValue
+import kotlin.math.pow
 
 
 class CanvasController(
@@ -24,10 +23,10 @@ class CanvasController(
     fun addNewPath(offset: Offset, isSinglePoint: Boolean = false) {
         val newPath = Path()
         newPath.moveTo(offset.x, offset.y)
-        if (isSinglePoint) newPath.lineTo(offset.x, offset.y)
+        newPath.lineTo(offset.x, offset.y)
         val newPathData = PathData(
             path = newPath,
-            points = mutableListOf(offset),
+            points = listOf(offset),
             color = penSettings.value.penColor.color,
             cap = penSettings.value.cap,
             strokeWidth = penSettings.value.strokeWidth,
@@ -41,13 +40,13 @@ class CanvasController(
     }
 
     fun expandPath(newPoint: Offset) {
-        if (checkDistance(newPoint)) {
+        if (checkDistance(newPoint, threshold = 10f)) {
             allPaths.last().path.lineTo(newPoint.x, newPoint.y)
+            visiblePaths[visiblePaths.lastIndex] =
+                visiblePaths.last().copy(points = getNewPoints(newPoint))
+            allPaths[allPaths.lastIndex] = visiblePaths.last()
+            undoPaths[undoPaths.lastIndex] = visiblePaths.last()
         }
-        visiblePaths[visiblePaths.lastIndex] =
-            visiblePaths.last().copy(points = getNewPoints(newPoint))
-        allPaths[allPaths.lastIndex] = visiblePaths.last()
-        undoPaths[undoPaths.lastIndex] = visiblePaths.last()
     }
 
     fun eraseSelectedPath(currentlySelectedPosition: Offset, eraserWidth: Float) {
@@ -66,6 +65,8 @@ class CanvasController(
     }
 
     fun getSelectedPathColor(currentlySelectedPosition: Offset): Color? {
+        getSelectedPath(currentlySelectedPosition, 20f)?.points?.let { println(it) }
+        getSelectedPath(currentlySelectedPosition, 20f)?.points?.let { println(it.size) }
         return getSelectedPath(currentlySelectedPosition, 20f)?.color
     }
 
@@ -111,11 +112,8 @@ class CanvasController(
 
     private fun checkDistance(newPoint: Offset, threshold: Float = 10f): Boolean {
         val previousPoint = allPaths.last().points.last()
-        if (penSettings.value.cap != StrokeCap.Round && allPaths.last().points.size < 10) {
-            val difference = previousPoint - newPoint
-            return (difference.x.absoluteValue >= threshold && difference.y.absoluteValue >= threshold)
-        }
-        return true
+        val difference = ((previousPoint.x - newPoint.x).pow(2) + (previousPoint.y - newPoint.y).pow(2)).pow(0.5f)
+        return difference >= threshold
     }
 
     private fun addUndoStep(path: PathData) {

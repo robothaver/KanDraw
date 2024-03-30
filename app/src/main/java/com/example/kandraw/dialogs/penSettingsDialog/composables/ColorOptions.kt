@@ -8,11 +8,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.kandraw.composables.ColorItem
-import com.example.kandraw.dialogs.penSettingsDialog.layouts.Title
 import com.example.kandraw.dialogs.penSettingsDialog.layouts.updateColor
 import com.example.kandraw.viewModel.PenSettings
 import com.example.kandraw.viewModel.defaultColors
@@ -21,10 +18,8 @@ import com.example.kandraw.viewModel.defaultColors
 fun ColorOptions(
     penSettings: MutableState<PenSettings>,
     isColorPickingPage: MutableState<Boolean>,
-    size: Dp = 42.dp,
-    fontSize: TextUnit = 22.sp
+    size: Dp = 42.dp
 ) {
-    Title("Color", fontSize)
     Row(
         Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
