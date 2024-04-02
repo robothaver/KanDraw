@@ -18,7 +18,7 @@ class CanvasEventHandler(
         when (activeTool.value) {
             Tools.Eraser -> {
                 selectedPosition.value = offset
-                canvasController.eraseSelectedPath(getOffset(offset), 20f)
+                canvasController.eraseSelectedPath(getOffset(offset))
             }
 
             Tools.ColorPicker -> {
@@ -29,7 +29,7 @@ class CanvasEventHandler(
             }
 
             Tools.Pen -> {
-                canvasController.addNewPath(getOffset(offset), true)
+                canvasController.addNewPath(getOffset(offset))
             }
 
             else -> Unit
@@ -50,7 +50,7 @@ class CanvasEventHandler(
         when (activeTool.value) {
             Tools.Eraser -> {
                 selectedPosition.value = change
-                canvasController.eraseSelectedPath(getOffset(change), 20f)
+                canvasController.eraseSelectedPath(getOffset(change))
             }
 
             Tools.ColorPicker -> {

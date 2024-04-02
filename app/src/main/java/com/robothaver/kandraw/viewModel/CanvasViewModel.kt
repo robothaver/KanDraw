@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModel
 
 class CanvasViewModel : ViewModel() {
     val allPaths = mutableStateListOf<PathData>()
+    val allPathBackup = mutableStateListOf<List<PathData>>()
     val undoPaths = mutableStateListOf<PathData>()
     val redoPaths = mutableStateListOf<PathData>()
-    val visiblePaths = mutableStateListOf<PathData>()
     val penSettings = mutableStateOf(PenSettings())
     val activeTool = mutableStateOf(Tools.Pen)
     val eraserWidth = mutableFloatStateOf(20f)
@@ -35,6 +35,5 @@ class CanvasViewModel : ViewModel() {
         }
         newPaths.removeLast()
         allPaths.addAll(newPaths)
-        visiblePaths.addAll(newPaths)
     }
 }

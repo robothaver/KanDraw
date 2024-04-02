@@ -57,6 +57,11 @@ class MainActivity : ComponentActivity() {
                             .background(MaterialTheme.colorScheme.background)
                             .padding(innerPadding)
                     ) {
+//                        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+//                            Spacer(modifier = Modifier.padding(vertical = 32.dp))
+//                            Text(text = "undos: ${viewModel.undoPaths.size.toString()}")
+//                            Text(text = "clears: ${viewModel.allPathBackup.size.toString()}")
+//                        }
                         Box(modifier = Modifier
                             .fillMaxSize()
                             .onSizeChanged { containerSize.value = it }
@@ -79,7 +84,8 @@ class MainActivity : ComponentActivity() {
                         DialogManager(
                             selectedDialog,
                             viewModel,
-                            windowInfo
+                            windowInfo,
+                            canvasController
                         ) { setWindowSettings(windowInsetsController) }
                     }
                 }

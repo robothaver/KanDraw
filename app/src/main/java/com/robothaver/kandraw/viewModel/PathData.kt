@@ -14,6 +14,12 @@ data class PathData(
     val strokeWidth: Float = 20f,
     val style: PathEffect? = null,
     val alpha: Float = 1f,
-    val wasErased: Boolean = false,
+    val action: Actions = Actions.Draw,
     val index: Int = 0
 )
+
+enum class Actions {
+    Draw,
+    Erase,
+    Clear
+}

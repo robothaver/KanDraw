@@ -14,6 +14,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.robothaver.kandraw.dialogs.eraserSettingsDialog.EraserSettingsDialog
 import com.robothaver.kandraw.dialogs.penSettingsDialog.PenSettingsDialog
+import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 
@@ -22,6 +23,7 @@ fun DialogManager(
     selectedDialog: MutableState<Dialogs>,
     viewModel: CanvasViewModel,
     windowInfo: WindowInfo,
+    canvasController: CanvasController,
     setWindowSettings: () -> Unit
 ) {
     if (selectedDialog.value == Dialogs.None) return
@@ -47,7 +49,7 @@ fun DialogManager(
                     )
                 }
                 Dialogs.EraserSettings -> {
-                    EraserSettingsDialog(eraserWidth = viewModel.eraserWidth, windowInfo)
+                    EraserSettingsDialog(eraserWidth = viewModel.eraserWidth, windowInfo, canvasController)
                 }
                 Dialogs.GeneralSettings -> TODO()
                 Dialogs.None -> Unit

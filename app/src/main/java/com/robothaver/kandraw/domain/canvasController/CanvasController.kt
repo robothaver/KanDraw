@@ -4,6 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import com.robothaver.kandraw.utils.penEffect.getPenEffect
+import com.robothaver.kandraw.viewModel.Actions
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 import com.robothaver.kandraw.viewModel.PathData
 import kotlin.math.pow
@@ -15,12 +16,14 @@ class CanvasController(
     private val maxUndoSteps = 64
     private val undoPaths = canvasViewModel.undoPaths
     private val redoPaths = canvasViewModel.redoPaths
+    private val allPathBackup = canvasViewModel.allPathBackup
     val allPaths = canvasViewModel.allPaths
-    val visiblePaths = canvasViewModel.visiblePaths
+    val visiblePaths = mutableListOf<PathData>()
     val penSettings = canvasViewModel.penSettings
     val backgroundColor = canvasViewModel.backgroundColor
+    val eraserWidth = canvasViewModel.eraserWidth
 
-    fun addNewPath(offset: Offset, isSinglePoint: Boolean = false) {
+    fun addNewPath(offset: Offset) {
         val newPath = Path()
         newPath.moveTo(offset.x, offset.y)
         newPath.lineTo(offset.x, offset.y)
@@ -40,7 +43,7 @@ class CanvasController(
     }
 
     fun expandPath(newPoint: Offset) {
-        if (checkDistance(newPoint, threshold = 10f)) {
+        if (checkDistance(newPoint)) {
             allPaths.last().path.lineTo(newPoint.x, newPoint.y)
             visiblePaths[visiblePaths.lastIndex] =
                 visiblePaths.last().copy(points = getNewPoints(newPoint))
@@ -49,13 +52,13 @@ class CanvasController(
         }
     }
 
-    fun eraseSelectedPath(currentlySelectedPosition: Offset, eraserWidth: Float) {
-        val selectedPath = getSelectedPath(currentlySelectedPosition, eraserWidth)
+    fun eraseSelectedPath(currentlySelectedPosition: Offset) {
+        val selectedPath =
+            getSelectedPath(currentlySelectedPosition, eraserWidth.floatValue * 1.75f)
         if (selectedPath != null) {
             addUndoStep(
                 selectedPath.copy(
-                    wasErased = true,
-                    index = visiblePaths.indexOf(selectedPath)
+                    action = Actions.Erase, index = visiblePaths.indexOf(selectedPath)
                 )
             )
             redoPaths.clear()
@@ -64,9 +67,21 @@ class CanvasController(
         }
     }
 
+    fun clearCanvas() {
+        if (allPaths.isNotEmpty()) {
+            val newBackup = mutableListOf<PathData>()
+            newBackup.addAll(allPaths)
+            allPathBackup.addAll(listOf(newBackup))
+            addUndoStep(
+                allPaths.last().copy(action = Actions.Clear, index = allPathBackup.lastIndex)
+            )
+            visiblePaths.clear()
+            allPaths.clear()
+            redoPaths.clear()
+        }
+    }
+
     fun getSelectedPathColor(currentlySelectedPosition: Offset): Color? {
-        getSelectedPath(currentlySelectedPosition, 20f)?.points?.let { println(it) }
-        getSelectedPath(currentlySelectedPosition, 20f)?.points?.let { println(it.size) }
         return getSelectedPath(currentlySelectedPosition, 20f)?.color
     }
 
@@ -78,7 +93,13 @@ class CanvasController(
     fun undo() {
         if (undoPaths.isNotEmpty()) {
             redoPaths.add(undoPaths.last())
-            if (undoPaths.last().wasErased) {
+            if (undoPaths.last().action == Actions.Clear && allPathBackup.isNotEmpty()) {
+                try {
+                    allPaths.addAll(allPathBackup[undoPaths.last().index])
+                } catch (e: IndexOutOfBoundsException) {
+                    allPaths.addAll(allPathBackup[undoPaths.last().index - 1])
+                }
+            } else if (undoPaths.last().action == Actions.Erase) {
                 allPaths.add(undoPaths.last().index, undoPaths.last())
                 visiblePaths.add(undoPaths.last().index, undoPaths.last())
             } else {
@@ -92,7 +113,16 @@ class CanvasController(
     fun redo() {
         if (redoPaths.isNotEmpty()) {
             undoPaths.add(redoPaths.last())
-            if (redoPaths.last().wasErased) {
+            if (redoPaths.last().action == Actions.Clear && allPathBackup.isNotEmpty()) {
+                try {
+                    allPaths.removeAll(allPathBackup[redoPaths.last().index])
+                    visiblePaths.removeAll(allPathBackup[redoPaths.last().index])
+                } catch (e: IndexOutOfBoundsException) {
+                    allPaths.removeAll(allPathBackup.last())
+                    visiblePaths.removeAll(allPathBackup.last())
+                }
+
+            } else if (redoPaths.last().action == Actions.Erase) {
                 allPaths.removeAt(redoPaths.last().index)
                 visiblePaths.removeAt(redoPaths.last().index)
             } else {
@@ -112,20 +142,39 @@ class CanvasController(
 
     private fun checkDistance(newPoint: Offset, threshold: Float = 10f): Boolean {
         val previousPoint = allPaths.last().points.last()
-        val difference = ((previousPoint.x - newPoint.x).pow(2) + (previousPoint.y - newPoint.y).pow(2)).pow(0.5f)
+        val difference =
+            ((previousPoint.x - newPoint.x).pow(2) + (previousPoint.y - newPoint.y).pow(2)).pow(0.5f)
         return difference >= threshold
     }
 
     private fun addUndoStep(path: PathData) {
         if (undoPaths.size == maxUndoSteps) {
+            if (undoPaths.first().action == Actions.Clear) {
+                try {
+                    allPathBackup.removeAt(undoPaths.first().index)
+                } catch (_: IndexOutOfBoundsException) {
+                    allPathBackup.removeFirst()
+                }
+
+                val newDick = mutableListOf<PathData>()
+                undoPaths.forEach {
+                    if (it.action == Actions.Clear) {
+                        newDick.add(it.copy(index = it.index - 1))
+                    } else {
+                        newDick.add(it)
+                    }
+                }
+
+                undoPaths.clear()
+                undoPaths.addAll(newDick)
+            }
             undoPaths.removeFirst()
         }
         undoPaths.add(path)
     }
 
     private fun getSelectedPath(
-        circle: Offset,
-        radius: Float
+        circle: Offset, radius: Float
     ): PathData? {
         for (path in visiblePaths.reversed()) {
             for (index in 0..path.points.lastIndex) {

@@ -82,6 +82,7 @@ fun MainCanvas(
                         ),
                         alpha = path.alpha
                     )
+//                    drawPoints(path.points, pointMode = PointMode.Points, Color.Blue, 20f)
                 }
             }
         }
@@ -89,8 +90,7 @@ fun MainCanvas(
         if (isTouchEventActive.value && activeTool.value == Tools.ColorPicker) {
             ColorPickerTool(canvasController = canvasController, selectedPosition.value)
         } else if (isTouchEventActive.value && activeTool.value == Tools.Eraser) {
-            Eraser(selectedPosition = selectedPosition)
+            Eraser(selectedPosition = selectedPosition, canvasController.eraserWidth)
         }
-//        Text(text = "Paths rendered: ${canvasController.visiblePaths.size}", fontSize = 22.sp)
     }
 }
