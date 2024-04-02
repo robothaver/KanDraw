@@ -42,27 +42,20 @@ fun PenSettingsDialog(
                 } else {
                     HorizontalLayout(
                         penSettings = penSettings,
-                        isColorPickingPage = isColorPickingPage
+                        isColorPickingPage = isColorPickingPage,
+                        windowInfo.screenWidthInfo,
+                        windowInfo.screenHeightInfo
                     )
                 }
             } else {
                 Box(
                     modifier = Modifier
+                        .fillMaxWidth(if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Medium && windowInfo.screenHeightInfo == WindowInfo.WindowType.Compact) 0.85f else 0.8f)
                         .fillMaxHeight(
-                            if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Compact) {
-                                0.55f
-                            } else {
-                                0.85f
-                            }
-                        )
-                        .fillMaxWidth(
-                            if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Compact) {
-                                0.8f
-                            } else {
-                                0.85f
-                            }
-                        )
-                ) {
+                            if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Medium && windowInfo.screenHeightInfo == WindowInfo.WindowType.Compact) 0.85f
+                            else if (windowInfo.screenHeightInfo == WindowInfo.WindowType.Expanded && windowInfo.screenWidthInfo == WindowInfo.WindowType.Medium) 0.35f
+                            else 0.6f
+                        )                ) {
                     CustomColorPicker(
                         initialColor = penSettings.value.customColor,
                         penColor = penSettings.value.penColor,

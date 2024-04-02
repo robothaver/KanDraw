@@ -1,6 +1,9 @@
 package com.robothaver.kandraw
 
+import android.annotation.TargetApi
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -35,11 +38,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        cutoutMode(enable = true)
         setContent {
             CanvasTestTheme(dynamicColor = false, theme = dark) {
                 val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
                 setWindowSettings(windowInsetsController)
-
                 val windowInfo = getWindowInfo()
                 val viewModel = viewModel<CanvasViewModel>()
                 val canvasController = CanvasController(viewModel)
@@ -47,9 +50,10 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(IntSize(0, 0))
                 }
                 val selectedDialog = remember {
-                    mutableStateOf<Dialogs>(Dialogs.None)
+                    mutableStateOf(Dialogs.None)
                 }
-
+                println(windowInfo.screenWidthInfo)
+                println(windowInfo.screenHeightInfo)
                 Scaffold { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -86,11 +90,20 @@ class MainActivity : ComponentActivity() {
                             viewModel,
                             windowInfo,
                             canvasController
-                        ) { setWindowSettings(windowInsetsController) }
+                        ) {  }
                     }
                 }
             }
         }
+    }
+}
+
+@TargetApi(Build.VERSION_CODES.P)
+fun ComponentActivity.cutoutMode(enable: Boolean) {
+    if (enable) {
+        window.attributes?.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+    } else {
+        window.attributes?.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
     }
 }
 

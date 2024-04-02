@@ -3,10 +3,12 @@
 
     <style name="Theme.KanDraw" parent="android:Theme.Material.Light.NoActionBar"/>
 
-
     <style name="Theme.SplashScreenTheme" parent="Theme.SplashScreen">
         <!-- Set the splash screen background, animated icon, and animation
         duration. -->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
         <item name="windowSplashScreenBackground">@color/background</item>
 
         <!-- Use windowSplashScreenAnimatedIcon to add a drawable or an animated

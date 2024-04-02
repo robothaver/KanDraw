@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import com.robothaver.kandraw.utils.penEffect.getShape
 
 data class PenSettings(
-    val penColor: PenColor = PenColor(Color.Red, 1f, Color.Red),
+    val penColor: PenColor = PenColor(defaultColors[0], 1f, defaultColors[0]),
     val cap: StrokeCap = StrokeCap.Round,
     val strokeWidth: Float = 10f,
     val alpha: Float = 1f,

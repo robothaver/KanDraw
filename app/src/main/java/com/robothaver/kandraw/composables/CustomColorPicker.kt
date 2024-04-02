@@ -4,8 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,6 +19,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -46,11 +47,9 @@ fun CustomColorPicker(
     val color = remember { mutableStateOf(initialColor) }
     Column {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
+            Icon(Icons.AutoMirrored.Filled.ArrowBack,
                 null,
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
@@ -58,10 +57,8 @@ fun CustomColorPicker(
                     .clip(CircleShape)
                     .clickable {
                         onDismiss()
-                    }
-            )
-            Icon(
-                painterResource(id = R.drawable.eye_dropper),
+                    })
+            Icon(painterResource(id = R.drawable.eye_dropper),
                 null,
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
@@ -69,25 +66,21 @@ fun CustomColorPicker(
                     .clip(CircleShape)
                     .clickable {
                         onColorPickerActivated()
-                    }
-            )
+                    })
         }
         if (layout == WindowInfo.WindowType.Compact) {
-            Column(verticalArrangement = Arrangement.SpaceBetween) {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxHeight()
+            ) {
                 HsvColorPicker(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(290.dp),
+                    modifier = Modifier.fillMaxWidth(0.8f),
                     controller = colorPickerController,
                     onColorChanged = { colorEnvelope: ColorEnvelope ->
                         onColorSelected(colorEnvelope.color)
                     },
                     initialColor = color.value
                 )
-
-                Spacer(modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f))
 
                 ColorBrightnessSlider(
                     penColor = penColor
@@ -96,21 +89,24 @@ fun CustomColorPicker(
                 }
             }
         } else {
-            Row {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                )
-                {
+            Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
                     ColorBrightnessSlider(
                         penColor = penColor
                     ) {
                         onBrightnessChanged(it)
                     }
                 }
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     VerticalDivider(
                         color = MaterialTheme.colorScheme.surfaceVariant,
                         modifier = Modifier.padding(horizontal = 12.dp)

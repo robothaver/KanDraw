@@ -22,18 +22,25 @@ import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenCapSettin
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenSizeSlider
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.penEffect.PenEffectOptions
+import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.viewModel.PenSettings
 import kotlin.math.roundToInt
 
 @Composable
 fun HorizontalLayout(
     penSettings: MutableState<PenSettings>,
-    isColorPickingPage: MutableState<Boolean>
+    isColorPickingPage: MutableState<Boolean>,
+    screenWidthInfo: WindowInfo.WindowType,
+    screenHeightInfo: WindowInfo.WindowType
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(0.85f)
-            .fillMaxHeight(0.85f)
+            .fillMaxWidth(if (screenWidthInfo == WindowInfo.WindowType.Medium && screenHeightInfo == WindowInfo.WindowType.Compact) 0.85f else 0.8f)
+            .fillMaxHeight(
+                if (screenWidthInfo == WindowInfo.WindowType.Medium && screenHeightInfo == WindowInfo.WindowType.Compact) 0.85f
+                else if (screenHeightInfo == WindowInfo.WindowType.Expanded && screenWidthInfo == WindowInfo.WindowType.Medium) 0.35f
+                else 0.6f
+            )
     ) {
         Column(
             modifier = Modifier

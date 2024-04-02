@@ -1,5 +1,6 @@
 package com.robothaver.kandraw.dialogs.penSettingsDialog.composables.penEffect
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,14 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.updateEffect
 import com.robothaver.kandraw.utils.penEffect.getShape
-import com.robothaver.kandraw.viewModel.PenSettings
 import com.robothaver.kandraw.viewModel.Effects
+import com.robothaver.kandraw.viewModel.PenSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PenEffectChanger(penSettings: MutableState<PenSettings>) {
     val selectedEffect = penSettings.value.penEffectSettings.effect
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.padding(vertical = 6.dp)) {
+    SingleChoiceSegmentedButtonRow(modifier = Modifier.padding(vertical = 6.dp).fillMaxWidth()) {
         SegmentedButton(
             selected = selectedEffect == Effects.Default,
             onClick = {
