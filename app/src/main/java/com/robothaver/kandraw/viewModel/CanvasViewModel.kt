@@ -1,5 +1,6 @@
 package com.robothaver.kandraw.viewModel
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -19,6 +20,7 @@ class CanvasViewModel : ViewModel() {
     val eraserWidth = mutableFloatStateOf(20f)
     val viewportPosition = mutableStateOf(Offset(0f, 0f))
     val backgroundColor by mutableStateOf(Color.DarkGray)
+    val backgroundImage = mutableStateOf<Bitmap?>(null)
 
     fun setInitial(range: IntRange) {
         val newPaths = mutableListOf<PathData>()

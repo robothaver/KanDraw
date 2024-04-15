@@ -13,6 +13,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robothaver.kandraw.composables.alphaSlider.AlphaSlider
@@ -22,7 +23,6 @@ import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenCapSettin
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenSizeSlider
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.penEffect.PenEffectOptions
-import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.viewModel.PenSettings
 import kotlin.math.roundToInt
 
@@ -30,17 +30,12 @@ import kotlin.math.roundToInt
 fun HorizontalLayout(
     penSettings: MutableState<PenSettings>,
     isColorPickingPage: MutableState<Boolean>,
-    screenWidthInfo: WindowInfo.WindowType,
-    screenHeightInfo: WindowInfo.WindowType
+    screenSize: Size,
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(if (screenWidthInfo == WindowInfo.WindowType.Medium && screenHeightInfo == WindowInfo.WindowType.Compact) 0.85f else 0.8f)
-            .fillMaxHeight(
-                if (screenWidthInfo == WindowInfo.WindowType.Medium && screenHeightInfo == WindowInfo.WindowType.Compact) 0.85f
-                else if (screenHeightInfo == WindowInfo.WindowType.Expanded && screenWidthInfo == WindowInfo.WindowType.Medium) 0.35f
-                else 0.6f
-            )
+            .fillMaxWidth(screenSize.width)
+            .fillMaxHeight(screenSize.height)
     ) {
         Column(
             modifier = Modifier

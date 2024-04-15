@@ -4,10 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -30,14 +28,14 @@ import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.robothaver.kandraw.composables.colorBrightnessSlider.ColorBrightnessSlider
-import com.robothaver.kandraw.utils.windowInfo.WindowInfo
+import com.robothaver.kandraw.utils.windowInfo.WindowType
 import com.robothaver.kandraw.viewModel.PenColor
 
 @Composable
 fun CustomColorPicker(
     initialColor: Color,
     penColor: PenColor,
-    layout: WindowInfo.WindowType = WindowInfo.WindowType.Compact,
+    layout: WindowType = WindowType.Compact,
     onDismiss: () -> Unit,
     onBrightnessChanged: (brightness: Float) -> Unit,
     onColorPickerActivated: () -> Unit,
@@ -68,20 +66,20 @@ fun CustomColorPicker(
                         onColorPickerActivated()
                     })
         }
-        if (layout == WindowInfo.WindowType.Compact) {
+        if (layout == WindowType.Compact) {
             Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxHeight()
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                HsvColorPicker(
-                    modifier = Modifier.fillMaxWidth(0.8f),
-                    controller = colorPickerController,
-                    onColorChanged = { colorEnvelope: ColorEnvelope ->
-                        onColorSelected(colorEnvelope.color)
-                    },
-                    initialColor = color.value
-                )
-
+                Column(modifier = Modifier.weight(1f)) {
+                    HsvColorPicker(
+                        modifier = Modifier.fillMaxWidth(),
+                        controller = colorPickerController,
+                        onColorChanged = { colorEnvelope: ColorEnvelope ->
+                            onColorSelected(colorEnvelope.color)
+                        },
+                        initialColor = color.value
+                    )
+                }
                 ColorBrightnessSlider(
                     penColor = penColor
                 ) {
@@ -114,7 +112,6 @@ fun CustomColorPicker(
                     HsvColorPicker(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(285.dp)
                             .padding(10.dp),
                         controller = colorPickerController,
                         onColorChanged = { colorEnvelope: ColorEnvelope ->

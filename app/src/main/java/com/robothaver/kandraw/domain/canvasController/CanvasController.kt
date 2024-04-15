@@ -3,6 +3,7 @@ package com.robothaver.kandraw.domain.canvasController
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.core.graphics.get
 import com.robothaver.kandraw.utils.penEffect.getPenEffect
 import com.robothaver.kandraw.viewModel.Actions
 import com.robothaver.kandraw.viewModel.CanvasViewModel
@@ -22,6 +23,7 @@ class CanvasController(
     val penSettings = canvasViewModel.penSettings
     val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth
+    val backgroundImage = canvasViewModel.backgroundImage
 
     fun addNewPath(offset: Offset) {
         val newPath = Path()
@@ -54,7 +56,7 @@ class CanvasController(
 
     fun eraseSelectedPath(currentlySelectedPosition: Offset) {
         val selectedPath =
-            getSelectedPath(currentlySelectedPosition, eraserWidth.floatValue * 1.75f)
+            getSelectedPath(currentlySelectedPosition, eraserWidth.floatValue)
         if (selectedPath != null) {
             addUndoStep(
                 selectedPath.copy(
@@ -81,7 +83,12 @@ class CanvasController(
         }
     }
 
+
     fun getSelectedPathColor(currentlySelectedPosition: Offset): Color? {
+        val color = backgroundImage.value?.get(currentlySelectedPosition.x.toInt(),
+            currentlySelectedPosition.y.toInt()
+        )
+        println(color)
         return getSelectedPath(currentlySelectedPosition, 20f)?.color
     }
 

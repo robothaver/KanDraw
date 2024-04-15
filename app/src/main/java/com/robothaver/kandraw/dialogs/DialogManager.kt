@@ -23,11 +23,9 @@ fun DialogManager(
     selectedDialog: MutableState<Dialogs>,
     viewModel: CanvasViewModel,
     windowInfo: WindowInfo,
-    canvasController: CanvasController,
-    setWindowSettings: () -> Unit
+    canvasController: CanvasController
 ) {
     if (selectedDialog.value == Dialogs.None) return
-    setWindowSettings()
 
     Dialog(
         onDismissRequest = { selectedDialog.value = Dialogs.None },

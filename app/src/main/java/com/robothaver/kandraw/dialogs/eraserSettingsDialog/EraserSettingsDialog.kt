@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
+import com.robothaver.kandraw.utils.windowInfo.WindowType
 import kotlin.math.roundToInt
 
 @Composable
@@ -30,7 +31,7 @@ fun EraserSettingsDialog(
     windowInfo: WindowInfo,
     canvasController: CanvasController
 ) {
-    Column(modifier = Modifier.fillMaxWidth(if (windowInfo.screenWidthInfo == WindowInfo.WindowType.Compact) 0.8f else 0.6f)) {
+    Column(modifier = Modifier.fillMaxWidth(if (windowInfo.screenWidthInfo == WindowType.Compact) 0.8f else 0.6f)) {
         Title(text = "Eraser width: ${eraserWidth.value.roundToInt()}")
         Slider(
             value = eraserWidth.value,

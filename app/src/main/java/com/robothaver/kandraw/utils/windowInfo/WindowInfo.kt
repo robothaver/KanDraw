@@ -8,9 +8,10 @@ data class WindowInfo(
     val screenWidth: Dp,
     val screenHeight: Dp
 ) {
-    enum class WindowType {
-        Compact,
-        Medium,
-        Expanded
-    }
+}
+
+enum class WindowType {
+    Compact,
+    Medium,
+    Expanded
 }

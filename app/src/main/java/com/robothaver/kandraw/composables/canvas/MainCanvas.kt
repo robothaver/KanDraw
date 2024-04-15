@@ -1,5 +1,6 @@
 package com.robothaver.kandraw.composables.canvas
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -15,6 +16,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
@@ -31,8 +33,10 @@ fun MainCanvas(
     backgroundColor: Color,
     activeTool: MutableState<Tools>,
     viewPortPosition: MutableState<Offset>,
-    canvasController: CanvasController
+    canvasController: CanvasController,
+    image: MutableState<Bitmap?>
 ) {
+
     val selectedPosition = remember { mutableStateOf(Offset(0f, 0f)) }
     val isTouchEventActive = remember { mutableStateOf(false) }
     val canvasEventHandler = CanvasEventHandler(
@@ -67,6 +71,12 @@ fun MainCanvas(
         }
         .drawBehind {
             translate(left = viewPortPosition.value.x, top = viewPortPosition.value.y) {
+                if (image.value != null) {
+                    drawImage(
+                        image = image.value!!.asImageBitmap()
+                    )
+                }
+
                 val pathsToDraw = getPathsToDraw(
                     activeTool, canvasController, viewPortPosition, size
                 )
@@ -82,7 +92,6 @@ fun MainCanvas(
                         ),
                         alpha = path.alpha
                     )
-//                    drawPoints(path.points, pointMode = PointMode.Points, Color.Blue, 20f)
                 }
             }
         }
