@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kandraw.R
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
-import com.robothaver.kandraw.viewModel.PenSettings
+import com.robothaver.kandraw.utils.data.PenSettings
 
 @Composable
 fun PenEffectOptions(penSettings: MutableState<PenSettings>, fontSize: TextUnit = 22.sp) {

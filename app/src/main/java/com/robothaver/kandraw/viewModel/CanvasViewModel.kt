@@ -9,8 +9,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.ViewModel
+import com.robothaver.kandraw.dialogs.Dialogs
+import com.robothaver.kandraw.utils.data.PathData
+import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.utils.data.Tools
 
 class CanvasViewModel : ViewModel() {
+    // Canvas
     val allPaths = mutableStateListOf<PathData>()
     val allPathBackup = mutableStateListOf<List<PathData>>()
     val undoPaths = mutableStateListOf<PathData>()
@@ -19,8 +24,11 @@ class CanvasViewModel : ViewModel() {
     val activeTool = mutableStateOf(Tools.Pen)
     val eraserWidth = mutableFloatStateOf(20f)
     val viewportPosition = mutableStateOf(Offset(0f, 0f))
-    val backgroundColor by mutableStateOf(Color.DarkGray)
     val backgroundImage = mutableStateOf<Bitmap?>(null)
+    val backgroundColor by mutableStateOf(Color.DarkGray)
+
+    // Dialogs
+    val selectedDialog = mutableStateOf(Dialogs.None)
 
     fun setInitial(range: IntRange) {
         val newPaths = mutableListOf<PathData>()

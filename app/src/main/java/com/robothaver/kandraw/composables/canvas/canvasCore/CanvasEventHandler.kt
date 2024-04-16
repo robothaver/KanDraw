@@ -5,7 +5,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.changeColorBrightness.changeColorBrightness
-import com.robothaver.kandraw.viewModel.Tools
+import com.robothaver.kandraw.utils.data.Tools
 
 class CanvasEventHandler(
     private val selectedPosition: MutableState<Offset>,

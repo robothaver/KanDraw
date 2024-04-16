@@ -3,12 +3,10 @@ package com.robothaver.kandraw.domain.canvasController
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.core.graphics.get
-import com.robothaver.kandraw.utils.penEffect.getPenEffect
-import com.robothaver.kandraw.viewModel.Actions
+import com.robothaver.kandraw.domain.canvasController.penEffect.getPenEffect
+import com.robothaver.kandraw.utils.data.Actions
+import com.robothaver.kandraw.utils.data.PathData
 import com.robothaver.kandraw.viewModel.CanvasViewModel
-import com.robothaver.kandraw.viewModel.PathData
-import kotlin.math.pow
 
 
 class CanvasController(
@@ -25,19 +23,8 @@ class CanvasController(
     val eraserWidth = canvasViewModel.eraserWidth
     val backgroundImage = canvasViewModel.backgroundImage
 
-    fun addNewPath(offset: Offset) {
-        val newPath = Path()
-        newPath.moveTo(offset.x, offset.y)
-        newPath.lineTo(offset.x, offset.y)
-        val newPathData = PathData(
-            path = newPath,
-            points = listOf(offset),
-            color = penSettings.value.penColor.color,
-            cap = penSettings.value.cap,
-            strokeWidth = penSettings.value.strokeWidth,
-            alpha = penSettings.value.alpha,
-            style = getPenEffect(penSettings.value)
-        )
+    fun addNewPath(newPoint: Offset) {
+        val newPathData = createNewPathData(newPoint)
         allPaths.add(newPathData)
         visiblePaths.add(newPathData)
         addUndoStep(newPathData)
@@ -45,13 +32,11 @@ class CanvasController(
     }
 
     fun expandPath(newPoint: Offset) {
-        if (checkDistance(newPoint)) {
-            allPaths.last().path.lineTo(newPoint.x, newPoint.y)
-            visiblePaths[visiblePaths.lastIndex] =
-                visiblePaths.last().copy(points = getNewPoints(newPoint))
-            allPaths[allPaths.lastIndex] = visiblePaths.last()
-            undoPaths[undoPaths.lastIndex] = visiblePaths.last()
-        }
+        allPaths.last().path.lineTo(newPoint.x, newPoint.y)
+        visiblePaths[visiblePaths.lastIndex] =
+            visiblePaths.last().copy(points = getNewPoints(newPoint))
+        allPaths[allPaths.lastIndex] = visiblePaths.last()
+        undoPaths[undoPaths.lastIndex] = visiblePaths.last()
     }
 
     fun eraseSelectedPath(currentlySelectedPosition: Offset) {
@@ -85,10 +70,9 @@ class CanvasController(
 
 
     fun getSelectedPathColor(currentlySelectedPosition: Offset): Color? {
-        val color = backgroundImage.value?.get(currentlySelectedPosition.x.toInt(),
-            currentlySelectedPosition.y.toInt()
-        )
-        println(color)
+//        val color = backgroundImage.value?.get(currentlySelectedPosition.x.toInt(),
+//            currentlySelectedPosition.y.toInt()
+//        )
         return getSelectedPath(currentlySelectedPosition, 20f)?.color
     }
 
@@ -140,18 +124,26 @@ class CanvasController(
         }
     }
 
+    private fun createNewPathData(newPoint: Offset): PathData {
+        val newPath = Path()
+        newPath.moveTo(newPoint.x, newPoint.y)
+        newPath.lineTo(newPoint.x, newPoint.y)
+        return PathData(
+            path = newPath,
+            points = listOf(newPoint),
+            color = penSettings.value.penColor.color,
+            cap = penSettings.value.cap,
+            strokeWidth = penSettings.value.strokeWidth,
+            alpha = penSettings.value.alpha,
+            style = getPenEffect(penSettings.value)
+        )
+    }
+
     private fun getNewPoints(newPoint: Offset): MutableList<Offset> {
         val newPoints = mutableListOf<Offset>()
         newPoints.addAll(allPaths.last().points)
         newPoints.add(newPoint)
         return newPoints
-    }
-
-    private fun checkDistance(newPoint: Offset, threshold: Float = 10f): Boolean {
-        val previousPoint = allPaths.last().points.last()
-        val difference =
-            ((previousPoint.x - newPoint.x).pow(2) + (previousPoint.y - newPoint.y).pow(2)).pow(0.5f)
-        return difference >= threshold
     }
 
     private fun addUndoStep(path: PathData) {
@@ -162,18 +154,16 @@ class CanvasController(
                 } catch (_: IndexOutOfBoundsException) {
                     allPathBackup.removeFirst()
                 }
-
-                val newDick = mutableListOf<PathData>()
+                val newUndos = mutableListOf<PathData>()
                 undoPaths.forEach {
                     if (it.action == Actions.Clear) {
-                        newDick.add(it.copy(index = it.index - 1))
+                        newUndos.add(it.copy(index = it.index - 1))
                     } else {
-                        newDick.add(it)
+                        newUndos.add(it)
                     }
                 }
-
                 undoPaths.clear()
-                undoPaths.addAll(newDick)
+                undoPaths.addAll(newUndos)
             }
             undoPaths.removeFirst()
         }

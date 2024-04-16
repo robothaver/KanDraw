@@ -11,9 +11,9 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.updateEffect
-import com.robothaver.kandraw.viewModel.Effects
-import com.robothaver.kandraw.viewModel.PenSettings
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.Effects
+import com.robothaver.kandraw.utils.data.PenSettings
 
 @Composable
 fun SelectedPenEffectSettings(penSettings: MutableState<PenSettings>) {

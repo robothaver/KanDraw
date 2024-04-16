@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.robothaver.kandraw.composables.ColorItem
-import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.updateColor
-import com.robothaver.kandraw.viewModel.PenSettings
-import com.robothaver.kandraw.viewModel.defaultColors
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
+import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.utils.data.defaultColors
 
 @Composable
 fun ColorOptions(

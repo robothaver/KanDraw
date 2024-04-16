@@ -2,7 +2,7 @@ package com.robothaver.kandraw.dialogs.penSettingsDialog.layouts
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -13,7 +13,6 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robothaver.kandraw.composables.alphaSlider.AlphaSlider
@@ -23,19 +22,17 @@ import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenCapSettin
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenSizeSlider
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.penEffect.PenEffectOptions
-import com.robothaver.kandraw.viewModel.PenSettings
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
+import com.robothaver.kandraw.utils.data.PenSettings
 import kotlin.math.roundToInt
 
 @Composable
 fun HorizontalLayout(
     penSettings: MutableState<PenSettings>,
-    isColorPickingPage: MutableState<Boolean>,
-    screenSize: Size,
+    isColorPickingPage: MutableState<Boolean>
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(screenSize.width)
-            .fillMaxHeight(screenSize.height)
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier

@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.viewModel
+package com.robothaver.kandraw.utils.data
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color

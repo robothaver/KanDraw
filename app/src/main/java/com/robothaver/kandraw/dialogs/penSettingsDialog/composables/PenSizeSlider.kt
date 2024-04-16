@@ -3,10 +3,10 @@ package com.robothaver.kandraw.dialogs.penSettingsDialog.composables
 import androidx.compose.material3.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.updateEffect
-import com.robothaver.kandraw.utils.penEffect.getShape
-import com.robothaver.kandraw.viewModel.Effects
-import com.robothaver.kandraw.viewModel.PenSettings
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
+import com.robothaver.kandraw.domain.canvasController.penEffect.getShape
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.Effects
+import com.robothaver.kandraw.utils.data.PenSettings
 
 @Composable
 fun PenSizeSlider(penSettings: MutableState<PenSettings>) {

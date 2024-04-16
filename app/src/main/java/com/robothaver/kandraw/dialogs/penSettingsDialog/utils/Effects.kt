@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.viewModel
+package com.robothaver.kandraw.dialogs.penSettingsDialog.utils
 
 enum class Effects {
     Default,

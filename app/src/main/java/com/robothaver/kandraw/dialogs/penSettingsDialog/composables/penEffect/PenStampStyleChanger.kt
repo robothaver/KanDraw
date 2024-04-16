@@ -25,9 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StampedPathEffectStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.updateEffect
-import com.robothaver.kandraw.viewModel.PenSettings
-import com.robothaver.kandraw.viewModel.StampStyles
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
+import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.StampStyles
 
 @Composable
 fun PenStampStyleChanger(penSettings: MutableState<PenSettings>) {

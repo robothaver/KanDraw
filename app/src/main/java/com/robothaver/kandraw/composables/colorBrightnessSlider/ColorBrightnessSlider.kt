@@ -30,7 +30,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.robothaver.kandraw.viewModel.PenColor
+import com.robothaver.kandraw.utils.data.PenColor
 import kotlin.math.roundToInt
 
 /**

@@ -25,7 +25,7 @@ import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.composables.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.composables.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.viewModel.Tools
+import com.robothaver.kandraw.utils.data.Tools
 
 
 @Composable

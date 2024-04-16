@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.kandraw.R
 import com.robothaver.kandraw.dialogs.Dialogs
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.viewModel.Tools
+import com.robothaver.kandraw.utils.data.Tools
 
 @Composable
 fun PenItem(activeTool: MutableState<Tools>, selectedDialog: MutableState<Dialogs>, canvasController: CanvasController) {

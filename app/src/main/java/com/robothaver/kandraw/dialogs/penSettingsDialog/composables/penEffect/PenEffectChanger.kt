@@ -11,10 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.updateEffect
-import com.robothaver.kandraw.utils.penEffect.getShape
-import com.robothaver.kandraw.viewModel.Effects
-import com.robothaver.kandraw.viewModel.PenSettings
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
+import com.robothaver.kandraw.domain.canvasController.penEffect.getShape
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.Effects
+import com.robothaver.kandraw.utils.data.PenSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

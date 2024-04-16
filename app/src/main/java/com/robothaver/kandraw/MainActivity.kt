@@ -33,7 +33,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.robothaver.kandraw.composables.canvas.MainCanvas
 import com.robothaver.kandraw.composables.toolBar.ToolBar
 import com.robothaver.kandraw.dialogs.DialogManager
-import com.robothaver.kandraw.dialogs.Dialogs
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.ui.customThemes.dark
 import com.robothaver.kandraw.ui.theme.CanvasTestTheme
@@ -56,9 +55,6 @@ class MainActivity : ComponentActivity() {
                 val canvasController = CanvasController(viewModel)
                 val containerSize = remember {
                     mutableStateOf(IntSize(0, 0))
-                }
-                val selectedDialog = remember {
-                    mutableStateOf(Dialogs.None)
                 }
                 val singlePhotoPickerLauncher =
                     rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) {
@@ -103,14 +99,14 @@ class MainActivity : ComponentActivity() {
                             ToolBar(
                                 canvasController,
                                 viewModel.activeTool,
-                                selectedDialog,
+                                viewModel.selectedDialog,
                                 containerSize,
                                 viewModel.undoPaths.isNotEmpty(),
                                 viewModel.redoPaths.isNotEmpty()
                             )
                         }
                         DialogManager(
-                            selectedDialog,
+                            viewModel.selectedDialog,
                             viewModel,
                             windowInfo,
                             canvasController

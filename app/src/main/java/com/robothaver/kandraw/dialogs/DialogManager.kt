@@ -47,7 +47,10 @@ fun DialogManager(
                     )
                 }
                 Dialogs.EraserSettings -> {
-                    EraserSettingsDialog(eraserWidth = viewModel.eraserWidth, windowInfo, canvasController)
+                    EraserSettingsDialog(
+                        viewModel.eraserWidth,
+                        windowInfo, canvasController
+                    )
                 }
                 Dialogs.GeneralSettings -> TODO()
                 Dialogs.None -> Unit

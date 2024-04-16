@@ -16,8 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.kandraw.R
-import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.updateColor
-import com.robothaver.kandraw.viewModel.PenSettings
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
+import com.robothaver.kandraw.utils.data.PenSettings
 
 @Composable
 fun CustomColorButton(penSettings: MutableState<PenSettings>, size: Dp, onClick: () -> Unit) {

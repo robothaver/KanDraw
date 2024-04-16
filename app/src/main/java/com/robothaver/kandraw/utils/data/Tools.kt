@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.viewModel
+package com.robothaver.kandraw.utils.data
 
 enum class Tools {
     Pen,

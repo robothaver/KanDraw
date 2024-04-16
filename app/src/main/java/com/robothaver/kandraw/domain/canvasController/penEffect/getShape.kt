@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.utils.penEffect
+package com.robothaver.kandraw.domain.canvasController.penEffect
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.asComposePath
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.graphics.shapes.toPath
-import com.robothaver.kandraw.viewModel.Shapes
 
 fun getShape(selectedShapes: Shapes, strokeWidth: Float): Path {
     val shapeSize = strokeWidth * 0.6f
@@ -46,4 +45,11 @@ fun getShape(selectedShapes: Shapes, strokeWidth: Float): Path {
             }
         }
     }
+}
+
+enum class Shapes {
+    Star,
+    Triangle,
+    Hexagon,
+    Arrow
 }
