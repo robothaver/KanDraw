@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
@@ -26,15 +27,19 @@ import com.robothaver.kandraw.composables.canvas.composables.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.composables.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.data.Tools
+import dev.shreyaspatil.capturable.capturable
+import dev.shreyaspatil.capturable.controller.CaptureController
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainCanvas(
     backgroundColor: Color,
     activeTool: MutableState<Tools>,
     viewPortPosition: MutableState<Offset>,
     canvasController: CanvasController,
-    image: MutableState<Bitmap?>
+    image: MutableState<Bitmap?>,
+    controller: CaptureController
 ) {
 
     val selectedPosition = remember { mutableStateOf(Offset(0f, 0f)) }
@@ -48,6 +53,7 @@ fun MainCanvas(
     )
 
     Box(modifier = Modifier
+        .capturable(controller)
         .background(backgroundColor)
         .fillMaxSize()
         .clipToBounds()

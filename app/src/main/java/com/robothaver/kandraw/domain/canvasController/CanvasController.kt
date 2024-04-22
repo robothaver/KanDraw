@@ -1,5 +1,13 @@
 package com.robothaver.kandraw.domain.canvasController
 
+import android.content.ContentResolver
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -10,7 +18,8 @@ import com.robothaver.kandraw.viewModel.CanvasViewModel
 
 
 class CanvasController(
-    canvasViewModel: CanvasViewModel
+    canvasViewModel: CanvasViewModel,
+    private val contentResolver: ContentResolver
 ) {
     private val maxUndoSteps = 64
     private val undoPaths = canvasViewModel.undoPaths
@@ -74,6 +83,27 @@ class CanvasController(
 //            currentlySelectedPosition.y.toInt()
 //        )
         return getSelectedPath(currentlySelectedPosition, 20f)?.color
+    }
+
+    fun processBackground(uri: Uri?) {
+        if (uri != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val source = ImageDecoder.createSource(contentResolver, uri)
+                backgroundImage.value =
+                    ImageDecoder.decodeBitmap(source) { imageDecoder, _, _ ->
+                        imageDecoder.isMutableRequired = true
+                    }
+            } else {
+                backgroundImage.value =
+                    MediaStore.Images.Media.getBitmap(contentResolver, uri)
+            }
+        }
+    }
+
+    fun getBackground(singlePhotoPickerLauncher: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>) {
+        singlePhotoPickerLauncher.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        )
     }
 
     fun addVisiblePaths(newVisiblePaths: List<PathData>) {

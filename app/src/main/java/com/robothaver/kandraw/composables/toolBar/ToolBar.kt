@@ -112,6 +112,8 @@ fun ToolBar(
         val redo = remember { { canvasController.redo() } }
         ToolBarItem(icon = Icons.AutoMirrored.Filled.ArrowBack, undoPaths, undo)
         ToolBarItem(icon = Icons.AutoMirrored.Filled.ArrowForward, redoPaths, redo)
-        ToolBarItem(icon = Icons.Filled.Menu) {}
+        ToolBarItem(icon = Icons.Filled.Menu) {
+            selectedDialog.value = Dialogs.GeneralSettings
+        }
     }
 }

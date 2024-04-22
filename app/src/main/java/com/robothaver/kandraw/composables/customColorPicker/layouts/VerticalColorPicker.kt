@@ -2,9 +2,11 @@ package com.robothaver.kandraw.composables.customColorPicker.layouts
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.ColorPickerController
@@ -24,7 +26,7 @@ fun VerticalColorPicker(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HsvColorPicker(
-            modifier = Modifier.fillMaxWidth().weight(1f),
+            modifier = Modifier.fillMaxWidth().clip(CircleShape).weight(1f),
             controller = colorPickerController,
             onColorChanged = { colorEnvelope: ColorEnvelope ->
                 onColorSelected(colorEnvelope.color)
