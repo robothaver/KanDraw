@@ -12,7 +12,8 @@ class CanvasEventHandler(
     private val isTouchEventActive: MutableState<Boolean>,
     private val activeTool: MutableState<Tools>,
     private val canvasController: CanvasController,
-    private val viewPortPosition: MutableState<Offset>
+    private val viewPortPosition: MutableState<Offset>,
+    private val gridOffset: MutableState<Offset>
 ) {
     fun tap(offset: Offset) {
         when (activeTool.value) {
@@ -46,26 +47,42 @@ class CanvasEventHandler(
         }
     }
 
-    fun drag(change: Offset, offset: Offset) {
-        when (activeTool.value) {
-            Tools.Eraser -> {
-                selectedPosition.value = change
-                canvasController.eraseSelectedPath(getOffset(change))
-            }
+    fun drag(change: Offset, offset: Offset) = when (activeTool.value) {
+        Tools.Eraser -> {
+            selectedPosition.value = change
+            canvasController.eraseSelectedPath(getOffset(change))
+        }
 
-            Tools.ColorPicker -> {
-                selectedPosition.value = change
-                val color = canvasController.getSelectedPathColor(getOffset(change))
-                setSelectedColor(canvasController, color)
-            }
+        Tools.ColorPicker -> {
+            selectedPosition.value = change
+            val color = canvasController.getSelectedPathColor(getOffset(change))
+            setSelectedColor(canvasController, color)
+        }
 
-            Tools.Mover -> {
-                viewPortPosition.value += offset
+        Tools.Mover -> {
+            val cellSize = 80 * 5
+            viewPortPosition.value += offset
+            when {
+                gridOffset.value.x + offset.x >= cellSize -> {
+                    gridOffset.value = gridOffset.value.copy(x = 0f)
+                }
+                gridOffset.value.x + offset.x <= -cellSize -> {
+                    gridOffset.value = gridOffset.value.copy(x = 0f)
+                }
+                gridOffset.value.y + offset.y >= cellSize -> {
+                    gridOffset.value = gridOffset.value.copy(y = 0f)
+                }
+                gridOffset.value.y + offset.y <= -cellSize -> {
+                    gridOffset.value = gridOffset.value.copy(y = 0f)
+                }
+                else -> {
+                    gridOffset.value += offset
+                }
             }
+        }
 
-            else -> {
-                canvasController.expandPath(getOffset(change))
-            }
+        else -> {
+            canvasController.expandPath(getOffset(change))
         }
     }
 

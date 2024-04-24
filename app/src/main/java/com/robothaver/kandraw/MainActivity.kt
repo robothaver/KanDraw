@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
@@ -84,6 +85,12 @@ class MainActivity : ComponentActivity() {
                 }
                 val scope = rememberCoroutineScope()
                 val controller = rememberCaptureController()
+                val gridOffset = remember {
+                    mutableStateOf(Offset(0f, 0f))
+                }
+                val isGridVisible = remember {
+                    mutableStateOf(true)
+                }
                 Scaffold { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -99,7 +106,9 @@ class MainActivity : ComponentActivity() {
                             }
                             Button(onClick = {
                                 scope.launch {
+                                    isGridVisible.value = false
                                     saveImage(createImage(controller), "KanDraw")
+                                    isGridVisible.value = true
                                 }
                             }) {
                                 Text(text = "Save screen")
@@ -116,7 +125,9 @@ class MainActivity : ComponentActivity() {
                                 viewModel.viewportPosition,
                                 canvasController,
                                 viewModel.backgroundImage,
-                                controller
+                                controller,
+                                gridOffset,
+                                isGridVisible
                             )
                             ToolBar(
                                 canvasController,

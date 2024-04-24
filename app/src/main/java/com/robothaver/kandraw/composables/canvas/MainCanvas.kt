@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
+import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasDrawer
 import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasEventHandler
 import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.composables.ColorPickerTool
@@ -39,7 +40,9 @@ fun MainCanvas(
     viewPortPosition: MutableState<Offset>,
     canvasController: CanvasController,
     image: MutableState<Bitmap?>,
-    controller: CaptureController
+    controller: CaptureController,
+    gridOffset: MutableState<Offset>,
+    isGridVisible: MutableState<Boolean>
 ) {
 
     val selectedPosition = remember { mutableStateOf(Offset(0f, 0f)) }
@@ -49,26 +52,22 @@ fun MainCanvas(
         isTouchEventActive,
         activeTool,
         canvasController,
-        viewPortPosition
+        viewPortPosition,
+        gridOffset
     )
-
     Box(modifier = Modifier
         .capturable(controller)
         .background(backgroundColor)
         .fillMaxSize()
         .clipToBounds()
         .pointerInput(false) {
-            detectDragGestures(
-                onDragStart = { offset ->
-                    canvasEventHandler.dragStart(offset)
-                },
-                onDrag = { change, offset ->
-                    canvasEventHandler.drag(change.position, offset)
-                },
-                onDragEnd = {
-                    canvasEventHandler.dragEnd()
-                }
-            )
+            detectDragGestures(onDragStart = { offset ->
+                canvasEventHandler.dragStart(offset)
+            }, onDrag = { change, offset ->
+                canvasEventHandler.drag(change.position, offset)
+            }, onDragEnd = {
+                canvasEventHandler.dragEnd()
+            })
         }
         .pointerInput(true) {
             detectTapGestures { offset ->
@@ -76,6 +75,11 @@ fun MainCanvas(
             }
         }
         .drawBehind {
+            val canvasDrawer = CanvasDrawer(this, 80f, 5, Color.Gray, Color.White, 5f, 7f)
+
+            if (isGridVisible.value) {
+                canvasDrawer.drawBackgroundGrid(gridOffset)
+            }
             translate(left = viewPortPosition.value.x, top = viewPortPosition.value.y) {
                 if (image.value != null) {
                     drawImage(
@@ -88,20 +92,16 @@ fun MainCanvas(
                 )
                 pathsToDraw.forEach { path ->
                     drawPath(
-                        path = path.path,
-                        color = path.color,
-                        style = Stroke(
+                        path = path.path, color = path.color, style = Stroke(
                             width = path.strokeWidth,
                             cap = path.cap,
                             join = StrokeJoin.Round,
                             pathEffect = path.style
-                        ),
-                        alpha = path.alpha
+                        ), alpha = path.alpha
                     )
                 }
             }
-        }
-    ) {
+        }) {
         if (isTouchEventActive.value && activeTool.value == Tools.ColorPicker) {
             ColorPickerTool(canvasController = canvasController, selectedPosition.value)
         } else if (isTouchEventActive.value && activeTool.value == Tools.Eraser) {
