@@ -1,10 +1,8 @@
 package com.robothaver.kandraw.composables.canvas.canvasCore
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.translate
 
 class CanvasDrawer(
     private val drawScope: DrawScope,
@@ -15,28 +13,27 @@ class CanvasDrawer(
     private val smallCellWidth: Float,
     private val largeCellStrokeWidth: Float
 ) {
-    fun drawBackgroundGrid(gridOffset: MutableState<Offset>) {
-        drawScope.backgroundGrid(gridOffset)
+    fun drawBackgroundGrid() {
+        drawScope.backgroundGrid()
     }
 
-    private fun DrawScope.backgroundGrid(gridOffset: MutableState<Offset>) {
+    private fun DrawScope.backgroundGrid() {
         val rows = (size.height / smallCellSize).toInt()
         val columns = (size.width / smallCellSize).toInt()
         val horizontalRange =
-            -largeCellSize * smallCellSize.toInt()..rows + largeCellSize * smallCellSize.toInt()
+            0 ..rows
         val verticalRange =
-            -largeCellSize * smallCellSize.toInt()..columns + largeCellSize * smallCellSize.toInt()
-
-        translate(left = gridOffset.value.x, top = gridOffset.value.y) {
-            drawGridLines(
-                horizontalRange,
-                verticalRange,
-                smallCellColor,
-                smallCellSize,
-                smallCellWidth
-            ) {
-                it % largeCellSize != 0
-            }
+            0 ..columns
+        drawGridLines(
+            horizontalRange,
+            verticalRange,
+            smallCellColor,
+            smallCellSize,
+            smallCellWidth
+        ) {
+            largeCellSize == 0 || it % largeCellSize != 0
+        }
+        if (largeCellSize != 0) {
             drawGridLines(
                 horizontalRange,
                 verticalRange,
@@ -84,8 +81,8 @@ class CanvasDrawer(
             if (whenTrue(i)) {
                 drawLine(
                     color = cellColor,
-                    start = Offset(-cellSize * largeCellSize, i * cellSize),
-                    end = Offset(size.width + cellSize * largeCellSize, i * cellSize),
+                    start = Offset(0f, i * cellSize),
+                    end = Offset(size.width, i * cellSize),
                     strokeWidth = strokeWidth
                 )
             }
@@ -103,8 +100,8 @@ class CanvasDrawer(
             if (whenTrue(i)) {
                 drawLine(
                     color = cellColor,
-                    start = Offset(i * cellSize, -cellSize * cellSize),
-                    end = Offset(i * cellSize, size.height + cellSize * cellSize),
+                    start = Offset(i * cellSize, 0f),
+                    end = Offset(i * cellSize, size.height),
                     strokeWidth = strokeWidth
                 )
             }

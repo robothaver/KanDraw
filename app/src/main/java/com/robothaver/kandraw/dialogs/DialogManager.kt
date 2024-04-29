@@ -54,7 +54,7 @@ fun DialogManager(
                         windowInfo, canvasController
                     )
                 }
-                Dialogs.GeneralSettings -> PreferencesDialog(windowInfo, canvasController)
+                Dialogs.GeneralSettings -> PreferencesDialog(windowInfo, canvasController, viewModel)
                 Dialogs.None -> Unit
             }
         }

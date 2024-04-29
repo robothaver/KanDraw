@@ -25,7 +25,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.robothaver.kandraw.composables.customColorPicker.layouts.HorizontalColorPicker
 import com.robothaver.kandraw.composables.customColorPicker.layouts.VerticalColorPicker
 import com.robothaver.kandraw.utils.windowInfo.WindowType
-import com.robothaver.kandraw.utils.data.PenColor
+import com.robothaver.kandraw.viewModel.data.PenColor
 
 @Composable
 fun CustomColorPicker(

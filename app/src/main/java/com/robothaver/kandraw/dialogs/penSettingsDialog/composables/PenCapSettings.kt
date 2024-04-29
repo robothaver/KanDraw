@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.kandraw.R
-import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.viewModel.data.PenSettings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

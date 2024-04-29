@@ -6,7 +6,7 @@ import androidx.compose.runtime.MutableState
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
 import com.robothaver.kandraw.domain.canvasController.penEffect.getShape
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.Effects
-import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.viewModel.data.PenSettings
 
 @Composable
 fun PenSizeSlider(penSettings: MutableState<PenSettings>) {

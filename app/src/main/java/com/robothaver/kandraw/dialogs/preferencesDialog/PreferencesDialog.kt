@@ -8,9 +8,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,17 +21,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.gridSettings.GridSettings
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.mainScreen.MainScreen
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
+import com.robothaver.kandraw.viewModel.CanvasViewModel
 
 @Composable
-fun PreferencesDialog(windowInfo: WindowInfo, canvasController: CanvasController) {
+fun PreferencesDialog(
+    windowInfo: WindowInfo,
+    canvasController: CanvasController,
+    viewModel: CanvasViewModel
+) {
     val navController = rememberNavController()
     Column(
         modifier = Modifier
             .fillMaxWidth(0.85f)
-            .fillMaxHeight(0.3f)
+            .verticalScroll(rememberScrollState())
     ) {
         NavHost(
             navController = navController,
@@ -65,11 +72,24 @@ fun PreferencesDialog(windowInfo: WindowInfo, canvasController: CanvasController
             }
         ) {
             composable(route = Screen.MainScreen.route) {
-                MainScreen(navController = navController)
+                MainScreen {
+                    println(it)
+                    navController.navigate(it)
+                }
             }
             composable(route = Screen.SaveDrawing.route) {
                 Column(modifier = Modifier.fillMaxSize()) {
                     Text(text = "Coming soon...")
+                }
+            }
+            composable(route = Screen.Other.route) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text(text = "OTHER PAGE")
+                }
+            }
+            composable(route = Screen.ToolbarPreferencesScreen.route) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text(text = "TOOLBAR PAGE")
                 }
             }
             composable(route = Screen.BackgroundImageScreen.route) {
@@ -92,6 +112,28 @@ fun PreferencesDialog(windowInfo: WindowInfo, canvasController: CanvasController
                     }
                 }
             }
+            composable(route = Screen.GridSettings.route) {
+                GridSettings(viewModel.gridSettings) {
+                    navController.navigate(it)
+                }
+            }
+
+            composable(
+                route = Screen.CustomColorSelector.route
+            ) {
+                TODO("Implement custom color picker")
+//                CustomColorPicker(
+//                    initialColor = ,
+//                    penColor = ,
+//                    onDismiss = { /*TODO*/ },
+//                    onBrightnessChanged = ,
+//                    onColorPickerActivated = { /*TODO*/ }) {
+//
+//                }
+            }
         }
     }
 }
+
+
+

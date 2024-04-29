@@ -19,7 +19,7 @@ import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenSizeSlide
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.penEffect.PenEffectOptions
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
-import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.viewModel.data.PenSettings
 import kotlin.math.roundToInt
 
 @Composable

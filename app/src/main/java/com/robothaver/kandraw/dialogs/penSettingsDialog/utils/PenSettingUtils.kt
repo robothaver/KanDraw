@@ -2,8 +2,8 @@ package com.robothaver.kandraw.dialogs.penSettingsDialog.utils
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
-import com.robothaver.kandraw.utils.data.PenEffectSettings
-import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.viewModel.data.PenEffectSettings
+import com.robothaver.kandraw.viewModel.data.PenSettings
 import com.robothaver.kandraw.utils.changeColorBrightness.changeColorBrightness
 
 fun updateEffect(penSettings: MutableState<PenSettings>, updateSettings: PenEffectSettings) {

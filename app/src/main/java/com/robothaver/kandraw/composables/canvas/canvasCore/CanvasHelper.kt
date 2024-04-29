@@ -4,8 +4,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.utils.data.PathData
-import com.robothaver.kandraw.utils.data.Tools
+import com.robothaver.kandraw.viewModel.data.PathData
+import com.robothaver.kandraw.viewModel.data.Tools
 
 fun getPathsToDraw(
     activeTool: MutableState<Tools>,

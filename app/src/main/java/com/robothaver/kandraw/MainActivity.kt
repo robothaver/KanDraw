@@ -32,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntSize
@@ -66,7 +65,7 @@ class MainActivity : ComponentActivity() {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         setWindowSettings(windowInsetsController)
         setContent {
-            CanvasTestTheme(dynamicColor = false, theme = dark) {
+            CanvasTestTheme(dynamicColor = true, theme = dark) {
                 val launcher = rememberLauncherForActivityResult(
                     ActivityResultContracts.RequestPermission()
                 ) { isGranted: Boolean ->
@@ -85,12 +84,6 @@ class MainActivity : ComponentActivity() {
                 }
                 val scope = rememberCoroutineScope()
                 val controller = rememberCaptureController()
-                val gridOffset = remember {
-                    mutableStateOf(Offset(0f, 0f))
-                }
-                val isGridVisible = remember {
-                    mutableStateOf(true)
-                }
                 Scaffold { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -106,9 +99,9 @@ class MainActivity : ComponentActivity() {
                             }
                             Button(onClick = {
                                 scope.launch {
-                                    isGridVisible.value = false
+                                    viewModel.gridSettings.value = viewModel.gridSettings.value.copy(isGridEnabled = false)
                                     saveImage(createImage(controller), "KanDraw")
-                                    isGridVisible.value = true
+                                    viewModel.gridSettings.value = viewModel.gridSettings.value.copy(isGridEnabled = true)
                                 }
                             }) {
                                 Text(text = "Save screen")
@@ -126,8 +119,6 @@ class MainActivity : ComponentActivity() {
                                 canvasController,
                                 viewModel.backgroundImage,
                                 controller,
-                                gridOffset,
-                                isGridVisible
                             )
                             ToolBar(
                                 canvasController,

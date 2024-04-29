@@ -5,7 +5,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.changeColorBrightness.changeColorBrightness
-import com.robothaver.kandraw.utils.data.Tools
+import com.robothaver.kandraw.viewModel.data.GridSettings
+import com.robothaver.kandraw.viewModel.data.Tools
 
 class CanvasEventHandler(
     private val selectedPosition: MutableState<Offset>,
@@ -13,7 +14,7 @@ class CanvasEventHandler(
     private val activeTool: MutableState<Tools>,
     private val canvasController: CanvasController,
     private val viewPortPosition: MutableState<Offset>,
-    private val gridOffset: MutableState<Offset>
+    private val gridSettings: MutableState<GridSettings>
 ) {
     fun tap(offset: Offset) {
         when (activeTool.value) {
@@ -60,23 +61,33 @@ class CanvasEventHandler(
         }
 
         Tools.Mover -> {
-            val cellSize = 80 * 5
             viewPortPosition.value += offset
+            val cellSize = gridSettings.value.smallCellSize * 15
             when {
-                gridOffset.value.x + offset.x >= cellSize -> {
-                    gridOffset.value = gridOffset.value.copy(x = 0f)
+                gridSettings.value.gridOffset.x + offset.x >= cellSize -> {
+                    setOffset(gridSettings, newX = 0f)
                 }
-                gridOffset.value.x + offset.x <= -cellSize -> {
-                    gridOffset.value = gridOffset.value.copy(x = 0f)
+
+                gridSettings.value.gridOffset.x + offset.x <= -cellSize -> {
+                    setOffset(gridSettings, newX = 0f)
                 }
-                gridOffset.value.y + offset.y >= cellSize -> {
-                    gridOffset.value = gridOffset.value.copy(y = 0f)
+
+                gridSettings.value.gridOffset.y + offset.y >= cellSize -> {
+                    setOffset(gridSettings, newY = 0f)
                 }
-                gridOffset.value.y + offset.y <= -cellSize -> {
-                    gridOffset.value = gridOffset.value.copy(y = 0f)
+
+                gridSettings.value.gridOffset.y + offset.y <= -cellSize -> {
+                    setOffset(gridSettings, newY = 0f)
                 }
+
                 else -> {
-                    gridOffset.value += offset
+                    gridSettings.value =
+                        gridSettings.value.copy(
+                            gridOffset = Offset(
+                                gridSettings.value.gridOffset.x + offset.x,
+                                gridSettings.value.gridOffset.y + offset.y
+                            )
+                        )
                 }
             }
         }
@@ -93,6 +104,14 @@ class CanvasEventHandler(
         }
     }
 
+    private fun setOffset(
+        gridSettings: MutableState<GridSettings>,
+        newX: Float = gridSettings.value.gridOffset.x,
+        newY: Float = gridSettings.value.gridOffset.y
+    ) {
+        gridSettings.value = gridSettings.value.copy(gridOffset = Offset(newX, newY))
+    }
+
     private fun setSelectedColor(canvasController: CanvasController, selectedColor: Color?) {
         var newColor = canvasController.backgroundColor
         if (selectedColor != null) {
@@ -101,7 +120,10 @@ class CanvasEventHandler(
         canvasController.penSettings.value = canvasController.penSettings.value.copy(
             customColor = newColor,
             penColor = canvasController.penSettings.value.penColor.copy(
-                color = changeColorBrightness(newColor, canvasController.penSettings.value.penColor.brightness),
+                color = changeColorBrightness(
+                    newColor,
+                    canvasController.penSettings.value.penColor.brightness
+                ),
                 hue = newColor
             )
         )

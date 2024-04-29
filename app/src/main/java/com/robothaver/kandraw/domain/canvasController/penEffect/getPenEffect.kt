@@ -2,7 +2,7 @@ package com.robothaver.kandraw.domain.canvasController.penEffect
 
 import androidx.compose.ui.graphics.PathEffect
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.Effects
-import com.robothaver.kandraw.utils.data.PenSettings
+import com.robothaver.kandraw.viewModel.data.PenSettings
 
 fun getPenEffect(penSettings: PenSettings): PathEffect? {
     return when (penSettings.penEffectSettings.effect) {

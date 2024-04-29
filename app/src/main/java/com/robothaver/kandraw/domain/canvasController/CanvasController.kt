@@ -12,9 +12,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import com.robothaver.kandraw.domain.canvasController.penEffect.getPenEffect
-import com.robothaver.kandraw.utils.data.Actions
-import com.robothaver.kandraw.utils.data.PathData
 import com.robothaver.kandraw.viewModel.CanvasViewModel
+import com.robothaver.kandraw.viewModel.data.Actions
+import com.robothaver.kandraw.viewModel.data.PathData
 
 
 class CanvasController(
@@ -31,6 +31,7 @@ class CanvasController(
     val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth
     val backgroundImage = canvasViewModel.backgroundImage
+    val gridSettings = canvasViewModel.gridSettings
 
     fun addNewPath(newPoint: Offset) {
         val newPathData = createNewPathData(newPoint)

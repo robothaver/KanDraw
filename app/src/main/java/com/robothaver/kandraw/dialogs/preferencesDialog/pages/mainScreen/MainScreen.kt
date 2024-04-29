@@ -15,6 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,10 +24,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(onNavigate: (route: String) -> Unit) {
+    val isClickable = remember {
+        mutableStateOf(true)
+    }
     Column {
         menuOptions.forEach { option ->
             Row(
@@ -33,7 +37,12 @@ fun MainScreen(navController: NavController) {
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .height(56.dp)
-                    .clickable { navController.navigate(option.route) },
+                    .clickable {
+                        if (isClickable.value) {
+                            isClickable.value = false
+                            onNavigate(option.route)
+                        }
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

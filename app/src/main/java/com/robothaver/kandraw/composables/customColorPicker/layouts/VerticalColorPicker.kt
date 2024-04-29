@@ -12,7 +12,7 @@ import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.robothaver.kandraw.composables.colorBrightnessSlider.ColorBrightnessSlider
-import com.robothaver.kandraw.utils.data.PenColor
+import com.robothaver.kandraw.viewModel.data.PenColor
 
 @Composable
 fun VerticalColorPicker(

@@ -27,7 +27,7 @@ import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.composables.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.composables.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.utils.data.Tools
+import com.robothaver.kandraw.viewModel.data.Tools
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.CaptureController
 
@@ -41,10 +41,8 @@ fun MainCanvas(
     canvasController: CanvasController,
     image: MutableState<Bitmap?>,
     controller: CaptureController,
-    gridOffset: MutableState<Offset>,
-    isGridVisible: MutableState<Boolean>
 ) {
-
+    val gridSettings = canvasController.gridSettings.value
     val selectedPosition = remember { mutableStateOf(Offset(0f, 0f)) }
     val isTouchEventActive = remember { mutableStateOf(false) }
     val canvasEventHandler = CanvasEventHandler(
@@ -53,7 +51,7 @@ fun MainCanvas(
         activeTool,
         canvasController,
         viewPortPosition,
-        gridOffset
+        canvasController.gridSettings
     )
     Box(modifier = Modifier
         .capturable(controller)
@@ -75,12 +73,19 @@ fun MainCanvas(
             }
         }
         .drawBehind {
-            val canvasDrawer = CanvasDrawer(this, 80f, 5, Color.Gray, Color.White, 5f, 7f)
-
-            if (isGridVisible.value) {
-                canvasDrawer.drawBackgroundGrid(gridOffset)
-            }
+            val canvasDrawer = CanvasDrawer(
+                this,
+                gridSettings.smallCellSize,
+                gridSettings.largeCellSize,
+                gridSettings.smallCellColor,
+                gridSettings.largeCellColor,
+                gridSettings.smallCellStrokeWidth,
+                gridSettings.largeCellStrokeWidth
+            )
             translate(left = viewPortPosition.value.x, top = viewPortPosition.value.y) {
+                if (gridSettings.isGridEnabled) {
+                    canvasDrawer.drawBackgroundGrid()
+                }
                 if (image.value != null) {
                     drawImage(
                         image = image.value!!.asImageBitmap()

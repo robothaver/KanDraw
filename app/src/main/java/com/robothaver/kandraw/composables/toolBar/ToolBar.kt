@@ -34,7 +34,7 @@ import com.robothaver.kandraw.composables.toolBar.composables.ToolBarActionItem
 import com.robothaver.kandraw.composables.toolBar.composables.ToolBarItem
 import com.robothaver.kandraw.dialogs.Dialogs
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.utils.data.Tools
+import com.robothaver.kandraw.viewModel.data.Tools
 import kotlin.math.roundToInt
 
 
