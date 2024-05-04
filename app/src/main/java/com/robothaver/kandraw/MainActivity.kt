@@ -44,7 +44,7 @@ import com.robothaver.kandraw.composables.canvas.MainCanvas
 import com.robothaver.kandraw.composables.toolBar.ToolBar
 import com.robothaver.kandraw.dialogs.DialogManager
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.ui.customThemes.dark
+import com.robothaver.kandraw.ui.customThemes.reFilc
 import com.robothaver.kandraw.ui.theme.CanvasTestTheme
 import com.robothaver.kandraw.utils.windowInfo.getWindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         setWindowSettings(windowInsetsController)
         setContent {
-            CanvasTestTheme(dynamicColor = true, theme = dark) {
+            CanvasTestTheme(dynamicColor = true, theme = reFilc) {
                 val launcher = rememberLauncherForActivityResult(
                     ActivityResultContracts.RequestPermission()
                 ) { isGranted: Boolean ->
@@ -113,7 +113,6 @@ class MainActivity : ComponentActivity() {
                             .onSizeChanged { containerSize.value = it }
                         ) {
                             MainCanvas(
-                                viewModel.backgroundColor,
                                 viewModel.activeTool,
                                 viewModel.viewportPosition,
                                 canvasController,

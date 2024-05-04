@@ -62,34 +62,6 @@ class CanvasEventHandler(
 
         Tools.Mover -> {
             viewPortPosition.value += offset
-            val cellSize = gridSettings.value.smallCellSize * 15
-            when {
-                gridSettings.value.gridOffset.x + offset.x >= cellSize -> {
-                    setOffset(gridSettings, newX = 0f)
-                }
-
-                gridSettings.value.gridOffset.x + offset.x <= -cellSize -> {
-                    setOffset(gridSettings, newX = 0f)
-                }
-
-                gridSettings.value.gridOffset.y + offset.y >= cellSize -> {
-                    setOffset(gridSettings, newY = 0f)
-                }
-
-                gridSettings.value.gridOffset.y + offset.y <= -cellSize -> {
-                    setOffset(gridSettings, newY = 0f)
-                }
-
-                else -> {
-                    gridSettings.value =
-                        gridSettings.value.copy(
-                            gridOffset = Offset(
-                                gridSettings.value.gridOffset.x + offset.x,
-                                gridSettings.value.gridOffset.y + offset.y
-                            )
-                        )
-                }
-            }
         }
 
         else -> {
@@ -99,32 +71,17 @@ class CanvasEventHandler(
 
     fun dragEnd() {
         isTouchEventActive.value = false
-        if (activeTool.value == Tools.ColorPicker) {
-            activeTool.value = Tools.Pen
-        }
     }
 
-    private fun setOffset(
-        gridSettings: MutableState<GridSettings>,
-        newX: Float = gridSettings.value.gridOffset.x,
-        newY: Float = gridSettings.value.gridOffset.y
-    ) {
-        gridSettings.value = gridSettings.value.copy(gridOffset = Offset(newX, newY))
-    }
-
-    private fun setSelectedColor(canvasController: CanvasController, selectedColor: Color?) {
-        var newColor = canvasController.backgroundColor
-        if (selectedColor != null) {
-            newColor = selectedColor
-        }
+    private fun setSelectedColor(canvasController: CanvasController, selectedColor: Color) {
         canvasController.penSettings.value = canvasController.penSettings.value.copy(
-            customColor = newColor,
+            customColor = selectedColor,
             penColor = canvasController.penSettings.value.penColor.copy(
                 color = changeColorBrightness(
-                    newColor,
+                    selectedColor,
                     canvasController.penSettings.value.penColor.brightness
                 ),
-                hue = newColor
+                hue = selectedColor
             )
         )
     }

@@ -3,8 +3,7 @@ package com.robothaver.kandraw.dialogs
 import androidx.compose.ui.geometry.Size
 import com.robothaver.kandraw.utils.windowInfo.WindowType
 
-fun getDialogSize(screenWidthInfo: WindowType, screenHeightInfo: WindowType): Size {
-    println("${screenWidthInfo.name} ${screenHeightInfo.name}")
+fun getPenDialogSize(screenWidthInfo: WindowType, screenHeightInfo: WindowType): Size {
     return when {
         // Mobile medium vertical layout
         screenWidthInfo == WindowType.Compact && screenHeightInfo == WindowType.Medium ->

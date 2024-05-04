@@ -29,6 +29,7 @@ import com.robothaver.kandraw.viewModel.data.PenColor
 
 @Composable
 fun CustomColorPicker(
+    modifier: Modifier = Modifier,
     initialColor: Color,
     penColor: PenColor,
     layout: WindowType = WindowType.Compact,
@@ -41,7 +42,7 @@ fun CustomColorPicker(
     val color by remember {
         mutableStateOf(initialColor)
     }
-    Column {
+    Column(modifier = modifier) {
         TopBar(
             onDismiss = { onDismiss() },
             onColorPickerActivated = { onColorPickerActivated() }

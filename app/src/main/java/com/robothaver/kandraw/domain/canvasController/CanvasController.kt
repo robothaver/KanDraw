@@ -25,12 +25,12 @@ class CanvasController(
     private val undoPaths = canvasViewModel.undoPaths
     private val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
+    private val backgroundImage = canvasViewModel.backgroundImage
     val allPaths = canvasViewModel.allPaths
     val visiblePaths = mutableListOf<PathData>()
     val penSettings = canvasViewModel.penSettings
-    val backgroundColor = canvasViewModel.backgroundColor
+    val backgroundColor = canvasViewModel.backgroundColor.value
     val eraserWidth = canvasViewModel.eraserWidth
-    val backgroundImage = canvasViewModel.backgroundImage
     val gridSettings = canvasViewModel.gridSettings
 
     fun addNewPath(newPoint: Offset) {
@@ -79,11 +79,11 @@ class CanvasController(
     }
 
 
-    fun getSelectedPathColor(currentlySelectedPosition: Offset): Color? {
+    fun getSelectedPathColor(currentlySelectedPosition: Offset): Color {
 //        val color = backgroundImage.value?.get(currentlySelectedPosition.x.toInt(),
 //            currentlySelectedPosition.y.toInt()
 //        )
-        return getSelectedPath(currentlySelectedPosition, 20f)?.color
+        return getSelectedPath(currentlySelectedPosition, 20f)?.color ?: backgroundColor.color
     }
 
     fun processBackground(uri: Uri?) {

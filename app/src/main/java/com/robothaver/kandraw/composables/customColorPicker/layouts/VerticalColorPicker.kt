@@ -3,6 +3,8 @@ package com.robothaver.kandraw.composables.customColorPicker.layouts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,6 +15,7 @@ import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.robothaver.kandraw.composables.colorBrightnessSlider.ColorBrightnessSlider
 import com.robothaver.kandraw.viewModel.data.PenColor
+import com.robothaver.kandraw.viewModel.data.defaultColors
 
 @Composable
 fun VerticalColorPicker(
@@ -37,6 +40,9 @@ fun VerticalColorPicker(
             penColor = penColor
         ) {
             onBrightnessChanged(it)
+        }
+        Button(onClick = { colorPickerController.selectByColor(defaultColors[2], true) }) {
+            Text(text = "Test")
         }
     }
 }

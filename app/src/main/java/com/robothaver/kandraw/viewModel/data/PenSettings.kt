@@ -9,7 +9,7 @@ import com.robothaver.kandraw.domain.canvasController.penEffect.Shapes
 import com.robothaver.kandraw.domain.canvasController.penEffect.getShape
 
 data class PenSettings(
-    val penColor: PenColor = PenColor(defaultColors[0], 1f, defaultColors[0]),
+    val penColor: PenColor = PenColor(color = defaultColors[0]),
     val cap: StrokeCap = StrokeCap.Round,
     val strokeWidth: Float = 10f,
     val alpha: Float = 1f,

@@ -94,10 +94,12 @@ fun ToolBar(
             toolName = Tools.Eraser,
             painterResource(id = R.drawable.eraser_solid)
         ) {
-            if (activeTool.value == it) {
-                selectedDialog.value = Dialogs.EraserSettings
+            if (selectedDialog.value == Dialogs.None) {
+                if (activeTool.value == it) {
+                    selectedDialog.value = Dialogs.EraserSettings
+                }
+                activeTool.value = it
             }
-            activeTool.value = it
         }
 
         ToolBarActionItem(
@@ -105,7 +107,9 @@ fun ToolBar(
             toolName = Tools.Mover,
             painterResource(id = R.drawable.mover)
         ) {
-            activeTool.value = it
+            if (selectedDialog.value == Dialogs.None) {
+                activeTool.value = it
+            }
         }
 
         val undo = remember { { canvasController.undo() } }

@@ -1,7 +1,6 @@
 package com.robothaver.kandraw.viewModel
 
 import android.graphics.Bitmap
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.robothaver.kandraw.dialogs.Dialogs
 import com.robothaver.kandraw.viewModel.data.GridSettings
 import com.robothaver.kandraw.viewModel.data.PathData
+import com.robothaver.kandraw.viewModel.data.PenColor
 import com.robothaver.kandraw.viewModel.data.PenSettings
 import com.robothaver.kandraw.viewModel.data.Tools
 
@@ -26,7 +26,7 @@ class CanvasViewModel : ViewModel() {
     val eraserWidth = mutableFloatStateOf(20f)
     val viewportPosition = mutableStateOf(Offset(0f, 0f))
     val backgroundImage = mutableStateOf<Bitmap?>(null)
-    val backgroundColor by mutableStateOf(Color.DarkGray)
+    val backgroundColor = mutableStateOf(PenColor(color = Color.DarkGray))
     val gridSettings = mutableStateOf(GridSettings())
     // Dialogs
     val selectedDialog = mutableStateOf(Dialogs.GeneralSettings)

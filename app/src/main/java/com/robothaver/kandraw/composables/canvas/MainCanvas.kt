@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -35,7 +34,6 @@ import dev.shreyaspatil.capturable.controller.CaptureController
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainCanvas(
-    backgroundColor: Color,
     activeTool: MutableState<Tools>,
     viewPortPosition: MutableState<Offset>,
     canvasController: CanvasController,
@@ -55,7 +53,7 @@ fun MainCanvas(
     )
     Box(modifier = Modifier
         .capturable(controller)
-        .background(backgroundColor)
+        .background(canvasController.backgroundColor.color)
         .fillMaxSize()
         .clipToBounds()
         .pointerInput(false) {
@@ -77,8 +75,8 @@ fun MainCanvas(
                 this,
                 gridSettings.smallCellSize,
                 gridSettings.largeCellSize,
-                gridSettings.smallCellColor,
-                gridSettings.largeCellColor,
+                gridSettings.smallCellColor.color,
+                gridSettings.largeCellColor.color,
                 gridSettings.smallCellStrokeWidth,
                 gridSettings.largeCellStrokeWidth
             )

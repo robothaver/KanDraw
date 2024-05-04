@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.robothaver.kandraw.composables.customColorPicker.CustomColorPicker
 import com.robothaver.kandraw.dialogs.Dialogs
-import com.robothaver.kandraw.dialogs.getDialogSize
+import com.robothaver.kandraw.dialogs.getPenDialogSize
 import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.HorizontalLayout
 import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.VerticalLayout
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
@@ -28,7 +28,7 @@ fun PenSettingsDialog(
     windowInfo: WindowInfo
 ) {
     val isSelectingCustomColor = remember { mutableStateOf(false) }
-    val size = getDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
+    val size = getPenDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
     AnimatedContent(
         targetState = isSelectingCustomColor.value,
         label = "penSettingsDialogPageChange"
