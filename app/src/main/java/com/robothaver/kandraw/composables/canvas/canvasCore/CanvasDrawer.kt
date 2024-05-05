@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 
 class CanvasDrawer(
     private val drawScope: DrawScope,
+    private val isLargeCellEnabled: Boolean,
     private val smallCellSize: Float,
     private val largeCellSize: Int,
     private val smallCellColor: Color,
@@ -21,9 +22,9 @@ class CanvasDrawer(
         val rows = (size.height / smallCellSize).toInt()
         val columns = (size.width / smallCellSize).toInt()
         val horizontalRange =
-            0 ..rows
+            0..rows
         val verticalRange =
-            0 ..columns
+            0..columns
         drawGridLines(
             horizontalRange,
             verticalRange,
@@ -31,9 +32,9 @@ class CanvasDrawer(
             smallCellSize,
             smallCellWidth
         ) {
-            largeCellSize == 0 || it % largeCellSize != 0
+            it % largeCellSize != 0 || !isLargeCellEnabled
         }
-        if (largeCellSize != 0) {
+        if (isLargeCellEnabled) {
             drawGridLines(
                 horizontalRange,
                 verticalRange,

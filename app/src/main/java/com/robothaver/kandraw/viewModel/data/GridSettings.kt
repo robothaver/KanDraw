@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.Color
 
 data class GridSettings(
     val isGridEnabled: Boolean = true,
-    val isLargeGridEnabled: Boolean = true,
+    val isLargeCellEnabled: Boolean = true,
     val gridOffset: Offset = Offset(0f, 0f),
     val smallCellSize: Float = 80f,
     val smallCellColor: PenColor = PenColor(color = Color.Gray),

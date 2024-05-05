@@ -55,11 +55,11 @@ fun BackgroundGridSettings(
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 6.dp))
 
-                SwitchWithText("Enable large cells", gridSettings.value.isLargeGridEnabled) {
-                    gridSettings.value = gridSettings.value.copy(isLargeGridEnabled = it)
+                SwitchWithText("Enable large cells", gridSettings.value.isLargeCellEnabled) {
+                    gridSettings.value = gridSettings.value.copy(isLargeCellEnabled = it)
                 }
 
-                AnimatedVisibility(visible = currentGridSettings.isLargeGridEnabled) {
+                AnimatedVisibility(visible = currentGridSettings.isLargeCellEnabled) {
                     CellSettings(
                         title = "Large cell settings",
                         cellSize = gridSettings.value.largeCellSize.toFloat(),

@@ -21,29 +21,27 @@ import java.util.Locale
 
 @Composable
 fun PreferencesHeader(currentRoute: String, onNavigate: () -> Unit) {
-    if (currentRoute != Screen.MainScreen.route && !currentRoute.contains(Screen.CustomColorSelector.route)) {
-        Row(
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = null,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        onNavigate()
-                    })
-            Text(
-                text = formatTitle(currentRoute),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Light,
-                modifier = Modifier.padding(horizontal = 12.dp)
-            )
-        }
+                .size(32.dp)
+                .clip(CircleShape)
+                .clickable {
+                    onNavigate()
+                })
+        Text(
+            text = formatTitle(currentRoute),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Light,
+            modifier = Modifier.padding(horizontal = 12.dp)
+        )
     }
 }
 

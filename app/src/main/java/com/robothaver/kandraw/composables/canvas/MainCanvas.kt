@@ -73,6 +73,7 @@ fun MainCanvas(
         .drawBehind {
             val canvasDrawer = CanvasDrawer(
                 this,
+                gridSettings.isLargeCellEnabled,
                 gridSettings.smallCellSize,
                 gridSettings.largeCellSize,
                 gridSettings.smallCellColor.color,

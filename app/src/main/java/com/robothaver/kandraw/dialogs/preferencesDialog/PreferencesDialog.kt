@@ -2,7 +2,6 @@ package com.robothaver.kandraw.dialogs.preferencesDialog
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.LinearEasing
@@ -16,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,66 +54,47 @@ fun PreferencesDialog(
     )
     val size = getSettingsDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute by remember { derivedStateOf { currentBackStackEntry?.destination?.route ?: "main" } }
+    val currentRoute by remember {
+        derivedStateOf {
+            currentBackStackEntry?.destination?.route ?: "main"
+        }
+    }
+
+    val previousBackStackEntry by navController.currentBackStackEntryAsState()
+    val previousRoute by remember {
+        derivedStateOf {
+            previousBackStackEntry?.destination?.route ?: "sdadas"
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth(size.width)
             .fillMaxHeight(size.height),
     ) {
-        PreferencesHeader(currentRoute = currentRoute) {
-            navController.navigate(Screen.MainScreen.route)
-        }
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
             NavHost(
                 navController = navController,
                 startDestination = Screen.MainScreen.route,
-                enterTransition = {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(
-                            durationMillis = 400,
-                            easing = LinearEasing
-                        )
-                    )
-                },
-                exitTransition = {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(
-                            durationMillis = 400,
-                            easing = LinearEasing
-                        )
-                    )
-                },
-                popEnterTransition = {
-                    slideIntoContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(
-                            durationMillis = 400,
-                            easing = LinearEasing
-                        )
-                    )
-                },
-                popExitTransition = {
-                    slideOutOfContainer(
-                        towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(
-                            durationMillis = 400,
-                            easing = LinearEasing
-                        )
-                    )
-                }
+                enterTransition = { enterTransition(false) },
+                exitTransition = { exitTransition(true) },
+                popEnterTransition = { enterTransition(true) },
+                popExitTransition = { exitTransition(false) }
             ) {
                 composable(route = Screen.MainScreen.route) {
-                    MainScreen {
-                        navController.navigate(it)
+                    Column(Modifier.fillMaxSize()) {
+                        MainScreen {
+                            navController.navigate(it)
+                        }
                     }
                 }
                 composable(route = Screen.SaveDrawing.route) {
                     Column(modifier = Modifier.fillMaxSize()) {
+                        PreferencesHeader(currentRoute = Screen.SaveDrawing.route) {
+
+                        }
                         Text(text = "Coming soon...")
                     }
                 }
@@ -137,6 +115,9 @@ fun PreferencesDialog(
                         canvasController.processBackground(it)
                     }
                     Column(modifier = Modifier.fillMaxSize()) {
+                        PreferencesHeader(currentRoute = Screen.BackgroundImageScreen.route) {
+
+                        }
                         Text(
                             text = "Select background image",
                             fontSize = 22.sp,
@@ -154,7 +135,10 @@ fun PreferencesDialog(
                     BackgroundSettings(
                         viewPortPosition = viewModel.viewportPosition,
                         backgroundColor = viewModel.backgroundColor.value.color,
-                        gridSettings = viewModel.gridSettings
+                        gridSettings = viewModel.gridSettings,
+                        onGoBack = {
+                            navController.popBackStack()
+                        }
                     ) {
                         navController.navigate(it)
                     }
@@ -174,7 +158,7 @@ fun PreferencesDialog(
                             initialColor = selectedData.color.hue,
                             penColor = selectedData.color,
                             onDismiss = {
-                                navController.navigate(Screen.GridSettings.route)
+                                navController.popBackStack()
                             },
                             onBrightnessChanged = { brightness ->
 
@@ -185,21 +169,23 @@ fun PreferencesDialog(
                             val updatedColor = changeColorBrightness(newColor, brightness)
                             when (selectedData.id) {
                                 ColorPickerIds.SmallGridColor -> {
-                                    viewModel.gridSettings.value = viewModel.gridSettings.value.copy(
-                                        smallCellColor = viewModel.gridSettings.value.smallCellColor.copy(
-                                            hue = updatedColor,
-                                            color = updatedColor
+                                    viewModel.gridSettings.value =
+                                        viewModel.gridSettings.value.copy(
+                                            smallCellColor = viewModel.gridSettings.value.smallCellColor.copy(
+                                                hue = updatedColor,
+                                                color = updatedColor
+                                            )
                                         )
-                                    )
                                 }
 
                                 ColorPickerIds.LargeGridColor -> {
-                                    viewModel.gridSettings.value = viewModel.gridSettings.value.copy(
-                                        largeCellColor = viewModel.gridSettings.value.largeCellColor.copy(
-                                            hue = updatedColor,
-                                            color = updatedColor
+                                    viewModel.gridSettings.value =
+                                        viewModel.gridSettings.value.copy(
+                                            largeCellColor = viewModel.gridSettings.value.largeCellColor.copy(
+                                                hue = updatedColor,
+                                                color = updatedColor
+                                            )
                                         )
-                                    )
                                 }
 
                                 ColorPickerIds.BackgroundColor -> {
