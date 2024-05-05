@@ -1,7 +1,9 @@
 package com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundSettings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
@@ -22,7 +24,7 @@ fun BackgroundSettings(
     gridSettings: MutableState<GridSettings>,
     changePage: (route: String) -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxSize().background(Color.Green)) {
         ColorChanger(color = backgroundColor, title = "Background color") {
             changePage("${Screen.CustomColorSelector.route}/BackgroundColor")
         }

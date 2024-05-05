@@ -21,3 +21,22 @@ fun getPenDialogSize(screenWidthInfo: WindowType, screenHeightInfo: WindowType):
             Size(0.85f, 0.9f)
     }
 }
+
+fun getSettingsDialogSize(screenWidthInfo: WindowType, screenHeightInfo: WindowType): Size {
+    return when {
+        // Mobile medium vertical layout
+        screenWidthInfo == WindowType.Compact && screenHeightInfo == WindowType.Medium ->
+            Size(0.8f, 0.6f)
+        // Mobile expanded vertical layout
+        screenWidthInfo == WindowType.Compact && screenHeightInfo == WindowType.Expanded ->
+            Size(0.8f, 0.6f)
+        // Tablet horizontal
+        screenWidthInfo == WindowType.Expanded && screenHeightInfo == WindowType.Medium ->
+            Size(0.85f, 0.6f)
+        // Tablet vertical
+        screenWidthInfo == WindowType.Medium && screenHeightInfo == WindowType.Expanded ->
+            Size(0.85f, 0.45f)
+        else ->
+            Size(0.85f, 0.9f)
+    }
+}

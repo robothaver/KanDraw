@@ -12,5 +12,5 @@ data class GridSettings(
     val smallCellStrokeWidth: Float = 5f,
     val largeCellSize: Int = 5,
     val largeCellColor: PenColor = PenColor(color = Color.White),
-    val largeCellStrokeWidth: Float = 6f
+    val largeCellStrokeWidth: Float = 10f
 )
