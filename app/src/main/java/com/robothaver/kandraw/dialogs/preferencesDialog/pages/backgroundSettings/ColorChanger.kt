@@ -34,7 +34,7 @@ fun ColorChanger(color: Color, title: String, onClick: () -> Unit) {
     ) {
         Text(
             text = title,
-            fontSize = 22.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Medium
         )
         Box(

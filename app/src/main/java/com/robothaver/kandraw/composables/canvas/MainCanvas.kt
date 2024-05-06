@@ -53,7 +53,7 @@ fun MainCanvas(
     )
     Box(modifier = Modifier
         .capturable(controller)
-        .background(canvasController.backgroundColor.color)
+        .background(canvasController.backgroundColor.value.color)
         .fillMaxSize()
         .clipToBounds()
         .pointerInput(false) {

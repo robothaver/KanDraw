@@ -9,7 +9,7 @@ val menuOptions = listOf(
     MenuOption("Save drawing", R.drawable.save_drawing, Screen.SaveDrawing.route),
     MenuOption("Toolbar preferences", R.drawable.toolbar_preferences, Screen.ToolbarPreferencesScreen.route),
     MenuOption("Other stuff", R.drawable.eraser_solid, Screen.Other.route),
-    MenuOption("Grid settings", R.drawable.grid, Screen.GridSettings.route)
+    MenuOption("Grid settings", R.drawable.grid, Screen.BackgroundSettings.route)
 )
 
 data class MenuOption(

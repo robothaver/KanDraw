@@ -4,39 +4,30 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.robothaver.kandraw.composables.customColorPicker.CustomColorPicker
-import com.robothaver.kandraw.dialogs.getSettingsDialogSize
+import com.robothaver.kandraw.dialogs.getDialogSize
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundSettings.BackgroundSettings
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.mainScreen.MainScreen
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.utils.changeColorBrightness.changeColorBrightness
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 
@@ -52,72 +43,65 @@ fun PreferencesDialog(
         ColorPickerData(viewModel.gridSettings.value.smallCellColor, ColorPickerIds.SmallGridColor),
         ColorPickerData(viewModel.gridSettings.value.largeCellColor, ColorPickerIds.LargeGridColor)
     )
-    val size = getSettingsDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute by remember {
-        derivedStateOf {
-            currentBackStackEntry?.destination?.route ?: "main"
-        }
-    }
-
-    val previousBackStackEntry by navController.currentBackStackEntryAsState()
-    val previousRoute by remember {
-        derivedStateOf {
-            previousBackStackEntry?.destination?.route ?: "sdadas"
-        }
-    }
+    val size = getDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
 
     Column(
         modifier = Modifier
             .fillMaxWidth(size.width)
             .fillMaxHeight(size.height),
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        NavHost(
+            navController = navController,
+            startDestination = Screen.MainScreen.route,
+            enterTransition = {
+                scaleIntoContainer()
+            },
+            exitTransition = {
+                scaleOutOfContainer(true)
+            },
+            popEnterTransition = {
+                scaleIntoContainer()
+            },
+            popExitTransition = {
+                scaleOutOfContainer()
+            }
         ) {
-            NavHost(
-                navController = navController,
-                startDestination = Screen.MainScreen.route,
-                enterTransition = { enterTransition(false) },
-                exitTransition = { exitTransition(true) },
-                popEnterTransition = { enterTransition(true) },
-                popExitTransition = { exitTransition(false) }
-            ) {
-                composable(route = Screen.MainScreen.route) {
-                    Column(Modifier.fillMaxSize()) {
-                        MainScreen {
-                            navController.navigate(it)
-                        }
+            composable(route = Screen.MainScreen.route) {
+                Column(Modifier.fillMaxSize()) {
+                    MainScreen {
+                        navController.navigate(it)
                     }
                 }
-                composable(route = Screen.SaveDrawing.route) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        PreferencesHeader(currentRoute = Screen.SaveDrawing.route) {
+            }
+            composable(route = Screen.SaveDrawing.route) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    PreferencesHeader(currentRoute = Screen.SaveDrawing.route) {
 
-                        }
-                        Text(text = "Coming soon...")
                     }
+                    Text(text = "Coming soon...")
                 }
-                composable(route = Screen.Other.route) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text(text = "OTHER PAGE")
-                    }
+            }
+            composable(route = Screen.Other.route) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text(text = "OTHER PAGE")
                 }
-                composable(route = Screen.ToolbarPreferencesScreen.route) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text(text = "TOOLBAR PAGE")
-                    }
+            }
+            composable(route = Screen.ToolbarPreferencesScreen.route) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text(text = "TOOLBAR PAGE")
                 }
-                composable(route = Screen.BackgroundImageScreen.route) {
-                    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-                        contract = ActivityResultContracts.PickVisualMedia()
-                    ) {
-                        canvasController.processBackground(it)
-                    }
+            }
+            composable(route = Screen.BackgroundImageScreen.route) {
+                val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.PickVisualMedia()
+                ) {
+                    canvasController.processBackground(it)
+                }
+                PreferencesBody(
+                    currentRoute = Screen.BackgroundImageScreen.route,
+                    onExit = { navController.popBackStack() }
+                ) {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        PreferencesHeader(currentRoute = Screen.BackgroundImageScreen.route) {
-
-                        }
                         Text(
                             text = "Select background image",
                             fontSize = 22.sp,
@@ -131,97 +115,54 @@ fun PreferencesDialog(
                         }
                     }
                 }
-                composable(route = Screen.GridSettings.route) {
-                    BackgroundSettings(
-                        viewPortPosition = viewModel.viewportPosition,
-                        backgroundColor = viewModel.backgroundColor.value.color,
-                        gridSettings = viewModel.gridSettings,
-                        onGoBack = {
-                            navController.popBackStack()
-                        }
-                    ) {
-                        navController.navigate(it)
+            }
+            composable(route = Screen.BackgroundSettings.route) {
+                BackgroundSettings(
+                    viewPortPosition = viewModel.viewportPosition,
+                    backgroundColor = viewModel.backgroundColor.value.color,
+                    gridSettings = viewModel.gridSettings,
+                    onGoBack = {
+                        navController.popBackStack()
                     }
-                }
-
-                composable(
-                    route = "${Screen.CustomColorSelector.route}/{colorId}",
-                    arguments = listOf(navArgument("colorId") { type = NavType.StringType })
                 ) {
-                    val colorId = it.arguments?.getString("colorId")!!
-                    val selectedData = colorPickerData.find { data ->
-                        data.id.name == colorId
-                    }!!
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        CustomColorPicker(
-                            modifier = Modifier.size(500.dp),
-                            initialColor = selectedData.color.hue,
-                            penColor = selectedData.color,
-                            onDismiss = {
-                                navController.popBackStack()
-                            },
-                            onBrightnessChanged = { brightness ->
+                    navController.navigate(it)
+                }
+            }
 
-                            },
-                            onColorPickerActivated = {}
-                        ) { newColor ->
-                            val brightness = viewModel.backgroundColor.value.brightness
-                            val updatedColor = changeColorBrightness(newColor, brightness)
-                            when (selectedData.id) {
-                                ColorPickerIds.SmallGridColor -> {
-                                    viewModel.gridSettings.value =
-                                        viewModel.gridSettings.value.copy(
-                                            smallCellColor = viewModel.gridSettings.value.smallCellColor.copy(
-                                                hue = updatedColor,
-                                                color = updatedColor
-                                            )
-                                        )
-                                }
-
-                                ColorPickerIds.LargeGridColor -> {
-                                    viewModel.gridSettings.value =
-                                        viewModel.gridSettings.value.copy(
-                                            largeCellColor = viewModel.gridSettings.value.largeCellColor.copy(
-                                                hue = updatedColor,
-                                                color = updatedColor
-                                            )
-                                        )
-                                }
-
-                                ColorPickerIds.BackgroundColor -> {
-                                    viewModel.backgroundColor.value =
-                                        viewModel.backgroundColor.value.copy(
-                                            hue = updatedColor,
-                                            color = updatedColor
-                                        )
-                                }
-                            }
-                        }
-
-                    }
+            composable(
+                route = "${Screen.CustomColorSelector.route}/{colorId}",
+                arguments = listOf(navArgument("colorId") { type = NavType.StringType })
+            ) {
+                val colorId = it.arguments?.getString("colorId")!!
+                val selectedData = colorPickerData.find { data ->
+                    data.id.name == colorId
+                }!!
+                CustomColorSelector(viewModel = viewModel, selectedData = selectedData) {
+                    navController.popBackStack()
                 }
             }
         }
     }
 }
 
-fun exitTransition(reversed: Boolean): ExitTransition {
-    return fadeOut(tween(300)) + slideOutHorizontally(
-        targetOffsetX = { if (reversed) -300 else 300 },
-        animationSpec = tween(
-            durationMillis = 400,
-            easing = LinearEasing
-        )
-    )
+private fun scaleIntoContainer(
+    isReversed: Boolean = false,
+    initialScale: Float = if (isReversed) 0.9f else 1.1f
+): EnterTransition {
+    return scaleIn(
+        animationSpec = tween(220, delayMillis = 90),
+        initialScale = initialScale
+    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
 }
 
-fun enterTransition(reversed: Boolean): EnterTransition {
-    return fadeIn(tween(300)) + slideInHorizontally(
-        initialOffsetX = { if (reversed) -300 else 300 },
+private fun scaleOutOfContainer(
+    isReversed: Boolean = false,
+    targetScale: Float = if (isReversed) 0.9f else 1.1f
+): ExitTransition {
+    return scaleOut(
         animationSpec = tween(
-            durationMillis = 400,
-            easing = LinearEasing
-        )
-    )
+            durationMillis = 220,
+            delayMillis = 90
+        ), targetScale = targetScale
+    ) + fadeOut(tween(delayMillis = 90))
 }
-

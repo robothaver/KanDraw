@@ -101,7 +101,7 @@ private fun SwitchWithText(
     ) {
         Text(
             text = text,
-            fontSize = 22.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.Medium
         )
         Switch(

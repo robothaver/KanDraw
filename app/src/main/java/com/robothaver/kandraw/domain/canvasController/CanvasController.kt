@@ -29,7 +29,7 @@ class CanvasController(
     val allPaths = canvasViewModel.allPaths
     val visiblePaths = mutableListOf<PathData>()
     val penSettings = canvasViewModel.penSettings
-    val backgroundColor = canvasViewModel.backgroundColor.value
+    val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth
     val gridSettings = canvasViewModel.gridSettings
 
@@ -42,7 +42,7 @@ class CanvasController(
     }
 
     fun expandPath(newPoint: Offset) {
-        allPaths.last().path.lineTo(newPoint.x, newPoint.y)
+        visiblePaths.last().path.lineTo(newPoint.x, newPoint.y)
         visiblePaths[visiblePaths.lastIndex] =
             visiblePaths.last().copy(points = getNewPoints(newPoint))
         allPaths[allPaths.lastIndex] = visiblePaths.last()
@@ -83,7 +83,7 @@ class CanvasController(
 //        val color = backgroundImage.value?.get(currentlySelectedPosition.x.toInt(),
 //            currentlySelectedPosition.y.toInt()
 //        )
-        return getSelectedPath(currentlySelectedPosition, 20f)?.color ?: backgroundColor.color
+        return getSelectedPath(currentlySelectedPosition, 20f)?.color ?: backgroundColor.value.color
     }
 
     fun processBackground(uri: Uri?) {
