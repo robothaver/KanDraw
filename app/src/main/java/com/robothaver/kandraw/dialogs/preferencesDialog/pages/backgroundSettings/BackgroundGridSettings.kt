@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robothaver.kandraw.dialogs.preferencesDialog.Screen
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorIds
 import com.robothaver.kandraw.viewModel.data.GridSettings
 
 @Composable
@@ -43,7 +44,7 @@ fun BackgroundGridSettings(
                     cellColor = currentGridSettings.smallCellColor.color,
                     sizeRange = 5f..300f,
                     onColorChange = {
-                        changePage("${Screen.CustomColorSelector.route}/SmallGridColor")
+                        changePage("${Screen.CustomColorSelector.route}/${ColorSelectorIds.SmallCellColor.name}")
                     },
                     onSizeChange = {
                         gridSettings.value = gridSettings.value.copy(smallCellSize = it)
@@ -67,7 +68,7 @@ fun BackgroundGridSettings(
                         cellColor = gridSettings.value.largeCellColor.color,
                         sizeRange = 2f..30f,
                         onColorChange = {
-                            changePage("${Screen.CustomColorSelector.route}/LargeGridColor")
+                            changePage("${Screen.CustomColorSelector.route}/${ColorSelectorIds.LargeCellColor.name}")
                         },
                         onSizeChange = {
                             gridSettings.value =

@@ -9,8 +9,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesBody
 import com.robothaver.kandraw.dialogs.preferencesDialog.Screen
+import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesBody
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorIds
 import com.robothaver.kandraw.viewModel.data.GridSettings
 
 @Composable
@@ -23,7 +24,7 @@ fun BackgroundSettings(
 ) {
     PreferencesBody(currentRoute = Screen.BackgroundSettings.route, onExit = { onGoBack() }) {
         ColorSelector(color = backgroundColor, title = "Background color") {
-            changePage("${Screen.CustomColorSelector.route}/BackgroundColor")
+            changePage("${Screen.CustomColorSelector.route}/${ColorSelectorIds.BackgroundColor.name}")
         }
 
         FilledTonalButton(
