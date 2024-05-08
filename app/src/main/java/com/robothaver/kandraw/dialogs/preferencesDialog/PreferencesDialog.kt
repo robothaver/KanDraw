@@ -2,13 +2,6 @@ package com.robothaver.kandraw.dialogs.preferencesDialog
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +18,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.robothaver.kandraw.dialogs.getDialogSize
+import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesBody
+import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesHeader
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundSettings.BackgroundSettings
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorData
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorIds
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.CustomColorSelector
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.mainScreen.MainScreen
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
@@ -39,9 +37,9 @@ fun PreferencesDialog(
 ) {
     val navController = rememberNavController()
     val colorPickerData = listOf(
-        ColorPickerData(viewModel.backgroundColor.value, ColorPickerIds.BackgroundColor),
-        ColorPickerData(viewModel.gridSettings.value.smallCellColor, ColorPickerIds.SmallGridColor),
-        ColorPickerData(viewModel.gridSettings.value.largeCellColor, ColorPickerIds.LargeGridColor)
+        ColorSelectorData(viewModel.backgroundColor.value, ColorSelectorIds.BackgroundColor),
+        ColorSelectorData(viewModel.gridSettings.value.smallCellColor, ColorSelectorIds.SmallCellColor),
+        ColorSelectorData(viewModel.gridSettings.value.largeCellColor, ColorSelectorIds.LargeCellColor)
     )
     val size = getDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
 
@@ -53,31 +51,19 @@ fun PreferencesDialog(
         NavHost(
             navController = navController,
             startDestination = Screen.MainScreen.route,
-            enterTransition = {
-                scaleIntoContainer()
-            },
-            exitTransition = {
-                scaleOutOfContainer(true)
-            },
-            popEnterTransition = {
-                scaleIntoContainer()
-            },
-            popExitTransition = {
-                scaleOutOfContainer()
-            }
+            enterTransition = { scaleIntoContainer() },
+            exitTransition = { scaleOutOfContainer(true) },
+            popEnterTransition = { scaleIntoContainer() },
+            popExitTransition = { scaleOutOfContainer() }
         ) {
             composable(route = Screen.MainScreen.route) {
-                Column(Modifier.fillMaxSize()) {
-                    MainScreen {
-                        navController.navigate(it)
-                    }
+                MainScreen {
+                    navController.navigate(it)
                 }
             }
             composable(route = Screen.SaveDrawing.route) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    PreferencesHeader(currentRoute = Screen.SaveDrawing.route) {
-
-                    }
+                    PreferencesHeader(currentRoute = Screen.SaveDrawing.route) {}
                     Text(text = "Coming soon...")
                 }
             }
@@ -137,32 +123,15 @@ fun PreferencesDialog(
                 val selectedData = colorPickerData.find { data ->
                     data.id.name == colorId
                 }!!
-                CustomColorSelector(viewModel = viewModel, selectedData = selectedData) {
+
+                CustomColorSelector(
+                    viewModel = viewModel,
+                    selectedData = selectedData,
+                    layout = windowInfo.screenWidthInfo
+                ) {
                     navController.popBackStack()
                 }
             }
         }
     }
-}
-
-private fun scaleIntoContainer(
-    isReversed: Boolean = false,
-    initialScale: Float = if (isReversed) 0.9f else 1.1f
-): EnterTransition {
-    return scaleIn(
-        animationSpec = tween(220, delayMillis = 90),
-        initialScale = initialScale
-    ) + fadeIn(animationSpec = tween(220, delayMillis = 90))
-}
-
-private fun scaleOutOfContainer(
-    isReversed: Boolean = false,
-    targetScale: Float = if (isReversed) 0.9f else 1.1f
-): ExitTransition {
-    return scaleOut(
-        animationSpec = tween(
-            durationMillis = 220,
-            delayMillis = 90
-        ), targetScale = targetScale
-    ) + fadeOut(tween(delayMillis = 90))
 }

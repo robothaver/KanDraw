@@ -117,7 +117,7 @@ fun ToolBar(
         ToolBarItem(icon = Icons.AutoMirrored.Filled.ArrowBack, undoPaths, undo)
         ToolBarItem(icon = Icons.AutoMirrored.Filled.ArrowForward, redoPaths, redo)
         ToolBarItem(icon = Icons.Filled.Menu) {
-            selectedDialog.value = Dialogs.GeneralSettings
+            selectedDialog.value = Dialogs.Preferences
         }
     }
 }

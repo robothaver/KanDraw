@@ -32,7 +32,10 @@ fun VerticalColorPicker(
             modifier = Modifier.fillMaxWidth().clip(CircleShape).weight(1f),
             controller = colorPickerController,
             onColorChanged = { colorEnvelope: ColorEnvelope ->
-                onColorSelected(colorEnvelope.color)
+                println(colorPickerController.selectedColor.value)
+                if (colorEnvelope.fromUser) {
+                    onColorSelected(colorEnvelope.color)
+                }
             },
             initialColor = initialColor
         )

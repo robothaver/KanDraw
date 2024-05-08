@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.utils.changeColorBrightness.changeColorBrightness
+import com.robothaver.kandraw.composables.customColorPicker.utils.changeColorBrightness
 import com.robothaver.kandraw.viewModel.data.GridSettings
 import com.robothaver.kandraw.viewModel.data.Tools
 

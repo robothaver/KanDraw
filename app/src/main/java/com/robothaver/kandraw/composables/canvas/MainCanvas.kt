@@ -23,8 +23,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasDrawer
 import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasEventHandler
 import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
-import com.robothaver.kandraw.composables.canvas.composables.ColorPickerTool
-import com.robothaver.kandraw.composables.canvas.composables.Eraser
+import com.robothaver.kandraw.composables.canvas.tools.ColorPickerTool
+import com.robothaver.kandraw.composables.canvas.tools.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.viewModel.data.Tools
 import dev.shreyaspatil.capturable.capturable

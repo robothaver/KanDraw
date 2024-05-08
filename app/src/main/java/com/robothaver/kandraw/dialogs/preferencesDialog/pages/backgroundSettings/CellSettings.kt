@@ -73,7 +73,7 @@ fun CellSettings(
                 steps = 8
             )
 
-            ColorChanger(color = cellColor, title = "Cell color") {
+            ColorSelector(color = cellColor, title = "Cell color") {
                 onColorChange()
             }
         }

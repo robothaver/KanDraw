@@ -48,13 +48,15 @@ fun DialogManager(
                         windowInfo
                     )
                 }
+
                 Dialogs.EraserSettings -> {
                     EraserSettingsDialog(
                         viewModel.eraserWidth,
                         windowInfo, canvasController
                     )
                 }
-                Dialogs.GeneralSettings -> PreferencesDialog(windowInfo, canvasController, viewModel)
+
+                Dialogs.Preferences -> PreferencesDialog(windowInfo, canvasController, viewModel)
                 Dialogs.None -> Unit
             }
         }
@@ -64,6 +66,6 @@ fun DialogManager(
 enum class Dialogs {
     PenSettings,
     EraserSettings,
-    GeneralSettings,
+    Preferences,
     None
 }

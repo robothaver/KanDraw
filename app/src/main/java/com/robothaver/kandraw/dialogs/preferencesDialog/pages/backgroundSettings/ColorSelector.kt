@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ColorChanger(color: Color, title: String, onClick: () -> Unit) {
+fun ColorSelector(color: Color, title: String, onClick: () -> Unit) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(12.dp))

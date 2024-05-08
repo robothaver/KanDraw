@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.composables.canvas.composables
+package com.robothaver.kandraw.composables.canvas.tools
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset

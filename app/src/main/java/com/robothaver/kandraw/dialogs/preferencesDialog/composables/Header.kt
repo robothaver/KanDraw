@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.dialogs.preferencesDialog
+package com.robothaver.kandraw.dialogs.preferencesDialog.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

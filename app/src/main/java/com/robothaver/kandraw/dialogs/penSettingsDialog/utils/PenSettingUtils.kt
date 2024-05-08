@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import com.robothaver.kandraw.viewModel.data.PenEffectSettings
 import com.robothaver.kandraw.viewModel.data.PenSettings
-import com.robothaver.kandraw.utils.changeColorBrightness.changeColorBrightness
+import com.robothaver.kandraw.composables.customColorPicker.utils.changeColorBrightness
 
 fun updateEffect(penSettings: MutableState<PenSettings>, updateSettings: PenEffectSettings) {
     penSettings.value = penSettings.value.copy(penEffectSettings = updateSettings)

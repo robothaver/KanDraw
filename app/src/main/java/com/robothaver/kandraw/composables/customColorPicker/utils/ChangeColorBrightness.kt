@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.utils.changeColorBrightness
+package com.robothaver.kandraw.composables.customColorPicker.utils
 
 import androidx.compose.ui.graphics.Color
 

@@ -57,7 +57,9 @@ fun HorizontalColorPicker(
                     .padding(10.dp),
                 controller = colorPickerController,
                 onColorChanged = { colorEnvelope: ColorEnvelope ->
-                    onColorSelected(colorEnvelope.color)
+                    if (colorEnvelope.fromUser) {
+                        onColorSelected(colorEnvelope.color)
+                    }
                 },
                 initialColor = initialColor
             )
