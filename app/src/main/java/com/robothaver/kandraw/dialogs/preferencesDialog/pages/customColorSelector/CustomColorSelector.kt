@@ -25,9 +25,6 @@ fun CustomColorSelector(
         },
         onBrightnessChanged = { brightness ->
             customColorSelectorHandler.updateBrightness(brightness, viewModel)
-        },
-        onColorPickerActivated = {
-
         }
     ) { newColor ->
         customColorSelectorHandler.updateColor(newColor, viewModel)

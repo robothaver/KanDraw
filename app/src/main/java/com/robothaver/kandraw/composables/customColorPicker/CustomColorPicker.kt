@@ -35,7 +35,7 @@ fun CustomColorPicker(
     layout: WindowType = WindowType.Compact,
     onDismiss: () -> Unit,
     onBrightnessChanged: (brightness: Float) -> Unit,
-    onColorPickerActivated: () -> Unit,
+    onColorPickerActivated: (() -> Unit)? = null,
     onColorSelected: (selectedColor: Color) -> Unit
 ) {
     val colorPickerController = rememberColorPickerController()
@@ -45,7 +45,7 @@ fun CustomColorPicker(
     Column(modifier = modifier) {
         TopBar(
             onDismiss = { onDismiss() },
-            onColorPickerActivated = { onColorPickerActivated() }
+            onColorPickerActivated = onColorPickerActivated
         )
         if (layout == WindowType.Compact) {
             VerticalColorPicker(
@@ -68,7 +68,7 @@ fun CustomColorPicker(
 }
 
 @Composable
-private fun TopBar(onDismiss: () -> Unit, onColorPickerActivated: () -> Unit) {
+private fun TopBar(onDismiss: () -> Unit, onColorPickerActivated: (() -> Unit)?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -82,14 +82,16 @@ private fun TopBar(onDismiss: () -> Unit, onColorPickerActivated: () -> Unit) {
                 .clip(CircleShape)
                 .clickable { onDismiss() }
         )
-        Icon(
-            painterResource(id = R.drawable.eye_dropper),
-            null,
-            tint = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier
-                .size(32.dp)
-                .clip(CircleShape)
-                .clickable { onColorPickerActivated() }
-        )
+        if (onColorPickerActivated != null) {
+            Icon(
+                painterResource(id = R.drawable.eye_dropper),
+                null,
+                tint = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .clickable { onColorPickerActivated() }
+            )
+        }
     }
 }

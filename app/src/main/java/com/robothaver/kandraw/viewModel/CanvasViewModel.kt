@@ -26,7 +26,7 @@ class CanvasViewModel : ViewModel() {
     val eraserWidth = mutableFloatStateOf(20f)
     val viewportPosition = mutableStateOf(Offset(0f, 0f))
     val backgroundImage = mutableStateOf<Bitmap?>(null)
-    val backgroundColor = mutableStateOf(PenColor(color = Color.DarkGray))
+    val backgroundColor = mutableStateOf(PenColor(color = Color.DarkGray, hue = Color.White, brightness = 0.27f))
     val gridSettings = mutableStateOf(GridSettings())
     // Dialogs
     val selectedDialog = mutableStateOf(Dialogs.Preferences)
