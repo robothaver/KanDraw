@@ -66,7 +66,7 @@ fun PenSettingsDialog(
                         selectedDialog.value = Dialogs.None
                     },
                 ) {
-                    updateColor(penSettings, it)
+                    updateColor(penSettings, newHue = it)
                     penSettings.value = penSettings.value.copy(customColor = it)
                 }
             }

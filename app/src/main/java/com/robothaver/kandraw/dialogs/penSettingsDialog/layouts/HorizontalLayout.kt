@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robothaver.kandraw.composables.alphaSlider.AlphaSlider
 import com.robothaver.kandraw.composables.colorBrightnessSlider.ColorBrightnessSlider
+import com.robothaver.kandraw.composables.customColorPicker.utils.changeColorBrightness
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.ColorOptions
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenCapSettings
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenSizeSlider

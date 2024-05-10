@@ -48,8 +48,7 @@ fun MainCanvas(
         isTouchEventActive,
         activeTool,
         canvasController,
-        viewPortPosition,
-        canvasController.gridSettings
+        viewPortPosition
     )
     Box(modifier = Modifier
         .capturable(controller)

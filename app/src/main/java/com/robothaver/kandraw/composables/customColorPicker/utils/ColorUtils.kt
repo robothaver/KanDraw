@@ -1,6 +1,7 @@
 package com.robothaver.kandraw.composables.customColorPicker.utils
 
 import androidx.compose.ui.graphics.Color
+import java.lang.Math.round
 import kotlin.math.max
 import kotlin.math.min
 
@@ -27,16 +28,19 @@ fun getHue(color: Color): Int {
     val blue = color.blue
     val green = color.green
 
-    val min: Float = Math.min(Math.min(red, green), blue)
-    val max: Float = Math.max(Math.max(red, green), blue)
+    val min: Float = min(min(red, green), blue)
+    val max: Float = max(max(red, green), blue)
 
     if (min == max) {
         return 0
     }
 
     val hue = calculateHue(max, min, red, green, blue) * 60
-
-    return Math.round(hue)
+    return if (hue < 0) {
+        round(360 + hue)
+    } else {
+        round(hue)
+    }
 }
 
 private fun calculateHue(max: Float, min: Float, red: Float, green: Float, blue: Float): Float {

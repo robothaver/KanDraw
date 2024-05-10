@@ -27,7 +27,10 @@ fun ColorOptions(
     ) {
         for (i in 0..4) {
             ColorItem(color = defaultColors[i], penSettings.value.penColor.hue, size) {
-                updateColor(penSettings, newHue = defaultColors[i])
+                updateColor(
+                    penSettings,
+                    newHue = defaultColors[i],
+                )
             }
         }
     }
@@ -38,7 +41,10 @@ fun ColorOptions(
     ) {
         for (i in 5..8) {
             ColorItem(color = defaultColors[i], penSettings.value.penColor.hue, size) {
-                updateColor(penSettings, newHue = defaultColors[i])
+                updateColor(
+                    penSettings,
+                    newHue = defaultColors[i],
+                )
             }
         }
         CustomColorButton(penSettings, size) {

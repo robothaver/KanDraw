@@ -81,7 +81,10 @@ class CustomColorSelectorHandler(
                 viewModel.backgroundColor.value =
                     backgroundColor.copy(
                         hue = hue,
-                        color = hue,
+                        color = changeColorBrightness(
+                            hue,
+                            backgroundColor.brightness
+                        )
                     )
             }
         }

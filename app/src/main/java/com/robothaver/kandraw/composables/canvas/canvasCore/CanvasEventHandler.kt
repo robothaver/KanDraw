@@ -3,9 +3,8 @@ package com.robothaver.kandraw.composables.canvas.canvasCore
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import com.robothaver.kandraw.composables.customColorPicker.utils.changeColorBrightness
+import com.robothaver.kandraw.composables.customColorPicker.utils.setColorToCustom
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.viewModel.data.GridSettings
 import com.robothaver.kandraw.viewModel.data.Tools
 
 class CanvasEventHandler(
@@ -13,8 +12,7 @@ class CanvasEventHandler(
     private val isTouchEventActive: MutableState<Boolean>,
     private val activeTool: MutableState<Tools>,
     private val canvasController: CanvasController,
-    private val viewPortPosition: MutableState<Offset>,
-    private val gridSettings: MutableState<GridSettings>
+    private val viewPortPosition: MutableState<Offset>
 ) {
     fun tap(offset: Offset) {
         when (activeTool.value) {
@@ -79,14 +77,8 @@ class CanvasEventHandler(
     private fun setSelectedColor(canvasController: CanvasController, selectedColor: Color) {
         canvasController.penSettings.value = canvasController.penSettings.value.copy(
             customColor = selectedColor,
-            penColor = canvasController.penSettings.value.penColor.copy(
-                color = changeColorBrightness(
-                    selectedColor,
-                    canvasController.penSettings.value.penColor.brightness
-                ),
-                hue = selectedColor
-            )
         )
+        setColorToCustom(canvasController.penSettings, selectedColor, true)
     }
 
     private fun getOffset(newPoint: Offset): Offset {
