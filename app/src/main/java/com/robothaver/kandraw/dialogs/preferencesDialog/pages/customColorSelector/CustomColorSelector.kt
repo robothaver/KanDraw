@@ -1,8 +1,6 @@
 package com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.robothaver.kandraw.composables.customColorPicker.CustomColorPicker
 import com.robothaver.kandraw.utils.windowInfo.WindowType
 import com.robothaver.kandraw.viewModel.CanvasViewModel
@@ -16,9 +14,9 @@ fun CustomColorSelector(
 ) {
     val customColorSelectorHandler = CustomColorSelectorHandler(selectedData = selectedData)
     CustomColorPicker(
-        modifier = Modifier.fillMaxWidth(),
         initialColor = selectedData.color.hue,
         penColor = selectedData.color,
+        defaultColors = selectedData.defaultColors,
         layout = layout,
         onDismiss = {
             onExit()

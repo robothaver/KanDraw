@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavType
@@ -37,7 +38,11 @@ fun PreferencesDialog(
 ) {
     val navController = rememberNavController()
     val colorPickerData = listOf(
-        ColorSelectorData(viewModel.backgroundColor.value, ColorSelectorIds.BackgroundColor),
+        ColorSelectorData(
+            viewModel.backgroundColor.value,
+            ColorSelectorIds.BackgroundColor,
+            listOf(Color(0xFFF2F2F2), Color(0xFF151515), Color(0xFFffff99), Color(0xFF274c43), Color(0xFF9DB2BF))
+        ),
         ColorSelectorData(viewModel.gridSettings.value.smallCellColor, ColorSelectorIds.SmallCellColor),
         ColorSelectorData(viewModel.gridSettings.value.largeCellColor, ColorSelectorIds.LargeCellColor)
     )

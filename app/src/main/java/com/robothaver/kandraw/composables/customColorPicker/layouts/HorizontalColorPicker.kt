@@ -18,6 +18,9 @@ import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.robothaver.kandraw.composables.colorBrightnessSlider.ColorBrightnessSlider
+import com.robothaver.kandraw.composables.customColorPicker.DefaultColors
+import com.robothaver.kandraw.composables.customColorPicker.utils.getColorBrightness
+import com.robothaver.kandraw.composables.customColorPicker.utils.getPeakColorHue
 import com.robothaver.kandraw.viewModel.data.PenColor
 
 @Composable
@@ -25,8 +28,9 @@ fun HorizontalColorPicker(
     colorPickerController: ColorPickerController,
     penColor: PenColor,
     initialColor: Color,
+    defaultColors: List<Color>?,
     onColorSelected: (newColor: Color) -> Unit,
-    onBrightnessChanged: (newBrightness: Float) -> Unit
+    onBrightnessChanged: (newBrightness: Float) -> Unit,
 ) {
     Row(modifier = Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
         Column(
@@ -38,6 +42,17 @@ fun HorizontalColorPicker(
                 penColor = penColor
             ) {
                 onBrightnessChanged(it)
+            }
+            if (defaultColors != null) {
+                DefaultColors(
+                    colors = defaultColors,
+                    currentColor = penColor.color,
+                    size = 48.dp
+                ) { color ->
+                    colorPickerController.selectByColor(color, true)
+                    onColorSelected(getPeakColorHue(color))
+                    onBrightnessChanged(getColorBrightness(color))
+                }
             }
         }
         Row(

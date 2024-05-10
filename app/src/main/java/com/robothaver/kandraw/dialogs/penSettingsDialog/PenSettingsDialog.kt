@@ -15,10 +15,10 @@ import com.robothaver.kandraw.dialogs.getDialogSize
 import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.HorizontalLayout
 import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.VerticalLayout
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
-import com.robothaver.kandraw.utils.windowInfo.WindowInfo
-import com.robothaver.kandraw.utils.windowInfo.WindowType
 import com.robothaver.kandraw.viewModel.data.PenSettings
 import com.robothaver.kandraw.viewModel.data.Tools
+import com.robothaver.kandraw.utils.windowInfo.WindowInfo
+import com.robothaver.kandraw.utils.windowInfo.WindowType
 
 @Composable
 fun PenSettingsDialog(

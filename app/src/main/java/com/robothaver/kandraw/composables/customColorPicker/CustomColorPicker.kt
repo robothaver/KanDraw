@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -12,9 +13,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -29,20 +27,17 @@ import com.robothaver.kandraw.viewModel.data.PenColor
 
 @Composable
 fun CustomColorPicker(
-    modifier: Modifier = Modifier,
     initialColor: Color,
     penColor: PenColor,
+    defaultColors: List<Color>? = null,
     layout: WindowType = WindowType.Compact,
     onDismiss: () -> Unit,
     onBrightnessChanged: (brightness: Float) -> Unit,
     onColorPickerActivated: (() -> Unit)? = null,
-    onColorSelected: (selectedColor: Color) -> Unit
+    onColorSelected: (newColor: Color) -> Unit
 ) {
     val colorPickerController = rememberColorPickerController()
-    val color by remember {
-        mutableStateOf(initialColor)
-    }
-    Column(modifier = modifier) {
+    Column(modifier = Modifier.fillMaxSize()) {
         TopBar(
             onDismiss = { onDismiss() },
             onColorPickerActivated = onColorPickerActivated
@@ -51,7 +46,8 @@ fun CustomColorPicker(
             VerticalColorPicker(
                 colorPickerController = colorPickerController,
                 penColor = penColor,
-                initialColor = color,
+                initialColor = initialColor,
+                defaultColors = defaultColors,
                 onColorSelected = { onColorSelected(it) },
                 onBrightnessChanged = { onBrightnessChanged(it) }
             )
@@ -59,8 +55,11 @@ fun CustomColorPicker(
             HorizontalColorPicker(
                 colorPickerController = colorPickerController,
                 penColor = penColor,
-                initialColor = color,
-                onColorSelected = { onColorSelected(it) },
+                initialColor = initialColor,
+                defaultColors = defaultColors,
+                onColorSelected = {
+                    onColorSelected(it)
+                },
                 onBrightnessChanged = { onBrightnessChanged(it) }
             )
         }
