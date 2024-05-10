@@ -26,6 +26,8 @@ import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelecto
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorIds
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.CustomColorSelector
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.mainScreen.MainScreen
+import com.robothaver.kandraw.dialogs.scaleIntoContainer
+import com.robothaver.kandraw.dialogs.scaleOutOfContainer
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel

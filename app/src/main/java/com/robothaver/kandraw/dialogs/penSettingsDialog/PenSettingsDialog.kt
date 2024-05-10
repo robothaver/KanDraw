@@ -1,6 +1,7 @@
 package com.robothaver.kandraw.dialogs.penSettingsDialog
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,10 +16,12 @@ import com.robothaver.kandraw.dialogs.getDialogSize
 import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.HorizontalLayout
 import com.robothaver.kandraw.dialogs.penSettingsDialog.layouts.VerticalLayout
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
-import com.robothaver.kandraw.viewModel.data.PenSettings
-import com.robothaver.kandraw.viewModel.data.Tools
+import com.robothaver.kandraw.dialogs.scaleIntoContainer
+import com.robothaver.kandraw.dialogs.scaleOutOfContainer
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.utils.windowInfo.WindowType
+import com.robothaver.kandraw.viewModel.data.PenSettings
+import com.robothaver.kandraw.viewModel.data.Tools
 
 @Composable
 fun PenSettingsDialog(
@@ -31,7 +34,10 @@ fun PenSettingsDialog(
     val size = getDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
     AnimatedContent(
         targetState = isSelectingCustomColor.value,
-        label = "penSettingsDialogPageChange"
+        label = "penSettingsDialogPageChange",
+        transitionSpec = {
+            scaleIntoContainer() togetherWith scaleOutOfContainer()
+        }
     ) { selectingCustomColor ->
         Column(modifier = Modifier
             .fillMaxWidth(size.width)

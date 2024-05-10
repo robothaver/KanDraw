@@ -42,9 +42,11 @@ fun BackgroundGridSettings(
                     cellSize = currentGridSettings.smallCellSize,
                     cellStrokeWidth = currentGridSettings.smallCellStrokeWidth,
                     cellColor = currentGridSettings.smallCellColor.color,
-                    sizeRange = 5f..300f,
+                    sizeRange = 25f..300f,
                     onColorChange = {
-                        changePage("${Screen.CustomColorSelector.route}/${ColorSelectorIds.SmallCellColor.name}")
+                        changePage(
+                            "${Screen.CustomColorSelector.route}/${ColorSelectorIds.SmallCellColor.name}"
+                        )
                     },
                     onSizeChange = {
                         gridSettings.value = gridSettings.value.copy(smallCellSize = it)

@@ -1,4 +1,4 @@
-package com.robothaver.kandraw.dialogs.preferencesDialog
+package com.robothaver.kandraw.dialogs
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
