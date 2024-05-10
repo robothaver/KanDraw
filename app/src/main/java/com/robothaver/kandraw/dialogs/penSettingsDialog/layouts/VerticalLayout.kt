@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -35,8 +34,7 @@ fun VerticalLayout(
         Title("Color")
         ColorOptions(penSettings = penSettings, isColorPickingPage = isColorPickingPage)
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 6.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant
+            modifier = Modifier.padding(vertical = 6.dp)
         )
 
         AlphaSlider(
@@ -53,24 +51,21 @@ fun VerticalLayout(
         }
 
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 6.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant
+            modifier = Modifier.padding(vertical = 6.dp)
         )
 
         Title("Width: ${penSettings.value.strokeWidth.roundToInt()}")
         PenSizeSlider(penSettings = penSettings)
 
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 6.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant
+            modifier = Modifier.padding(vertical = 6.dp)
         )
 
         Title("Pen cap")
         PenCapSettings(penSettings = penSettings)
 
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 6.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant
+            modifier = Modifier.padding(vertical = 6.dp)
         )
         PenEffectOptions(penSettings = penSettings)
     }

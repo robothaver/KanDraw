@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -62,7 +61,6 @@ fun HorizontalColorPicker(
             verticalAlignment = Alignment.CenterVertically
         ) {
             VerticalDivider(
-                color = MaterialTheme.colorScheme.surfaceVariant,
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
             HsvColorPicker(

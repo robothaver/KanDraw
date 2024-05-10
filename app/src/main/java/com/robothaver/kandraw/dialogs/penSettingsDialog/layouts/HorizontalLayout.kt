@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -17,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.robothaver.kandraw.composables.alphaSlider.AlphaSlider
 import com.robothaver.kandraw.composables.colorBrightnessSlider.ColorBrightnessSlider
-import com.robothaver.kandraw.composables.customColorPicker.utils.changeColorBrightness
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.ColorOptions
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenCapSettings
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.PenSizeSlider
@@ -46,13 +44,11 @@ fun HorizontalLayout(
             PenCapSettings(penSettings = penSettings)
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 6.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
+                modifier = Modifier.padding(vertical = 6.dp)
             )
             PenEffectOptions(penSettings = penSettings, 18.sp)
         }
         VerticalDivider(
-            color = MaterialTheme.colorScheme.surfaceVariant,
             modifier = Modifier.padding(horizontal = 12.dp)
         )
         Column(
@@ -67,8 +63,7 @@ fun HorizontalLayout(
                 40.dp
             )
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 3.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
+                modifier = Modifier.padding(vertical = 3.dp)
             )
 
             AlphaSlider(
@@ -89,8 +84,7 @@ fun HorizontalLayout(
             }
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 3.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
+                modifier = Modifier.padding(vertical = 3.dp)
             )
 
             Title(
