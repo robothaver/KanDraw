@@ -1,6 +1,5 @@
 package com.robothaver.kandraw.composables.canvas
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -26,6 +25,7 @@ import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.tools.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.tools.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
+import com.robothaver.kandraw.viewModel.data.BackgroundImage
 import com.robothaver.kandraw.viewModel.data.Tools
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.CaptureController
@@ -37,7 +37,7 @@ fun MainCanvas(
     activeTool: MutableState<Tools>,
     viewPortPosition: MutableState<Offset>,
     canvasController: CanvasController,
-    image: MutableState<Bitmap?>,
+    image: MutableState<BackgroundImage>,
     controller: CaptureController,
 ) {
     val gridSettings = canvasController.gridSettings.value
@@ -84,9 +84,9 @@ fun MainCanvas(
                 if (gridSettings.isGridEnabled) {
                     canvasDrawer.drawBackgroundGrid()
                 }
-                if (image.value != null) {
+                if (image.value.image != null) {
                     drawImage(
-                        image = image.value!!.asImageBitmap()
+                        image = image.value.image!!.asImageBitmap()
                     )
                 }
 

@@ -8,6 +8,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.View
+import android.view.Window
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -16,7 +18,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +45,7 @@ import com.robothaver.kandraw.composables.canvas.MainCanvas
 import com.robothaver.kandraw.composables.toolBar.ToolBar
 import com.robothaver.kandraw.dialogs.DialogManager
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.ui.customThemes.reFilc
+import com.robothaver.kandraw.ui.customThemes.newFilcTheme
 import com.robothaver.kandraw.ui.theme.CanvasTestTheme
 import com.robothaver.kandraw.utils.windowInfo.getWindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
@@ -57,15 +58,14 @@ import java.io.IOException
 class MainActivity : ComponentActivity() {
     private lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
 
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         cutoutMode(enable = true)
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        setWindowSettings(windowInsetsController)
+        setWindowSettings(windowInsetsController, window)
         setContent {
-            CanvasTestTheme(dynamicColor = true, theme = reFilc) {
+            CanvasTestTheme(dynamicColor = true, theme = newFilcTheme) {
                 val launcher = rememberLauncherForActivityResult(
                     ActivityResultContracts.RequestPermission()
                 ) { isGranted: Boolean ->
@@ -99,9 +99,11 @@ class MainActivity : ComponentActivity() {
                             }
                             Button(onClick = {
                                 scope.launch {
-                                    viewModel.gridSettings.value = viewModel.gridSettings.value.copy(isGridEnabled = false)
+                                    viewModel.gridSettings.value =
+                                        viewModel.gridSettings.value.copy(isGridEnabled = false)
                                     saveImage(createImage(controller), "KanDraw")
-                                    viewModel.gridSettings.value = viewModel.gridSettings.value.copy(isGridEnabled = true)
+                                    viewModel.gridSettings.value =
+                                        viewModel.gridSettings.value.copy(isGridEnabled = true)
                                 }
                             }) {
                                 Text(text = "Save screen")
@@ -133,7 +135,7 @@ class MainActivity : ComponentActivity() {
                             viewModel,
                             windowInfo,
                             canvasController
-                        ) { setWindowSettings(windowInsetsController) }
+                        ) { setWindowSettings(windowInsetsController, window) }
                     }
                 }
             }
@@ -146,14 +148,17 @@ class MainActivity : ComponentActivity() {
         } else null
     }
 
-    fun saveImage(image: Bitmap, displayName: String) {
+    private fun saveImage(image: Bitmap, displayName: String) {
         val imageCollection = apiLevel29orUp {
             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         } ?: MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
         val contentValues = ContentValues().apply {
             apiLevel29orUp {
-                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/KanDraw")
+                put(
+                    MediaStore.Images.Media.RELATIVE_PATH,
+                    Environment.DIRECTORY_PICTURES + "/KanDraw"
+                )
             }
             put(MediaStore.Images.Media.DISPLAY_NAME, "$displayName.png")
             put(MediaStore.Images.Media.HEIGHT, image.height)
@@ -176,21 +181,12 @@ class MainActivity : ComponentActivity() {
 
     private fun checkPermissions(launcher: ManagedActivityResultLauncher<String, Boolean>) {
         // Use LocalContext.current
-        val readPermission = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
         val writePermission = ContextCompat.checkSelfPermission(
             this,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
         val hasMinSdk = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-        val permissionToRequest = arrayOf(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-
-        if (!hasMinSdk) {
+        if (!hasMinSdk && !writePermission) {
             launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
     }
@@ -214,8 +210,15 @@ fun ComponentActivity.cutoutMode(enable: Boolean) {
     }
 }
 
-fun setWindowSettings(windowInsetsController: WindowInsetsControllerCompat) {
-    windowInsetsController.systemBarsBehavior =
-        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-    windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+fun setWindowSettings(windowInsetsController: WindowInsetsControllerCompat, window: Window) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+    } else {
+        val flags =
+            (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        window.decorView.systemUiVisibility = flags
+    }
 }

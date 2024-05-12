@@ -15,15 +15,17 @@ fun PreferencesBody(
     onExit: () -> Unit,
     composable: @Composable () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+    Column {
         PreferencesHeader(currentRoute = currentRoute) {
             onExit()
         }
-        composable()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            composable()
+        }
     }
 }

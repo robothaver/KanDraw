@@ -1,26 +1,21 @@
 package com.robothaver.kandraw.dialogs.preferencesDialog
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.robothaver.kandraw.dialogs.getDialogSize
-import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesBody
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesHeader
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundImage.BackgroundImagePreferences
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundSettings.BackgroundSettings
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorData
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorIds
@@ -85,28 +80,8 @@ fun PreferencesDialog(
                 }
             }
             composable(route = Screen.BackgroundImageScreen.route) {
-                val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.PickVisualMedia()
-                ) {
-                    canvasController.processBackground(it)
-                }
-                PreferencesBody(
-                    currentRoute = Screen.BackgroundImageScreen.route,
-                    onExit = { navController.popBackStack() }
-                ) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = "Select background image",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = { canvasController.getBackground(singlePhotoPickerLauncher) }
-                        ) {
-                            Text(text = "Open image")
-                        }
-                    }
+                BackgroundImagePreferences(viewModel.backgroundImage, canvasController) {
+                    navController.popBackStack()
                 }
             }
             composable(route = Screen.BackgroundSettings.route) {
