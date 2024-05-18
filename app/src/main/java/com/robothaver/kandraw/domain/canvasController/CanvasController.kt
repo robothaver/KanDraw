@@ -25,12 +25,19 @@ class CanvasController(
     private val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
     private val backgroundImage = canvasViewModel.backgroundImage
+    private val bitmapProcessor = BitmapProcessor()
     val allPaths = canvasViewModel.allPaths
     val visiblePaths = mutableListOf<PathData>()
     val penSettings = canvasViewModel.penSettings
     val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth
     val gridSettings = canvasViewModel.gridSettings
+
+    fun resizeBitmap() {
+        backgroundImage.value = backgroundImage.value.copy(
+            image = bitmapProcessor.resizeBitmap(backgroundImage.value, IntSize(1000, 1000))
+        )
+    }
 
     fun addNewPath(newPoint: Offset) {
         val newPathData = createNewPathData(newPoint)

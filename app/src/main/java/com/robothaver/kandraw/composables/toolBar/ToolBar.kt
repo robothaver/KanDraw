@@ -83,41 +83,73 @@ fun ToolBar(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Tools(activeTool, canvasController, selectedDialog)
+        OptionButtons(canvasController, selectedDialog, undoPaths, redoPaths)
+    }
+}
 
-        PenItem(
-            activeTool = activeTool,
-            selectedDialog = selectedDialog,
-            canvasController = canvasController
-        )
-        ToolBarActionItem(
-            activeTool = activeTool,
-            toolName = Tools.Eraser,
-            painterResource(id = R.drawable.eraser_solid)
-        ) {
-            if (selectedDialog.value == Dialogs.None) {
-                if (activeTool.value == it) {
-                    selectedDialog.value = Dialogs.EraserSettings
-                }
-                activeTool.value = it
+@Composable
+fun Tools(
+    activeTool: MutableState<Tools>,
+    canvasController: CanvasController,
+    selectedDialog: MutableState<Dialogs>
+) {
+    PenItem(
+        activeTool = activeTool.value,
+        tint = canvasController.penSettings.value.penColor.color
+    ) {
+        if (activeTool.value == Tools.Pen || activeTool.value == Tools.ColorPicker) {
+            selectedDialog.value = Dialogs.PenSettings
+            activeTool.value = Tools.Pen
+        } else {
+            activeTool.value = Tools.Pen
+        }
+    }
+
+    ToolBarActionItem(
+        activeTool = activeTool.value,
+        toolName = Tools.Eraser,
+        painterResource(id = R.drawable.eraser_solid)
+    ) {
+        if (selectedDialog.value == Dialogs.None) {
+            if (activeTool.value == Tools.Eraser) {
+                selectedDialog.value = Dialogs.EraserSettings
             }
+            activeTool.value = Tools.Eraser
         }
+    }
 
-        ToolBarActionItem(
-            activeTool = activeTool,
-            toolName = Tools.Mover,
-            painterResource(id = R.drawable.mover)
-        ) {
-            if (selectedDialog.value == Dialogs.None) {
-                activeTool.value = it
-            }
+    ToolBarActionItem(
+        activeTool = activeTool.value,
+        toolName = Tools.Mover,
+        painterResource(id = R.drawable.mover)
+    ) {
+        if (selectedDialog.value == Dialogs.None) {
+            activeTool.value = Tools.Mover
         }
+    }
+}
 
-        val undo = remember { { canvasController.undo() } }
-        val redo = remember { { canvasController.redo() } }
-        ToolBarItem(icon = Icons.AutoMirrored.Filled.ArrowBack, undoPaths, undo)
-        ToolBarItem(icon = Icons.AutoMirrored.Filled.ArrowForward, redoPaths, redo)
-        ToolBarItem(icon = Icons.Filled.Menu) {
-            selectedDialog.value = Dialogs.Preferences
-        }
+@Composable
+fun OptionButtons(
+    canvasController: CanvasController,
+    selectedDialog: MutableState<Dialogs>,
+    undoPaths: Boolean,
+    redoPaths: Boolean
+) {
+    val undo = remember { { canvasController.undo() } }
+    val redo = remember { { canvasController.redo() } }
+    ToolBarItem(
+        icon = Icons.AutoMirrored.Filled.ArrowBack,
+        undoPaths,
+        undo
+    )
+    ToolBarItem(
+        icon = Icons.AutoMirrored.Filled.ArrowForward,
+        redoPaths,
+        redo
+    )
+    ToolBarItem(icon = Icons.Filled.Menu) {
+        selectedDialog.value = Dialogs.Preferences
     }
 }

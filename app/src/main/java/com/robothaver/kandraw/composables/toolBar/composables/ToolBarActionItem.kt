@@ -8,7 +8,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -18,18 +17,18 @@ import com.robothaver.kandraw.viewModel.data.Tools
 
 @Composable
 fun ToolBarActionItem(
-    activeTool: MutableState<Tools>,
+    activeTool: Tools,
     toolName: Tools,
     icon: Painter,
-    onClick: (toolName: Tools) -> Unit
+    onClick: () -> Unit
 ) {
 
     Button(
-        onClick = { onClick(toolName) },
+        onClick = onClick,
         modifier = Modifier.clip(CircleShape),
         contentPadding = PaddingValues(12.dp),
         colors = ButtonDefaults.buttonColors(
-            if (activeTool.value == toolName) MaterialTheme.colorScheme.primary
+            if (activeTool == toolName) MaterialTheme.colorScheme.primary
             else Color.Transparent
         )
     ) {
@@ -37,7 +36,7 @@ fun ToolBarActionItem(
             painter = icon,
             modifier = Modifier.size(32.dp),
             contentDescription = null,
-            tint = if (activeTool.value == toolName) MaterialTheme.colorScheme.onPrimary
+            tint = if (activeTool == toolName) MaterialTheme.colorScheme.onPrimary
             else MaterialTheme.colorScheme.primary
         )
     }

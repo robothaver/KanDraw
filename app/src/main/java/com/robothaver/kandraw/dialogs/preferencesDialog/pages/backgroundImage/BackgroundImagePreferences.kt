@@ -144,6 +144,7 @@ fun BackgroundImagePreferences(
                     backgroundImage.value = backgroundImage.value.copy(
                         scaleImageToFill = it
                     )
+                    canvasController.resizeBitmap()
                 }
             }
         }
