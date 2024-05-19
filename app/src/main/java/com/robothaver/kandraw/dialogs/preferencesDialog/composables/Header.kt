@@ -43,7 +43,8 @@ fun PreferencesHeader(currentRoute: String, onNavigate: () -> Unit) {
             text = formatTitle(currentRoute),
             fontSize = 24.sp,
             fontWeight = FontWeight.Light,
-            modifier = Modifier.padding(horizontal = 12.dp)
+            modifier = Modifier.padding(horizontal = 12.dp),
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }

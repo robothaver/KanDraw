@@ -2,13 +2,21 @@ package com.robothaver.kandraw.composables.canvas.canvasCore
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.unit.IntSize
 import com.robothaver.kandraw.viewModel.data.GridSettings
+import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
+import com.robothaver.kandraw.viewModel.data.backgroundImage.ImageAlignments
 
 class CanvasDrawer(
+    gridSettings: GridSettings,
     private val drawScope: DrawScope,
-    gridSettings: GridSettings
+    private val backgroundImage: BackgroundImage,
+    private val viewportOffset: Offset
 ) {
+    private val isGridEnabled = gridSettings.isGridEnabled
     private val isLargeCellEnabled = gridSettings.isLargeCellEnabled
     private val smallCellSize = gridSettings.smallCellSize
     private val largeCellSize = gridSettings.largeCellSize
@@ -16,18 +24,61 @@ class CanvasDrawer(
     private val largeCellColor = gridSettings.largeCellColor.color
     private val smallCellStrokeWidth = gridSettings.smallCellStrokeWidth
     private val largeCellStrokeWidth = gridSettings.largeCellStrokeWidth
-    
+
+    fun drawBackgroundImage() {
+        if (backgroundImage.image == null || !backgroundImage.isVisible) return
+        drawScope.backgroundImage()
+    }
+
+    private fun DrawScope.backgroundImage() {
+        val offset = getBackgroundImageOffset()
+        translate(left = offset.x, top = offset.y) {
+            drawImage(backgroundImage.image!!.asImageBitmap())
+        }
+    }
+
+    private fun getBackgroundImageOffset(): Offset {
+        val imageSize = IntSize(backgroundImage.image!!.width, backgroundImage.image.height)
+        val centerHorizontally = drawScope.size.width / 2f - imageSize.width / 2
+        val centerVertically = drawScope.size.height / 2f - imageSize.height / 2
+
+        val offset = when (backgroundImage.alignment) {
+            ImageAlignments.TopCenter -> Offset(centerHorizontally, 0f)
+            ImageAlignments.TopEnd -> Offset(drawScope.size.width - imageSize.width, 0f)
+
+            ImageAlignments.CenterStart -> Offset(0f, centerVertically)
+            ImageAlignments.Center -> Offset(centerHorizontally, centerVertically)
+            ImageAlignments.CenterEnd -> Offset(drawScope.size.width - imageSize.width, centerVertically)
+
+            ImageAlignments.BottomStart -> Offset(0f, drawScope.size.height - imageSize.height)
+            ImageAlignments.BottomCenter -> Offset(
+                centerHorizontally,
+                drawScope.size.height - imageSize.height
+            )
+
+            ImageAlignments.BottomEnd -> Offset(
+                drawScope.size.width - imageSize.width,
+                drawScope.size.height - imageSize.height
+            )
+
+            else -> Offset(0f, 0f)
+        }
+        if (!backgroundImage.stickToBackground) {
+            return Offset(offset.x + viewportOffset.x, offset.y + viewportOffset.y)
+        }
+        return offset
+    }
+
     fun drawBackgroundGrid() {
+        if (!isGridEnabled) return
         drawScope.backgroundGrid()
     }
 
     private fun DrawScope.backgroundGrid() {
         val rows = (size.height / smallCellSize).toInt()
         val columns = (size.width / smallCellSize).toInt()
-        val horizontalRange =
-            0..rows
-        val verticalRange =
-            0..columns
+        val horizontalRange = 0..rows
+        val verticalRange = 0..columns
         drawGridLines(
             horizontalRange,
             verticalRange,

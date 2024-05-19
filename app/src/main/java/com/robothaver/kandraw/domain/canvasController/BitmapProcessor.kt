@@ -2,8 +2,8 @@ package com.robothaver.kandraw.domain.canvasController
 
 import android.graphics.Bitmap
 import androidx.compose.ui.unit.IntSize
-import com.robothaver.kandraw.viewModel.data.BackgroundImage
-import com.robothaver.kandraw.viewModel.data.ScaleModes
+import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
+import com.robothaver.kandraw.viewModel.data.backgroundImage.ScaleModes
 
 class BitmapProcessor {
     fun resizeBitmap(backgroundImage: BackgroundImage, newSize: IntSize): Bitmap {
@@ -15,7 +15,7 @@ class BitmapProcessor {
     fun getNewBitmapSize(backgroundImage: BackgroundImage, screenSize: IntSize): IntSize {
         return when (backgroundImage.scaleMode) {
             ScaleModes.Default -> backgroundImage.originalSize!!
-            ScaleModes.Fill_width -> {
+            ScaleModes.FillWidth -> {
                 val scaleRatio = screenSize.width.toFloat() / backgroundImage.originalSize!!.width
                 IntSize(
                     screenSize.width,
@@ -23,14 +23,14 @@ class BitmapProcessor {
                 )
             }
 
-            ScaleModes.Fill_height -> {
+            ScaleModes.FillHeight -> {
                 val scaleRatio = screenSize.height.toFloat() / backgroundImage.originalSize!!.height
                 IntSize(
                     (backgroundImage.originalSize.width * scaleRatio).toInt(), screenSize.height
                 )
             }
 
-            ScaleModes.Strecth_to_fill -> {
+            ScaleModes.StretchToFill -> {
                 screenSize
             }
         }

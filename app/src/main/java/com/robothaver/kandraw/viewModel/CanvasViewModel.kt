@@ -8,12 +8,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.ViewModel
 import com.robothaver.kandraw.dialogs.Dialogs
-import com.robothaver.kandraw.viewModel.data.BackgroundImage
 import com.robothaver.kandraw.viewModel.data.GridSettings
 import com.robothaver.kandraw.viewModel.data.PathData
 import com.robothaver.kandraw.viewModel.data.PenColor
 import com.robothaver.kandraw.viewModel.data.PenSettings
 import com.robothaver.kandraw.viewModel.data.Tools
+import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
 
 class CanvasViewModel : ViewModel() {
     // Canvas
@@ -29,7 +29,7 @@ class CanvasViewModel : ViewModel() {
     val backgroundColor = mutableStateOf(PenColor(color = Color.DarkGray, hue = Color.White, brightness = 0.27f))
     val gridSettings = mutableStateOf(GridSettings())
     // Dialogs
-    val selectedDialog = mutableStateOf(Dialogs.None)
+    val selectedDialog = mutableStateOf(Dialogs.Preferences)
 
     fun setInitial(range: IntRange) {
         val newPaths = mutableListOf<PathData>()

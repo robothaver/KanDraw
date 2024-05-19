@@ -35,14 +35,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.kandraw.R
+import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.robothaver.kandraw.dialogs.preferencesDialog.Screen
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.CheckboxWithText
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesBody
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.RadioButtonWithText
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.SwitchWithText
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.viewModel.data.BackgroundImage
-import com.robothaver.kandraw.viewModel.data.ScaleModes
+import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
+import com.robothaver.kandraw.viewModel.data.backgroundImage.ScaleModes
 
 @Composable
 fun BackgroundImagePreferences(
@@ -150,5 +151,10 @@ fun BackgroundImagePreferences(
                 }
             }
         }
+        Title(text = "Horizontal alignment", fontSize = 18.sp)
+        BackgroundImageAlignment(backgroundImage = backgroundImage)
+
+        Title(text = "Vertical alignment", fontSize = 18.sp)
+        BackgroundImageAlignment(backgroundImage = backgroundImage, isHorizontal = false)
     }
 }

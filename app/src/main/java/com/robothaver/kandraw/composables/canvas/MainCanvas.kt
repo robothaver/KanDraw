@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
@@ -25,7 +24,7 @@ import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.tools.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.tools.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.viewModel.data.BackgroundImage
+import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
 import com.robothaver.kandraw.viewModel.data.Tools
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.CaptureController
@@ -70,17 +69,12 @@ fun MainCanvas(
             }
         }
         .drawBehind {
-            val canvasDrawer = CanvasDrawer(this, gridSettings)
-            translate(left = viewPortPosition.value.x, top = viewPortPosition.value.y) {
-                if (gridSettings.isGridEnabled) {
-                    canvasDrawer.drawBackgroundGrid()
-                }
-                if (image.value.image != null) {
-                    drawImage(
-                        image = image.value.image!!.asImageBitmap()
-                    )
-                }
+            val canvasDrawer = CanvasDrawer(gridSettings, this, image.value, viewPortPosition.value)
 
+            canvasDrawer.drawBackgroundGrid()
+            canvasDrawer.drawBackgroundImage()
+
+            translate(left = viewPortPosition.value.x, top = viewPortPosition.value.y) {
                 val pathsToDraw = getPathsToDraw(
                     activeTool, canvasController, viewPortPosition, size
                 )
