@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -18,6 +19,7 @@ import com.robothaver.kandraw.viewModel.data.PathData
 
 class CanvasController(
     canvasViewModel: CanvasViewModel,
+    private val screenSize: MutableState<IntSize>,
     private val contentResolver: ContentResolver
 ) {
     private val maxUndoSteps = 64
@@ -35,7 +37,10 @@ class CanvasController(
 
     fun resizeBitmap() {
         backgroundImage.value = backgroundImage.value.copy(
-            image = bitmapProcessor.resizeBitmap(backgroundImage.value, IntSize(1000, 1000))
+            image = bitmapProcessor.resizeBitmap(
+                backgroundImage = backgroundImage.value,
+                newSize = bitmapProcessor.getNewBitmapSize(backgroundImage.value, screenSize.value)
+            )
         )
     }
 

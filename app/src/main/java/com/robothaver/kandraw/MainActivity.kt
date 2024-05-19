@@ -16,25 +16,23 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.ExperimentalComposeApi
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.unit.IntSize
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -56,8 +54,6 @@ import java.io.IOException
 
 
 class MainActivity : ComponentActivity() {
-    private lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -78,65 +74,71 @@ class MainActivity : ComponentActivity() {
                 }
                 val windowInfo = getWindowInfo()
                 val viewModel = viewModel<CanvasViewModel>()
-                val canvasController = CanvasController(viewModel, this.contentResolver)
                 val containerSize = remember {
                     mutableStateOf(IntSize(0, 0))
                 }
+                val canvasController = CanvasController(viewModel, containerSize, this.contentResolver)
                 val scope = rememberCoroutineScope()
                 val controller = rememberCaptureController()
-                Scaffold { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.background)
-                            .padding(innerPadding)
-                    ) {
-                        Row {
-                            Button(onClick = {
-                                checkPermissions(launcher)
-                            }) {
-                                Text(text = "Get permissions")
-                            }
-                            Button(onClick = {
-                                scope.launch {
-                                    viewModel.gridSettings.value =
-                                        viewModel.gridSettings.value.copy(isGridEnabled = false)
-                                    saveImage(createImage(controller), "KanDraw")
-                                    viewModel.gridSettings.value =
-                                        viewModel.gridSettings.value.copy(isGridEnabled = true)
-                                }
-                            }) {
-                                Text(text = "Save screen")
-                            }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                ) {
+                    Row {
+                        Button(onClick = {
+                            checkPermissions(launcher)
+                        }) {
+                            Text(text = "Get permissions")
                         }
-
-                        Box(modifier = Modifier
-                            .fillMaxSize()
-                            .onSizeChanged { containerSize.value = it }
-                        ) {
-                            MainCanvas(
-                                viewModel.activeTool,
-                                viewModel.viewportPosition,
-                                canvasController,
-                                viewModel.backgroundImage,
-                                controller,
-                            )
-                            ToolBar(
-                                canvasController,
-                                viewModel.activeTool,
-                                viewModel.selectedDialog,
-                                containerSize,
-                                viewModel.undoPaths.isNotEmpty(),
-                                viewModel.redoPaths.isNotEmpty()
-                            )
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.gridSettings.value =
+                                    viewModel.gridSettings.value.copy(isGridEnabled = false)
+                                saveImage(createImage(controller), "KanDraw")
+                                viewModel.gridSettings.value =
+                                    viewModel.gridSettings.value.copy(isGridEnabled = true)
+                            }
+                        }) {
+                            Text(text = "Save screen")
                         }
-                        DialogManager(
-                            viewModel.selectedDialog,
-                            viewModel,
-                            windowInfo,
-                            canvasController
-                        ) { setWindowSettings(windowInsetsController, window) }
                     }
+                    LaunchedEffect(key1 = viewModel.backgroundImage.value.scaleMode) {
+                        if (viewModel.backgroundImage.value.image != null) {
+                            canvasController.resizeBitmap()
+                        }
+                    }
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .onPlaced {
+                            println("Canvas placed")
+                            if (containerSize.value.width == 0) {
+                                containerSize.value = it.size
+                            }
+                        }
+                    ) {
+                        MainCanvas(
+                            viewModel.activeTool,
+                            viewModel.viewportPosition,
+                            canvasController,
+                            viewModel.backgroundImage,
+                            controller,
+                        )
+                        ToolBar(
+                            canvasController,
+                            viewModel.activeTool,
+                            viewModel.selectedDialog,
+                            containerSize,
+                            viewModel.undoPaths.isNotEmpty(),
+                            viewModel.redoPaths.isNotEmpty()
+                        )
+                    }
+                    DialogManager(
+                        viewModel.selectedDialog,
+                        viewModel,
+                        windowInfo,
+                        canvasController
+                    ) { setWindowSettings(windowInsetsController, window) }
                 }
             }
         }

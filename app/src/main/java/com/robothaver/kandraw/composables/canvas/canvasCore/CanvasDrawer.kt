@@ -3,17 +3,20 @@ package com.robothaver.kandraw.composables.canvas.canvasCore
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import com.robothaver.kandraw.viewModel.data.GridSettings
 
 class CanvasDrawer(
     private val drawScope: DrawScope,
-    private val isLargeCellEnabled: Boolean,
-    private val smallCellSize: Float,
-    private val largeCellSize: Int,
-    private val smallCellColor: Color,
-    private val largeCellColor: Color,
-    private val smallCellWidth: Float,
-    private val largeCellStrokeWidth: Float
+    gridSettings: GridSettings
 ) {
+    private val isLargeCellEnabled = gridSettings.isLargeCellEnabled
+    private val smallCellSize = gridSettings.smallCellSize
+    private val largeCellSize = gridSettings.largeCellSize
+    private val smallCellColor = gridSettings.smallCellColor.color
+    private val largeCellColor = gridSettings.largeCellColor.color
+    private val smallCellStrokeWidth = gridSettings.smallCellStrokeWidth
+    private val largeCellStrokeWidth = gridSettings.largeCellStrokeWidth
+    
     fun drawBackgroundGrid() {
         drawScope.backgroundGrid()
     }
@@ -30,7 +33,7 @@ class CanvasDrawer(
             verticalRange,
             smallCellColor,
             smallCellSize,
-            smallCellWidth
+            smallCellStrokeWidth
         ) {
             it % largeCellSize != 0 || !isLargeCellEnabled
         }

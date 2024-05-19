@@ -82,7 +82,8 @@ fun BackgroundImagePreferences(
             )
             Text(
                 text = if (image.image == null) "Select image" else "Select other image",
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier.padding(horizontal = 12.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
             if (image.image != null) {
                 Spacer(
@@ -121,13 +122,15 @@ fun BackgroundImagePreferences(
             Icon(
                 painterResource(id = R.drawable.image_scale),
                 contentDescription = null,
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(30.dp),
+                tint = MaterialTheme.colorScheme.onBackground
             )
             Text(
                 text = "Image scaling",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier.padding(horizontal = 12.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         Column(
@@ -138,13 +141,12 @@ fun BackgroundImagePreferences(
         ) {
             ScaleModes.values().forEach {
                 RadioButtonWithText(
-                    selected = image.scaleImageToFill == it,
+                    selected = image.scaleMode == it,
                     text = it.name.replace("_", " ")
                 ) {
                     backgroundImage.value = backgroundImage.value.copy(
-                        scaleImageToFill = it
+                        scaleMode = it
                     )
-                    canvasController.resizeBitmap()
                 }
             }
         }

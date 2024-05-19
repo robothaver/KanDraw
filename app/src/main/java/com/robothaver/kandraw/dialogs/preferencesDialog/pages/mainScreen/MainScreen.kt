@@ -55,7 +55,8 @@ fun MainScreen(onNavigate: (route: String) -> Unit) {
                 text = "Settings",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.offset(x = 0.dp, y = 26.dp)
+                modifier = Modifier.offset(x = 0.dp, y = 26.dp),
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
         menuOptions.forEach { option ->

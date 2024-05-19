@@ -29,7 +29,7 @@ class CanvasViewModel : ViewModel() {
     val backgroundColor = mutableStateOf(PenColor(color = Color.DarkGray, hue = Color.White, brightness = 0.27f))
     val gridSettings = mutableStateOf(GridSettings())
     // Dialogs
-    val selectedDialog = mutableStateOf(Dialogs.Preferences)
+    val selectedDialog = mutableStateOf(Dialogs.None)
 
     fun setInitial(range: IntRange) {
         val newPaths = mutableListOf<PathData>()

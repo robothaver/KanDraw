@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.IntSize
 data class BackgroundImage(
     val image: Bitmap? = null,
     val originalSize: IntSize? = null,
-    val scaleImageToFill: ScaleModes = ScaleModes.Default,
+    val scaleMode: ScaleModes = ScaleModes.Default,
     val stickToBackground: Boolean = false,
     val isVisible: Boolean = true
 )
