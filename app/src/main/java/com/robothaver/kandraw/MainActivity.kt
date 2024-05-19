@@ -18,10 +18,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +50,7 @@ import com.robothaver.kandraw.utils.windowInfo.getWindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
+import kotlinx.coroutines.launch
 import java.io.IOException
 
 
@@ -81,24 +86,29 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-//                    Row {
-//                        Button(onClick = {
-//                            checkPermissions(launcher)
-//                        }) {
-//                            Text(text = "Get permissions")
-//                        }
-//                        Button(onClick = {
-//                            scope.launch {
-//                                viewModel.gridSettings.value =
-//                                    viewModel.gridSettings.value.copy(isGridEnabled = false)
-//                                saveImage(createImage(controller), "KanDraw")
-//                                viewModel.gridSettings.value =
-//                                    viewModel.gridSettings.value.copy(isGridEnabled = true)
-//                            }
-//                        }) {
-//                            Text(text = "Save screen")
-//                        }
-//                    }
+                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                        Button(onClick = {
+                            checkPermissions(launcher)
+                        }) {
+                            Text(text = "Get permissions")
+                        }
+                        Button(onClick = {
+                            scope.launch {
+                                viewModel.gridSettings.value =
+                                    viewModel.gridSettings.value.copy(isGridEnabled = false)
+                                saveImage(createImage(controller), "KanDraw")
+                                viewModel.gridSettings.value =
+                                    viewModel.gridSettings.value.copy(isGridEnabled = true)
+                            }
+                        }) {
+                            Text(text = "Save screen")
+                        }
+                        Column {
+                            Text(text = "All paths: ${viewModel.allPaths.size}")
+                            Text(text = "Visible paths: ${canvasController.visiblePaths.size}")
+                        }
+
+                    }
                     LaunchedEffect(key1 = viewModel.backgroundImage.value.scaleMode) {
                         if (viewModel.backgroundImage.value.image != null) {
                             canvasController.resizeBitmap()
@@ -140,7 +150,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun <T> apiLevel29orUp(onApiLevel29: () -> T): T? {
+    private fun <T> apiLevel29orUp(onApiLevel29: () -> T): T? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             onApiLevel29()
         } else null

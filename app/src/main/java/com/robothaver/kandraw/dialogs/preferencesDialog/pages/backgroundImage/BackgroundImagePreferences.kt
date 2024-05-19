@@ -143,7 +143,7 @@ fun BackgroundImagePreferences(
             ScaleModes.values().forEach {
                 RadioButtonWithText(
                     selected = image.scaleMode == it,
-                    text = it.name.replace("_", " ")
+                    text = it.name.split(Regex("(?=\\p{Upper})")).joinToString(" ")
                 ) {
                     backgroundImage.value = backgroundImage.value.copy(
                         scaleMode = it

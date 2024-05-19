@@ -35,6 +35,8 @@ class CanvasController(
     val eraserWidth = canvasViewModel.eraserWidth
     val gridSettings = canvasViewModel.gridSettings
 
+    // Fix visible paths!!!!!
+
     fun resizeBitmap() {
         backgroundImage.value = backgroundImage.value.copy(
             image = bitmapProcessor.resizeBitmap(
@@ -90,11 +92,17 @@ class CanvasController(
     }
 
 
-    fun getSelectedPathColor(currentlySelectedPosition: Offset): Color {
-//        val color = backgroundImage.value?.get(currentlySelectedPosition.x.toInt(),
-//            currentlySelectedPosition.y.toInt()
-//        )
-        return getSelectedPath(currentlySelectedPosition, 20f)?.color ?: backgroundColor.value.color
+    fun getSelectedPathColor(selectedPos: Offset): Color {
+        val imgColor = bitmapProcessor.getColorFromBitmap(
+            backgroundImage.value,
+            selectedPos
+        )
+        val path = getSelectedPath(selectedPos, 20f)
+        return when {
+            path != null -> path.color
+            imgColor != null -> imgColor
+            else -> backgroundColor.value.color
+        }
     }
 
     fun processBackground(uri: Uri?) {
