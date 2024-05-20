@@ -8,9 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -18,36 +15,28 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.robothaver.kandraw.composables.canvas.CanvasPage
 import com.robothaver.kandraw.dialogs.DialogManager
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.ui.customThemes.newFilcTheme
 import com.robothaver.kandraw.ui.theme.KanDrawTheme
+import com.robothaver.kandraw.utils.WindowManager
 import com.robothaver.kandraw.utils.windowInfo.getWindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 import com.robothaver.kandraw.viewModel.data.PathData
 import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
-import kotlinx.coroutines.launch
 import java.io.IOException
 
 
@@ -55,11 +44,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        cutoutMode(enable = true)
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        setWindowSettings(windowInsetsController, window)
+//        cutoutMode(enable = true)
         setContent {
             KanDrawTheme(dynamicColor = true, theme = newFilcTheme) {
+                val windowManager = WindowManager(window)
+                windowManager.hideSystemBars()
                 val launcher = rememberLauncherForActivityResult(
                     ActivityResultContracts.RequestPermission()
                 ) { isGranted: Boolean ->
@@ -83,29 +72,29 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                        Button(onClick = {
-                            checkPermissions(launcher)
-                        }) {
-                            Text(text = "Get permissions")
-                        }
-                        Button(onClick = {
-                            scope.launch {
-                                viewModel.gridSettings.value =
-                                    viewModel.gridSettings.value.copy(isGridEnabled = false)
-                                saveImage(createImage(controller), "KanDraw")
-                                viewModel.gridSettings.value =
-                                    viewModel.gridSettings.value.copy(isGridEnabled = true)
-                            }
-                        }) {
-                            Text(text = "Save screen")
-                        }
-                        Column {
-                            Text(text = "All paths: ${viewModel.allPaths.size}", color= Color.White)
-                            Text(text = "Visible paths: ${canvasController.visiblePaths.size}", color= Color.White)
-                        }
-
-                    }
+//                    Row(horizontalArrangement = Arrangement.SpaceBetween) {
+//                        Button(onClick = {
+//                            checkPermissions(launcher)
+//                        }) {
+//                            Text(text = "Get permissions")
+//                        }
+//                        Button(onClick = {
+//                            scope.launch {
+//                                viewModel.gridSettings.value =
+//                                    viewModel.gridSettings.value.copy(isGridEnabled = false)
+//                                saveImage(createImage(controller), "KanDraw")
+//                                viewModel.gridSettings.value =
+//                                    viewModel.gridSettings.value.copy(isGridEnabled = true)
+//                            }
+//                        }) {
+//                            Text(text = "Save screen")
+//                        }
+//                        Column {
+//                            Text(text = "All paths: ${viewModel.allPaths.size}", color= Color.White)
+//                            Text(text = "Visible paths: ${canvasController.visiblePaths.size}", color= Color.White)
+//                        }
+//
+//                    }
                     CanvasPage(
                         viewModel = viewModel,
                         canvasController = canvasController,
@@ -115,10 +104,9 @@ class MainActivity : ComponentActivity() {
                         viewModel.selectedDialog,
                         viewModel,
                         windowInfo,
-                        canvasController
-                    ) {
-                        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-                    }
+                        canvasController,
+                        windowManager
+                    )
                 }
             }
         }
@@ -178,29 +166,4 @@ class MainActivity : ComponentActivity() {
         return controller.captureAsync().await().asAndroidBitmap()
     }
 
-}
-
-fun ComponentActivity.cutoutMode(enable: Boolean) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        if (enable) {
-            window.attributes?.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
-        } else {
-            window.attributes?.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
-        }
-    }
-}
-
-fun setWindowSettings(windowInsetsController: WindowInsetsControllerCompat, window: Window) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-    } else {
-        val flags =
-            (View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        window.decorView.systemUiVisibility = flags
-    }
 }

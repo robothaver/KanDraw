@@ -16,6 +16,7 @@ import com.robothaver.kandraw.dialogs.eraserSettingsDialog.EraserSettingsDialog
 import com.robothaver.kandraw.dialogs.penSettingsDialog.PenSettingsDialog
 import com.robothaver.kandraw.dialogs.preferencesDialog.PreferencesDialog
 import com.robothaver.kandraw.domain.canvasController.CanvasController
+import com.robothaver.kandraw.utils.WindowManager
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 
@@ -25,12 +26,14 @@ fun DialogManager(
     viewModel: CanvasViewModel,
     windowInfo: WindowInfo,
     canvasController: CanvasController,
-    setWindowSettings: () -> Unit
+    windowManager: WindowManager
 ) {
     if (selectedDialog.value == Dialogs.None) return
-    setWindowSettings()
     Dialog(
-        onDismissRequest = { selectedDialog.value = Dialogs.None },
+        onDismissRequest = {
+            selectedDialog.value = Dialogs.None
+            windowManager.hideSystemBars()
+        },
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Box(
@@ -56,7 +59,10 @@ fun DialogManager(
                     )
                 }
 
-                Dialogs.Preferences -> PreferencesDialog(windowInfo, canvasController, viewModel)
+                Dialogs.Preferences -> {
+                    windowManager.showSystemBars()
+                    PreferencesDialog(windowInfo, canvasController, viewModel)
+                }
                 Dialogs.None -> Unit
             }
         }
