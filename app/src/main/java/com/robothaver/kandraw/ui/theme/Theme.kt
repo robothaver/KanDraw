@@ -16,7 +16,7 @@ import com.robothaver.kandraw.ui.customThemes.CustomTheme
 import com.robothaver.kandraw.ui.customThemes.deepSeaTheme
 
 @Composable
-fun CanvasTestTheme(
+fun KanDrawTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,

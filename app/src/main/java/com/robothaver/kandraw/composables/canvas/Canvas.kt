@@ -24,7 +24,6 @@ import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.tools.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.tools.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
 import com.robothaver.kandraw.viewModel.data.Tools
 import dev.shreyaspatil.capturable.capturable
 import dev.shreyaspatil.capturable.controller.CaptureController
@@ -32,14 +31,14 @@ import dev.shreyaspatil.capturable.controller.CaptureController
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun MainCanvas(
+fun Canvas(
     activeTool: MutableState<Tools>,
     viewPortPosition: MutableState<Offset>,
     canvasController: CanvasController,
-    image: MutableState<BackgroundImage>,
     controller: CaptureController,
 ) {
     val gridSettings = canvasController.gridSettings.value
+    val image = canvasController.backgroundImage.value
     val selectedPosition = remember { mutableStateOf(Offset(0f, 0f)) }
     val isTouchEventActive = remember { mutableStateOf(false) }
     val canvasEventHandler = CanvasEventHandler(
@@ -54,7 +53,7 @@ fun MainCanvas(
         .background(canvasController.backgroundColor.value.color)
         .fillMaxSize()
         .clipToBounds()
-        .pointerInput(false) {
+        .pointerInput(Unit) {
             detectDragGestures(onDragStart = { offset ->
                 canvasEventHandler.dragStart(offset)
             }, onDrag = { change, offset ->
@@ -63,13 +62,13 @@ fun MainCanvas(
                 canvasEventHandler.dragEnd()
             })
         }
-        .pointerInput(true) {
+        .pointerInput(Unit) {
             detectTapGestures { offset ->
                 canvasEventHandler.tap(offset)
             }
         }
         .drawBehind {
-            val canvasDrawer = CanvasDrawer(gridSettings, this, image.value, viewPortPosition.value)
+            val canvasDrawer = CanvasDrawer(gridSettings, this, image, viewPortPosition.value)
 
             canvasDrawer.drawBackgroundGrid()
             canvasDrawer.drawBackgroundImage()

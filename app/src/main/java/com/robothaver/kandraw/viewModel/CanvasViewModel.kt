@@ -29,7 +29,7 @@ class CanvasViewModel : ViewModel() {
     val backgroundColor = mutableStateOf(PenColor(color = Color.DarkGray, hue = Color.White, brightness = 0.27f))
     val gridSettings = mutableStateOf(GridSettings())
     // Dialogs
-    val selectedDialog = mutableStateOf(Dialogs.Preferences)
+    val selectedDialog = mutableStateOf(Dialogs.None)
 
     fun setInitial(range: IntRange) {
         val newPaths = mutableListOf<PathData>()
@@ -41,7 +41,6 @@ class CanvasViewModel : ViewModel() {
             val newPoints = mutableListOf<Offset>()
             points.forEach { point -> path.lineTo(point.x + i * 1000, point.y)
             newPoints.add(Offset(point.x + i * 1000, point.y))}
-//            path.lineTo(newPaths[i - 1].points[newPaths[i - 1].points.lastIndex].x + 120f, 100f)
             newPaths.add(PathData(points = newPoints, path = path))
         }
         newPaths.removeLast()

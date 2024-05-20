@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -19,17 +19,16 @@ import com.robothaver.kandraw.viewModel.data.PathData
 
 class CanvasController(
     canvasViewModel: CanvasViewModel,
-    private val screenSize: MutableState<IntSize>,
-    private val contentResolver: ContentResolver
+    private val contentResolver: ContentResolver,
+    val visiblePaths: SnapshotStateList<PathData>
 ) {
     private val maxUndoSteps = 64
     private val undoPaths = canvasViewModel.undoPaths
     private val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
-    private val backgroundImage = canvasViewModel.backgroundImage
     private val bitmapProcessor = BitmapProcessor()
+    val backgroundImage = canvasViewModel.backgroundImage
     val allPaths = canvasViewModel.allPaths
-    val visiblePaths = mutableListOf<PathData>()
     val penSettings = canvasViewModel.penSettings
     val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth
@@ -37,11 +36,11 @@ class CanvasController(
 
     // Fix visible paths!!!!!
 
-    fun resizeBitmap() {
+    fun resizeBitmap(screenSize: IntSize) {
         backgroundImage.value = backgroundImage.value.copy(
             image = bitmapProcessor.resizeBitmap(
                 backgroundImage = backgroundImage.value,
-                newSize = bitmapProcessor.getNewBitmapSize(backgroundImage.value, screenSize.value)
+                newSize = bitmapProcessor.getNewBitmapSize(backgroundImage.value, screenSize)
             )
         )
     }

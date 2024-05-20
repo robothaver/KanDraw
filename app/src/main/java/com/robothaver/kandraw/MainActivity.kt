@@ -19,7 +19,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,27 +26,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.ExperimentalComposeApi
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.layout.onPlaced
-import androidx.compose.ui.unit.IntSize
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.robothaver.kandraw.composables.canvas.MainCanvas
-import com.robothaver.kandraw.composables.toolBar.ToolBar
+import com.robothaver.kandraw.composables.canvas.CanvasPage
 import com.robothaver.kandraw.dialogs.DialogManager
 import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.ui.customThemes.newFilcTheme
-import com.robothaver.kandraw.ui.theme.CanvasTestTheme
+import com.robothaver.kandraw.ui.theme.KanDrawTheme
 import com.robothaver.kandraw.utils.windowInfo.getWindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
+import com.robothaver.kandraw.viewModel.data.PathData
 import dev.shreyaspatil.capturable.controller.CaptureController
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import kotlinx.coroutines.launch
@@ -62,7 +59,7 @@ class MainActivity : ComponentActivity() {
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         setWindowSettings(windowInsetsController, window)
         setContent {
-            CanvasTestTheme(dynamicColor = true, theme = newFilcTheme) {
+            KanDrawTheme(dynamicColor = true, theme = newFilcTheme) {
                 val launcher = rememberLauncherForActivityResult(
                     ActivityResultContracts.RequestPermission()
                 ) { isGranted: Boolean ->
@@ -75,10 +72,10 @@ class MainActivity : ComponentActivity() {
                 }
                 val windowInfo = getWindowInfo()
                 val viewModel = viewModel<CanvasViewModel>()
-                val containerSize = remember {
-                    mutableStateOf(IntSize(0, 0))
+                val visiblePaths = remember {
+                    mutableStateListOf<PathData>()
                 }
-                val canvasController = CanvasController(viewModel, containerSize, this.contentResolver)
+                val canvasController = CanvasController(viewModel, this.contentResolver, visiblePaths)
                 val scope = rememberCoroutineScope()
                 val controller = rememberCaptureController()
                 Column(
@@ -104,47 +101,24 @@ class MainActivity : ComponentActivity() {
                             Text(text = "Save screen")
                         }
                         Column {
-                            Text(text = "All paths: ${viewModel.allPaths.size}")
-                            Text(text = "Visible paths: ${canvasController.visiblePaths.size}")
+                            Text(text = "All paths: ${viewModel.allPaths.size}", color= Color.White)
+                            Text(text = "Visible paths: ${canvasController.visiblePaths.size}", color= Color.White)
                         }
 
                     }
-                    LaunchedEffect(key1 = viewModel.backgroundImage.value.scaleMode) {
-                        if (viewModel.backgroundImage.value.image != null) {
-                            canvasController.resizeBitmap()
-                        }
-                    }
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .onPlaced {
-                            println("Canvas placed")
-                            if (containerSize.value.width == 0) {
-                                containerSize.value = it.size
-                            }
-                        }
-                    ) {
-                        MainCanvas(
-                            viewModel.activeTool,
-                            viewModel.viewportPosition,
-                            canvasController,
-                            viewModel.backgroundImage,
-                            controller,
-                        )
-                        ToolBar(
-                            canvasController,
-                            viewModel.activeTool,
-                            viewModel.selectedDialog,
-                            containerSize,
-                            viewModel.undoPaths.isNotEmpty(),
-                            viewModel.redoPaths.isNotEmpty()
-                        )
-                    }
+                    CanvasPage(
+                        viewModel = viewModel,
+                        canvasController = canvasController,
+                        captureController = controller
+                    )
                     DialogManager(
                         viewModel.selectedDialog,
                         viewModel,
                         windowInfo,
                         canvasController
-                    ) { setWindowSettings(windowInsetsController, window) }
+                    ) {
+                        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+                    }
                 }
             }
         }
