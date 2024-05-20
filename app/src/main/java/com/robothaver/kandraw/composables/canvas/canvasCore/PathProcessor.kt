@@ -30,7 +30,6 @@ class PathProcessor(
                 pathsToRender.add(path)
             }
         }
-        println(pathsToRender)
         return pathsToRender
     }
 

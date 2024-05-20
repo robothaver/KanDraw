@@ -15,12 +15,10 @@ fun getPathsToDraw(
 ): List<PathData> {
     val pathsToDraw: List<PathData>
     if (activeTool.value == Tools.Mover || canvasController.visiblePaths.isEmpty()) {
-        println("Reloaded all paths")
         val pathProcessor = PathProcessor(canvasController.allPaths, viewPortPosition, size)
         pathsToDraw = pathProcessor.processPaths()
         canvasController.addVisiblePaths(pathsToDraw)
     } else {
-        println("Rendered only visible paths")
         pathsToDraw = canvasController.visiblePaths
     }
     return pathsToDraw

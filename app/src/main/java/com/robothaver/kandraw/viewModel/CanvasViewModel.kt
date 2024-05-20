@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.lifecycle.ViewModel
 import com.robothaver.kandraw.dialogs.Dialogs
 import com.robothaver.kandraw.viewModel.data.GridSettings
+import com.robothaver.kandraw.viewModel.data.ImageSaveOptions
 import com.robothaver.kandraw.viewModel.data.PathData
 import com.robothaver.kandraw.viewModel.data.PenColor
 import com.robothaver.kandraw.viewModel.data.PenSettings
@@ -25,11 +26,15 @@ class CanvasViewModel : ViewModel() {
     val activeTool = mutableStateOf(Tools.Pen)
     val eraserWidth = mutableFloatStateOf(20f)
     val viewportPosition = mutableStateOf(Offset(0f, 0f))
-    val backgroundImage = mutableStateOf(BackgroundImage())
     val backgroundColor = mutableStateOf(PenColor(color = Color.DarkGray, hue = Color.White, brightness = 0.27f))
-    val gridSettings = mutableStateOf(GridSettings())
+
     // Dialogs
     val selectedDialog = mutableStateOf(Dialogs.None)
+
+    // Settings
+    val backgroundImage = mutableStateOf(BackgroundImage())
+    val imageSaveOptions = mutableStateOf(ImageSaveOptions())
+    val gridSettings = mutableStateOf(GridSettings())
 
     fun setInitial(range: IntRange) {
         val newPaths = mutableListOf<PathData>()

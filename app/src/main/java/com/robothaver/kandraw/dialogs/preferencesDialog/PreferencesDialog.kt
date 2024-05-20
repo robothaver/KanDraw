@@ -14,13 +14,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.robothaver.kandraw.dialogs.getDialogSize
-import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesHeader
-import com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundImage.BackgroundImagePreferences
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundImage.BackgroundImageSettings
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundSettings.BackgroundSettings
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorData
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorIds
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.CustomColorSelector
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.mainScreen.MainScreen
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.saveDrawing.SaveDrawing
 import com.robothaver.kandraw.dialogs.scaleIntoContainer
 import com.robothaver.kandraw.dialogs.scaleOutOfContainer
 import com.robothaver.kandraw.domain.canvasController.CanvasController
@@ -64,9 +64,8 @@ fun PreferencesDialog(
                 }
             }
             composable(route = Screen.SaveDrawing.route) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    PreferencesHeader(currentRoute = Screen.SaveDrawing.route) {}
-                    Text(text = "Coming soon...")
+                SaveDrawing(viewModel.imageSaveOptions, canvasController) {
+                    navController.popBackStack()
                 }
             }
             composable(route = Screen.Other.route) {
@@ -80,7 +79,7 @@ fun PreferencesDialog(
                 }
             }
             composable(route = Screen.BackgroundImageScreen.route) {
-                BackgroundImagePreferences(viewModel.backgroundImage, canvasController) {
+                BackgroundImageSettings(viewModel.backgroundImage, canvasController) {
                     navController.popBackStack()
                 }
             }

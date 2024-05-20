@@ -22,7 +22,7 @@ import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
 
 @Composable
-fun BackgroundImagePreferences(
+fun BackgroundImageSettings(
     backgroundImage: MutableState<BackgroundImage>,
     canvasController: CanvasController,
     onNavigate: () -> Unit

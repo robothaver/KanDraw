@@ -20,7 +20,8 @@ import com.robothaver.kandraw.viewModel.data.PathData
 class CanvasController(
     canvasViewModel: CanvasViewModel,
     private val contentResolver: ContentResolver,
-    val visiblePaths: SnapshotStateList<PathData>
+    val visiblePaths: SnapshotStateList<PathData>,
+    val imageSaver: ImageSaver
 ) {
     private val maxUndoSteps = 64
     private val undoPaths = canvasViewModel.undoPaths
