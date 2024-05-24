@@ -23,7 +23,7 @@ class CanvasEventHandler(
 
             Tools.ColorPicker -> {
                 selectedPosition.value = offset
-                val color = canvasController.getSelectedPathColor(getOffset(offset))
+                val color = canvasController.getSelectedPathColor(getOffset(offset), offset)
                 setSelectedColor(canvasController, color)
                 activeTool.value = Tools.Pen
             }
@@ -54,7 +54,7 @@ class CanvasEventHandler(
 
         Tools.ColorPicker -> {
             selectedPosition.value = change
-            val color = canvasController.getSelectedPathColor(getOffset(change))
+            val color = canvasController.getSelectedPathColor(getOffset(change), change)
             setSelectedColor(canvasController, color)
         }
 

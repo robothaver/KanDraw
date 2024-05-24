@@ -35,8 +35,6 @@ class CanvasController(
     val eraserWidth = canvasViewModel.eraserWidth
     val gridSettings = canvasViewModel.gridSettings
 
-    // Fix visible paths!!!!!
-
     fun resizeBitmap(screenSize: IntSize) {
         backgroundImage.value = backgroundImage.value.copy(
             image = bitmapProcessor.resizeBitmap(
@@ -55,11 +53,13 @@ class CanvasController(
     }
 
     fun expandPath(newPoint: Offset) {
-        visiblePaths.last().path.lineTo(newPoint.x, newPoint.y)
-        visiblePaths[visiblePaths.lastIndex] =
-            visiblePaths.last().copy(points = getNewPoints(newPoint))
-        allPaths[allPaths.lastIndex] = visiblePaths.last()
-        undoPaths[undoPaths.lastIndex] = visiblePaths.last()
+        if (allPaths.isNotEmpty()) {
+            visiblePaths.last().path.lineTo(newPoint.x, newPoint.y)
+            visiblePaths[visiblePaths.lastIndex] =
+                visiblePaths.last().copy(points = getNewPoints(newPoint))
+            allPaths[allPaths.lastIndex] = visiblePaths.last()
+            undoPaths[undoPaths.lastIndex] = visiblePaths.last()
+        }
     }
 
     fun eraseSelectedPath(currentlySelectedPosition: Offset) {
@@ -91,18 +91,23 @@ class CanvasController(
         }
     }
 
-
-    fun getSelectedPathColor(selectedPos: Offset): Color {
+    /**
+     * @param globalPosition the selected position with global offset.
+     * @param localPosition the selected point on the screen without the global offset.
+     */
+    fun getSelectedPathColor(globalPosition: Offset, localPosition: Offset): Color {
+        val path = getSelectedPath(globalPosition, 20f)
+        if (path != null) {
+            return path.color
+        }
         val imgColor = bitmapProcessor.getColorFromBitmap(
             backgroundImage.value,
-            selectedPos
+            if (backgroundImage.value.stickToBackground) localPosition else globalPosition
         )
-        val path = getSelectedPath(selectedPos, 20f)
-        return when {
-            path != null -> path.color
-            imgColor != null -> imgColor
-            else -> backgroundColor.value.color
+        if (imgColor != null) {
+            return imgColor
         }
+        return backgroundColor.value.color
     }
 
     fun processBackground(uri: Uri?) {
