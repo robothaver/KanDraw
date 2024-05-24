@@ -1,11 +1,13 @@
 package com.robothaver.kandraw.domain.canvasController
 
 import android.content.ContentResolver
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -28,6 +30,7 @@ class CanvasController(
     private val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
     private val bitmapProcessor = BitmapProcessor()
+    val canvasSize = mutableStateOf(IntSize(0, 0))
     val backgroundImage = canvasViewModel.backgroundImage
     val allPaths = canvasViewModel.allPaths
     val penSettings = canvasViewModel.penSettings
@@ -35,12 +38,20 @@ class CanvasController(
     val eraserWidth = canvasViewModel.eraserWidth
     val gridSettings = canvasViewModel.gridSettings
 
-    fun resizeBitmap(screenSize: IntSize) {
-        backgroundImage.value = backgroundImage.value.copy(
-            image = bitmapProcessor.resizeBitmap(
-                backgroundImage = backgroundImage.value,
-                newSize = bitmapProcessor.getNewBitmapSize(backgroundImage.value, screenSize)
+    private fun getResizedBitmap(bitmap: Bitmap): Bitmap {
+        return bitmapProcessor.resizeBitmap(
+            bitmap = bitmap,
+            newSize = bitmapProcessor.getNewBitmapSize(
+                backgroundImage.value.scaleMode,
+                canvasSize.value,
+                IntSize(bitmap.width, bitmap.height)
             )
+        )
+    }
+
+    fun resizeBitmap() {
+        backgroundImage.value = backgroundImage.value.copy(
+            image = getResizedBitmap(backgroundImage.value.originalImage!!)
         )
     }
 
@@ -117,8 +128,8 @@ class CanvasController(
                 imageDecoder.isMutableRequired = true
             }
             backgroundImage.value = backgroundImage.value.copy(
-                image = bitmap,
-                originalSize = IntSize(bitmap.width, bitmap.height)
+                image = getResizedBitmap(bitmap),
+                originalImage = bitmap
             )
         }
     }

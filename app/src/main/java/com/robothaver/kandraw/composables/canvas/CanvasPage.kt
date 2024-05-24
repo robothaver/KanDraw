@@ -20,8 +20,9 @@ fun CanvasPage(viewModel: CanvasViewModel, canvasController: CanvasController, c
 
     // Resize background image when screen is rotated or settings are changed
     LaunchedEffect(key1 = viewModel.backgroundImage.value.scaleMode) {
+        canvasController.canvasSize.value = containerSize.value
         if (viewModel.backgroundImage.value.image != null) {
-            canvasController.resizeBitmap(containerSize.value)
+            canvasController.resizeBitmap()
         }
     }
 

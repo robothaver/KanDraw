@@ -29,27 +29,27 @@ class BitmapProcessor {
                 selectedPos.y >= 0f && selectedPos.y <= imageSize.height
     }
 
-    fun resizeBitmap(backgroundImage: BackgroundImage, newSize: IntSize): Bitmap {
+    fun resizeBitmap(bitmap: Bitmap, newSize: IntSize): Bitmap {
         return Bitmap.createScaledBitmap(
-            backgroundImage.image!!, newSize.width, newSize.height, true
+            bitmap, newSize.width, newSize.height, true
         )
     }
 
-    fun getNewBitmapSize(backgroundImage: BackgroundImage, screenSize: IntSize): IntSize {
-        return when (backgroundImage.scaleMode) {
-            ScaleModes.Default -> backgroundImage.originalSize!!
+    fun getNewBitmapSize(scaleMode: ScaleModes, screenSize: IntSize, bitmapSize: IntSize): IntSize {
+        return when (scaleMode) {
+            ScaleModes.Default -> bitmapSize
             ScaleModes.FillWidth -> {
-                val scaleRatio = screenSize.width.toFloat() / backgroundImage.originalSize!!.width
+                val scaleRatio = screenSize.width.toFloat() / bitmapSize.width
                 IntSize(
                     screenSize.width,
-                    (backgroundImage.originalSize.height * scaleRatio).toInt(),
+                    (bitmapSize.height * scaleRatio).toInt(),
                 )
             }
 
             ScaleModes.FillHeight -> {
-                val scaleRatio = screenSize.height.toFloat() / backgroundImage.originalSize!!.height
+                val scaleRatio = screenSize.height.toFloat() / bitmapSize.height
                 IntSize(
-                    (backgroundImage.originalSize.width * scaleRatio).toInt(), screenSize.height
+                    (bitmapSize.width * scaleRatio).toInt(), screenSize.height
                 )
             }
 
