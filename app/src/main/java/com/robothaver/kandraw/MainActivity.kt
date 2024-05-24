@@ -15,7 +15,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.robothaver.kandraw.composables.canvas.CanvasPage
 import com.robothaver.kandraw.dialogs.DialogManager
 import com.robothaver.kandraw.domain.canvasController.CanvasController
-import com.robothaver.kandraw.domain.canvasController.ImageSaver
 import com.robothaver.kandraw.ui.customThemes.newFilcTheme
 import com.robothaver.kandraw.ui.theme.KanDrawTheme
 import com.robothaver.kandraw.utils.WindowManager
@@ -37,8 +36,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel = viewModel<CanvasViewModel>()
                 val visiblePaths = remember { mutableStateListOf<PathData>() }
                 val controller = rememberCaptureController()
-                val imageSaver = ImageSaver(controller, this)
-                val canvasController = CanvasController(viewModel, this.contentResolver, visiblePaths, imageSaver)
+                val canvasController = CanvasController(viewModel, this, controller, visiblePaths)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -50,7 +48,6 @@ class MainActivity : ComponentActivity() {
                         captureController = controller
                     )
                     DialogManager(
-                        viewModel.selectedDialog,
                         viewModel,
                         windowInfo,
                         canvasController,

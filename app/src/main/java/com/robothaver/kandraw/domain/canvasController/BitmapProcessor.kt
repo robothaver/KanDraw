@@ -1,6 +1,9 @@
 package com.robothaver.kandraw.domain.canvasController
 
+import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
@@ -9,6 +12,13 @@ import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
 import com.robothaver.kandraw.viewModel.data.backgroundImage.ScaleModes
 
 class BitmapProcessor {
+    fun createBitmapFromUri(uri: Uri, contentResolver: ContentResolver): Bitmap {
+        val source = ImageDecoder.createSource(contentResolver, uri)
+        return ImageDecoder.decodeBitmap(source) { imageDecoder, _, _ ->
+            imageDecoder.isMutableRequired = true
+        }
+    }
+
     fun removeColor(image: Bitmap, backgroundColor: Color) {
         image.eraseColor(backgroundColor.value.toInt())
     }

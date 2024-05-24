@@ -1,6 +1,7 @@
 package com.robothaver.kandraw.dialogs.preferencesDialog.pages.backgroundImage
 
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -31,7 +32,7 @@ fun BackgroundImageSettings(
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) {
-        canvasController.processBackground(it)
+        canvasController.loadBackgroundImage(it)
     }
     PreferencesBody(currentRoute = Screen.BackgroundImageScreen.route, onExit = { onNavigate() }) {
         AnimatedVisibility(
@@ -47,7 +48,11 @@ fun BackgroundImageSettings(
         }
         OpenImageButton(
             image = backgroundImage.value,
-            onOpen = { canvasController.getBackground(singlePhotoPickerLauncher) },
+            onOpen = {
+                singlePhotoPickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
+            },
             onRemove = {
                 backgroundImage.value = backgroundImage.value.copy(
                     image = null

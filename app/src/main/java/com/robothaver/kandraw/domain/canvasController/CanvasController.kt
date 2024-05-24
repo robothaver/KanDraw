@@ -1,12 +1,9 @@
 package com.robothaver.kandraw.domain.canvasController
 
-import android.content.ContentResolver
+import android.app.Activity
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
@@ -14,22 +11,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.IntSize
 import com.robothaver.kandraw.domain.canvasController.penEffect.getPenEffect
+import com.robothaver.kandraw.utils.windowInfo.WindowInfo
+import com.robothaver.kandraw.utils.windowInfo.getWindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 import com.robothaver.kandraw.viewModel.data.Actions
 import com.robothaver.kandraw.viewModel.data.PathData
+import dev.shreyaspatil.capturable.controller.CaptureController
 
 
 class CanvasController(
     canvasViewModel: CanvasViewModel,
-    private val contentResolver: ContentResolver,
-    val visiblePaths: SnapshotStateList<PathData>,
-    val imageSaver: ImageSaver
+    activity: Activity,
+    captureController: CaptureController,
+    val visiblePaths: SnapshotStateList<PathData>
 ) {
     private val maxUndoSteps = 64
     private val undoPaths = canvasViewModel.undoPaths
     private val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
     private val bitmapProcessor = BitmapProcessor()
+    private val contentResolver = activity.contentResolver
+    val imageSaver = ImageSaver(captureController, activity)
     val canvasSize = mutableStateOf(IntSize(0, 0))
     val backgroundImage = canvasViewModel.backgroundImage
     val allPaths = canvasViewModel.allPaths
@@ -37,17 +39,6 @@ class CanvasController(
     val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth
     val gridSettings = canvasViewModel.gridSettings
-
-    private fun getResizedBitmap(bitmap: Bitmap): Bitmap {
-        return bitmapProcessor.resizeBitmap(
-            bitmap = bitmap,
-            newSize = bitmapProcessor.getNewBitmapSize(
-                backgroundImage.value.scaleMode,
-                canvasSize.value,
-                IntSize(bitmap.width, bitmap.height)
-            )
-        )
-    }
 
     fun resizeBitmap() {
         backgroundImage.value = backgroundImage.value.copy(
@@ -121,23 +112,14 @@ class CanvasController(
         return backgroundColor.value.color
     }
 
-    fun processBackground(uri: Uri?) {
+    fun loadBackgroundImage(uri: Uri?) {
         if (uri != null) {
-            val source = ImageDecoder.createSource(contentResolver, uri)
-            val bitmap = ImageDecoder.decodeBitmap(source) { imageDecoder, _, _ ->
-                imageDecoder.isMutableRequired = true
-            }
+            val bitmap = bitmapProcessor.createBitmapFromUri(uri, contentResolver)
             backgroundImage.value = backgroundImage.value.copy(
                 image = getResizedBitmap(bitmap),
                 originalImage = bitmap
             )
         }
-    }
-
-    fun getBackground(singlePhotoPickerLauncher: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>) {
-        singlePhotoPickerLauncher.launch(
-            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-        )
     }
 
     fun addVisiblePaths(newVisiblePaths: List<PathData>) {
@@ -186,6 +168,17 @@ class CanvasController(
             }
             redoPaths.removeLast()
         }
+    }
+
+    private fun getResizedBitmap(bitmap: Bitmap): Bitmap {
+        return bitmapProcessor.resizeBitmap(
+            bitmap = bitmap,
+            newSize = bitmapProcessor.getNewBitmapSize(
+                backgroundImage.value.scaleMode,
+                canvasSize.value,
+                IntSize(bitmap.width, bitmap.height)
+            )
+        )
     }
 
     private fun createNewPathData(newPoint: Offset): PathData {

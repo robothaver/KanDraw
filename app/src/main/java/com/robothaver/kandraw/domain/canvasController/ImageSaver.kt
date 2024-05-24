@@ -24,12 +24,6 @@ class ImageSaver(
 ) {
     private val contentResolver = activity.contentResolver
 
-    private fun <T> apiLevel29orUp(onApiLevel29: () -> T): T? {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            onApiLevel29()
-        } else null
-    }
-
     fun isNewApi(): Boolean {
         return Build.VERSION.SDK_INT > Build.VERSION_CODES.P
     }
@@ -75,11 +69,6 @@ class ImageSaver(
         }
     }
 
-    @OptIn(ExperimentalComposeApi::class)
-    private suspend fun createImage(): Bitmap {
-        return captureController.captureAsync().await().asAndroidBitmap()
-    }
-
     fun hasPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             activity,
@@ -89,5 +78,16 @@ class ImageSaver(
 
     fun getPermissions(launcher: ManagedActivityResultLauncher<String, Boolean>) {
         launcher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+
+    @OptIn(ExperimentalComposeApi::class)
+    private suspend fun createImage(): Bitmap {
+        return captureController.captureAsync().await().asAndroidBitmap()
+    }
+
+    private fun <T> apiLevel29orUp(onApiLevel29: () -> T): T? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            onApiLevel29()
+        } else null
     }
 }
