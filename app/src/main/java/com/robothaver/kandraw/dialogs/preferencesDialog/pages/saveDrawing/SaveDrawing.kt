@@ -50,7 +50,7 @@ fun SaveDrawing(
     ) { isGranted: Boolean ->
         if (isGranted) {
             scope.launch {
-                canvasController.imageSaver.saveImage(options)
+                canvasController.saveDrawing()
             }
         } else {
             showDialog.value = true
@@ -64,7 +64,7 @@ fun SaveDrawing(
                     if (!canvasController.imageSaver.isNewApi() && !canvasController.imageSaver.hasPermission()) {
                         showDialog.value = true
                     } else {
-                        canvasController.imageSaver.saveImage(options)
+                        canvasController.saveDrawing()
                     }
                 }
             },

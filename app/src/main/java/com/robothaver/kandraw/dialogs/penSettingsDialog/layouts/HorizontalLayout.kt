@@ -69,16 +69,16 @@ fun HorizontalLayout(
             AlphaSlider(
                 alpha = penSettings.value.alpha,
                 color = penSettings.value.penColor.hue,
-                height = 32.dp,
-                selectorSize = 32.dp
+                height = 36.dp,
+                selectorSize = 36.dp
             ) {
                 penSettings.value = penSettings.value.copy(alpha = it)
             }
 
             ColorBrightnessSlider(
                 penColor = penSettings.value.penColor,
-                height = 32.dp,
-                selectorSize = 32.dp
+                height = 36.dp,
+                selectorSize = 36.dp
             ) {
                 updateColor(penSettings, brightness = it)
             }

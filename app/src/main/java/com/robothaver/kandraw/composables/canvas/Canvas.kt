@@ -49,8 +49,8 @@ fun Canvas(
         viewPortPosition
     )
     Box(modifier = Modifier
-        .capturable(controller)
         .background(canvasController.backgroundColor.value.color)
+        .capturable(controller)
         .fillMaxSize()
         .clipToBounds()
         .pointerInput(Unit) {

@@ -3,7 +3,6 @@ package com.robothaver.kandraw.domain.canvasController
 import android.app.Activity
 import android.graphics.Bitmap
 import android.net.Uri
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
@@ -11,8 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.IntSize
 import com.robothaver.kandraw.domain.canvasController.penEffect.getPenEffect
-import com.robothaver.kandraw.utils.windowInfo.WindowInfo
-import com.robothaver.kandraw.utils.windowInfo.getWindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 import com.robothaver.kandraw.viewModel.data.Actions
 import com.robothaver.kandraw.viewModel.data.PathData
@@ -29,8 +26,9 @@ class CanvasController(
     private val undoPaths = canvasViewModel.undoPaths
     private val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
-    private val bitmapProcessor = BitmapProcessor()
     private val contentResolver = activity.contentResolver
+    private val bitmapProcessor = BitmapProcessor()
+    private val saveOptions = canvasViewModel.imageSaveOptions
     val imageSaver = ImageSaver(captureController, activity)
     val canvasSize = mutableStateOf(IntSize(0, 0))
     val backgroundImage = canvasViewModel.backgroundImage
@@ -91,6 +89,12 @@ class CanvasController(
             allPaths.clear()
             redoPaths.clear()
         }
+    }
+
+    suspend fun saveDrawing() {
+        toggleElements(false)
+        imageSaver.saveImage(saveOptions.value, backgroundColor.value.color)
+        toggleElements(true)
     }
 
     /**
@@ -167,6 +171,19 @@ class CanvasController(
                 visiblePaths.add(redoPaths.last())
             }
             redoPaths.removeLast()
+        }
+    }
+
+    private fun toggleElements(visible: Boolean) {
+        if (!saveOptions.value.includeBackgroundImage) {
+            backgroundImage.value = backgroundImage.value.copy(
+                isVisible = visible
+            )
+        }
+        if (!saveOptions.value.includeGrid) {
+            gridSettings.value = gridSettings.value.copy(
+                isGridEnabled = visible
+            )
         }
     }
 

@@ -67,7 +67,7 @@ fun CheckboxWithText(
         Checkbox(
             checked = isChecked,
             onCheckedChange = { onCheckedChange(it) },
-            modifier = Modifier.padding(horizontal = 6.dp)
+            modifier = Modifier.padding(horizontal = 4.dp)
         )
     }
 }

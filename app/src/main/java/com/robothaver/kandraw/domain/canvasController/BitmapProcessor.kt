@@ -19,10 +19,6 @@ class BitmapProcessor {
         }
     }
 
-    fun removeColor(image: Bitmap, backgroundColor: Color) {
-        image.eraseColor(backgroundColor.value.toInt())
-    }
-
     fun getColorFromBitmap(backgroundImage: BackgroundImage, offset: Offset): Color? {
         val image = backgroundImage.image
         val isImageValid = image != null && backgroundImage.isVisible
