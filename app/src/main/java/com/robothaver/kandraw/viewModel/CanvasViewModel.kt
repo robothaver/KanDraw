@@ -13,6 +13,7 @@ import com.robothaver.kandraw.viewModel.data.ImageSaveOptions
 import com.robothaver.kandraw.viewModel.data.PathData
 import com.robothaver.kandraw.viewModel.data.PenColor
 import com.robothaver.kandraw.viewModel.data.PenSettings
+import com.robothaver.kandraw.viewModel.data.ToolbarSettings
 import com.robothaver.kandraw.viewModel.data.Tools
 import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
 
@@ -35,6 +36,7 @@ class CanvasViewModel : ViewModel() {
     val backgroundImage = mutableStateOf(BackgroundImage())
     val imageSaveOptions = mutableStateOf(ImageSaveOptions())
     val gridSettings = mutableStateOf(GridSettings())
+    val toolbarSettings = mutableStateOf(ToolbarSettings())
 
     fun setInitial(range: IntRange) {
         val newPaths = mutableListOf<PathData>()

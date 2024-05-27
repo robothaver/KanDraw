@@ -2,38 +2,31 @@ package com.robothaver.kandraw.composables.toolBar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.example.kandraw.R
-import com.robothaver.kandraw.composables.toolBar.composables.PenItem
-import com.robothaver.kandraw.composables.toolBar.composables.ToolBarActionItem
-import com.robothaver.kandraw.composables.toolBar.composables.ToolBarItem
+import com.robothaver.kandraw.composables.toolBar.composables.OptionButtons
+import com.robothaver.kandraw.composables.toolBar.composables.Tools
 import com.robothaver.kandraw.dialogs.Dialogs
 import com.robothaver.kandraw.domain.canvasController.CanvasController
+import com.robothaver.kandraw.viewModel.data.ToolbarSettings
+import com.robothaver.kandraw.viewModel.data.ToolbarSize
 import com.robothaver.kandraw.viewModel.data.Tools
 import kotlin.math.roundToInt
 
@@ -41,115 +34,105 @@ import kotlin.math.roundToInt
 @Composable
 fun ToolBar(
     canvasController: CanvasController,
+    toolbarSettings: MutableState<ToolbarSettings>,
     activeTool: MutableState<Tools>,
     selectedDialog: MutableState<Dialogs>,
-    parentSize: MutableState<IntSize>,
-    undoPaths: Boolean,
-    redoPaths: Boolean
+    parentSize: MutableState<IntSize>
 ) {
     val offsetX = remember { mutableFloatStateOf(0f) }
     val offsetY = remember { mutableFloatStateOf(0f) }
-    var size by remember { mutableStateOf(IntSize(0, 0)) }
-    val hasBeenPositioned = remember {
-        mutableStateOf(false)
+    val size = remember { mutableStateOf(IntSize(0, 0)) }
+    val hasBeenPositioned = remember { mutableStateOf(false) }
+    val settings = toolbarSettings.value
+
+    LaunchedEffect(toolbarSettings.value.isHorizontal) {
+        size.value = IntSize(0, 0)
+        hasBeenPositioned.value = false
     }
 
-    Row(
-        modifier = Modifier
-            .onGloballyPositioned {
-                if (!hasBeenPositioned.value) {
+    val modifier = Modifier
+        .onGloballyPositioned {
+            if (!hasBeenPositioned.value) {
+                if (settings.isHorizontal) {
                     offsetX.floatValue = (parentSize.value.width / 2f) - (it.size.width / 2)
                     offsetY.floatValue = parentSize.value.height - it.size.height.toFloat() - 25f
-                    size = IntSize(it.size.width, it.size.height)
-                    hasBeenPositioned.value = true
+                } else {
+                    offsetX.floatValue = 25f
+                    offsetY.floatValue = (parentSize.value.height / 2f) - (it.size.height / 2)
                 }
+                size.value = IntSize(it.size.width, it.size.height)
+                hasBeenPositioned.value = true
             }
-            .offset { IntOffset(offsetX.floatValue.roundToInt(), offsetY.floatValue.roundToInt()) }
-            .clip(RoundedCornerShape(50.dp))
-            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
-            .padding(6.dp)
-            .pointerInput(true) {
-                detectDragGestures { _, offset ->
+        }
+        .offset { IntOffset(offsetX.floatValue.roundToInt(), offsetY.floatValue.roundToInt()) }
+        .clip(RoundedCornerShape(50.dp))
+        .background(MaterialTheme.colorScheme.background.copy(alpha = 0.75f))
+        .padding(if (settings.size != ToolbarSize.Small) 6.dp else 3.dp)
+        .pointerInput(true) {
+            detectDragGestures { _, offset ->
+                if (!toolbarSettings.value.isPinned) {
                     offsetX.floatValue = (offsetX.floatValue + offset.x).coerceIn(
                         0f,
-                        parentSize.value.width - size.width.toFloat()
+                        parentSize.value.width - size.value.width.toFloat()
                     )
                     offsetY.floatValue = (offsetY.floatValue + offset.y).coerceIn(
                         0f,
-                        parentSize.value.height - size.height.toFloat()
+                        parentSize.value.height - size.value.height.toFloat()
                     )
                 }
-            },
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
+            }
+        }
+
+    if (isVisible(
+            settings.isVisible,
+            settings.hideOnDraw,
+            canvasController.isTouchEventActive.value
+        )
     ) {
-        Tools(activeTool, canvasController, selectedDialog)
-        OptionButtons(canvasController, selectedDialog, undoPaths, redoPaths)
+        if (settings.isHorizontal) {
+            Row(
+                modifier = modifier
+            ) {
+                ToolbarItems(activeTool, canvasController, selectedDialog, settings.size)
+            }
+        } else {
+            Column(
+                modifier = modifier,
+            ) {
+                ToolbarItems(activeTool, canvasController, selectedDialog, settings.size)
+            }
+        }
     }
 }
 
 @Composable
-fun Tools(
+private fun ToolbarItems(
     activeTool: MutableState<Tools>,
     canvasController: CanvasController,
-    selectedDialog: MutableState<Dialogs>
+    selectedDialog: MutableState<Dialogs>,
+    toolbarSize: ToolbarSize
 ) {
-    PenItem(
-        activeTool = activeTool.value,
-        tint = canvasController.penSettings.value.penColor.color
-    ) {
-        if (activeTool.value == Tools.Pen || activeTool.value == Tools.ColorPicker) {
-            selectedDialog.value = Dialogs.PenSettings
-            activeTool.value = Tools.Pen
-        } else {
-            activeTool.value = Tools.Pen
-        }
+    val size = when (toolbarSize) {
+        ToolbarSize.Small -> 32.dp
+        ToolbarSize.Medium -> 46.dp
+        ToolbarSize.Large -> 52.dp
     }
-
-    ToolBarActionItem(
-        activeTool = activeTool.value,
-        toolName = Tools.Eraser,
-        painterResource(id = R.drawable.eraser_solid)
-    ) {
-        if (selectedDialog.value == Dialogs.None) {
-            if (activeTool.value == Tools.Eraser) {
-                selectedDialog.value = Dialogs.EraserSettings
-            }
-            activeTool.value = Tools.Eraser
-        }
+    val padding = when (toolbarSize) {
+        ToolbarSize.Small -> 3.dp
+        ToolbarSize.Medium -> 6.dp
+        ToolbarSize.Large -> 6.dp
     }
-
-    ToolBarActionItem(
-        activeTool = activeTool.value,
-        toolName = Tools.Mover,
-        painterResource(id = R.drawable.mover)
-    ) {
-        if (selectedDialog.value == Dialogs.None) {
-            activeTool.value = Tools.Mover
-        }
-    }
+    Tools(activeTool, canvasController, selectedDialog, size, padding)
+    OptionButtons(canvasController, selectedDialog, size, padding)
 }
 
-@Composable
-fun OptionButtons(
-    canvasController: CanvasController,
-    selectedDialog: MutableState<Dialogs>,
-    undoPaths: Boolean,
-    redoPaths: Boolean
-) {
-    val undo = remember { { canvasController.undo() } }
-    val redo = remember { { canvasController.redo() } }
-    ToolBarItem(
-        icon = Icons.AutoMirrored.Filled.ArrowBack,
-        undoPaths,
-        undo
-    )
-    ToolBarItem(
-        icon = Icons.AutoMirrored.Filled.ArrowForward,
-        redoPaths,
-        redo
-    )
-    ToolBarItem(icon = Icons.Filled.Menu) {
-        selectedDialog.value = Dialogs.Preferences
+private fun isVisible(
+    isVisible: Boolean,
+    hideOnDraw: Boolean,
+    isTouchEventActive: Boolean
+): Boolean {
+    return when {
+        isVisible && hideOnDraw && isTouchEventActive -> false
+        else -> isVisible
     }
 }

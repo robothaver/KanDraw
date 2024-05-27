@@ -37,12 +37,11 @@ class CanvasEventHandler(
     }
 
     fun dragStart(offset: Offset) {
+        isTouchEventActive.value = true
         if (activeTool.value == Tools.Pen) {
             canvasController.addNewPath(
                 getOffset(offset)
             )
-        } else if (activeTool.value == Tools.Eraser || activeTool.value == Tools.ColorPicker) {
-            isTouchEventActive.value = true
         }
     }
 

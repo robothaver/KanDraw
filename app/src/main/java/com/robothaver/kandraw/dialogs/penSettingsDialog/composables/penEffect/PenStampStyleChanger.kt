@@ -25,16 +25,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StampedPathEffectStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.StampStyles
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
 import com.robothaver.kandraw.viewModel.data.PenSettings
-import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.StampStyles
 
 @Composable
 fun PenStampStyleChanger(penSettings: MutableState<PenSettings>) {
     val isExpended = remember {
         mutableStateOf(false)
     }
-    Text(text = "Selected style", fontSize = 12.sp, color = MaterialTheme.colorScheme.surfaceVariant)
+    Text(
+        text = "Selected style",
+        fontSize = 12.sp,
+        color = MaterialTheme.colorScheme.surfaceVariant
+    )
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,8 +51,15 @@ fun PenStampStyleChanger(penSettings: MutableState<PenSettings>) {
             .clickable { isExpended.value = !isExpended.value }
             .padding(12.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text(text = penSettings.value.penEffectSettings.stampStyle.toString())
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = penSettings.value.penEffectSettings.stampStyle.toString(),
+                color = MaterialTheme.colorScheme.onBackground
+            )
             Icon(
                 Icons.Filled.KeyboardArrowDown,
                 null,
@@ -58,7 +69,7 @@ fun PenStampStyleChanger(penSettings: MutableState<PenSettings>) {
         DropdownMenu(expanded = isExpended.value, onDismissRequest = { isExpended.value = false }) {
             StampStyles.values().forEach { style ->
                 DropdownMenuItem(
-                    text = { Text(style.toString()) },
+                    text = { Text(style.toString(), color = MaterialTheme.colorScheme.onBackground) },
                     onClick = {
                         updateEffect(
                             penSettings,

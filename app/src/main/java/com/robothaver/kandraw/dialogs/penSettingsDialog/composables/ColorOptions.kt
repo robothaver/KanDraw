@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.robothaver.kandraw.composables.ColorItem
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateColor
 import com.robothaver.kandraw.viewModel.data.PenSettings
-import com.robothaver.kandraw.viewModel.data.defaultColors
+import com.robothaver.kandraw.utils.penDefaultColors
 
 @Composable
 fun ColorOptions(
@@ -26,10 +26,10 @@ fun ColorOptions(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         for (i in 0..4) {
-            ColorItem(color = defaultColors[i], penSettings.value.penColor.hue, size) {
+            ColorItem(color = penDefaultColors[i], penSettings.value.penColor.hue, size) {
                 updateColor(
                     penSettings,
-                    newHue = defaultColors[i],
+                    newHue = penDefaultColors[i],
                 )
             }
         }
@@ -40,10 +40,10 @@ fun ColorOptions(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         for (i in 5..8) {
-            ColorItem(color = defaultColors[i], penSettings.value.penColor.hue, size) {
+            ColorItem(color = penDefaultColors[i], penSettings.value.penColor.hue, size) {
                 updateColor(
                     penSettings,
-                    newHue = defaultColors[i],
+                    newHue = penDefaultColors[i],
                 )
             }
         }

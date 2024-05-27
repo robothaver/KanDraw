@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Settings
@@ -29,35 +31,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.robothaver.kandraw.utils.windowInfo.WindowType
 
 @Composable
-fun MainScreen(onNavigate: (route: String) -> Unit) {
+fun MainScreen(screenWidthInfo: WindowType, onNavigate: (route: String) -> Unit) {
     val isClickable = remember {
         mutableStateOf(true)
     }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                Icons.Filled.Settings,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-                modifier = Modifier.size(48.dp)
-            )
-            Text(
-                text = "Settings",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.offset(x = 0.dp, y = 26.dp),
-                color = MaterialTheme.colorScheme.onBackground
-            )
+        if (screenWidthInfo == WindowType.Compact) {
+            SettingsHeaderIcon()
         }
         menuOptions.forEach { option ->
             Row(
@@ -99,5 +87,29 @@ fun MainScreen(onNavigate: (route: String) -> Unit) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SettingsHeaderIcon() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            Icons.Filled.Settings,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
+            modifier = Modifier.size(48.dp)
+        )
+        Text(
+            text = "Settings",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.offset(x = 0.dp, y = 26.dp),
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }

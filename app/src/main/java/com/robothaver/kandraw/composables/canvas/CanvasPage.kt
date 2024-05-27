@@ -15,7 +15,11 @@ import com.robothaver.kandraw.viewModel.CanvasViewModel
 import dev.shreyaspatil.capturable.controller.CaptureController
 
 @Composable
-fun CanvasPage(viewModel: CanvasViewModel, canvasController: CanvasController, captureController: CaptureController) {
+fun CanvasPage(
+    viewModel: CanvasViewModel,
+    canvasController: CanvasController,
+    captureController: CaptureController
+) {
     val containerSize = remember { mutableStateOf(IntSize(0, 0)) }
 
     // Resize background image when screen is rotated or settings are changed
@@ -42,11 +46,14 @@ fun CanvasPage(viewModel: CanvasViewModel, canvasController: CanvasController, c
         )
         ToolBar(
             canvasController,
+            viewModel.toolbarSettings,
             viewModel.activeTool,
             viewModel.selectedDialog,
-            containerSize,
-            viewModel.undoPaths.isNotEmpty(),
-            viewModel.redoPaths.isNotEmpty()
+            containerSize
+        )
+        ToolbarVisibilityButton(
+            toolbarSettings = viewModel.toolbarSettings,
+            containerSize = containerSize.value
         )
     }
 }

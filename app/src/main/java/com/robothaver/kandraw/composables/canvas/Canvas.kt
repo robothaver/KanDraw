@@ -40,10 +40,9 @@ fun Canvas(
     val gridSettings = canvasController.gridSettings.value
     val image = canvasController.backgroundImage.value
     val selectedPosition = remember { mutableStateOf(Offset(0f, 0f)) }
-    val isTouchEventActive = remember { mutableStateOf(false) }
     val canvasEventHandler = CanvasEventHandler(
         selectedPosition,
-        isTouchEventActive,
+        canvasController.isTouchEventActive,
         activeTool,
         canvasController,
         viewPortPosition
@@ -89,9 +88,9 @@ fun Canvas(
                 }
             }
         }) {
-        if (isTouchEventActive.value && activeTool.value == Tools.ColorPicker) {
+        if (canvasController.isTouchEventActive.value && activeTool.value == Tools.ColorPicker) {
             ColorPickerTool(canvasController = canvasController, selectedPosition.value)
-        } else if (isTouchEventActive.value && activeTool.value == Tools.Eraser) {
+        } else if (canvasController.isTouchEventActive.value && activeTool.value == Tools.Eraser) {
             Eraser(selectedPosition = selectedPosition, canvasController.eraserWidth)
         }
     }

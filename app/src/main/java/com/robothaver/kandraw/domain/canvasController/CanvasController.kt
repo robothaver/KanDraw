@@ -23,12 +23,13 @@ class CanvasController(
     val visiblePaths: SnapshotStateList<PathData>
 ) {
     private val maxUndoSteps = 64
-    private val undoPaths = canvasViewModel.undoPaths
-    private val redoPaths = canvasViewModel.redoPaths
+    val undoPaths = canvasViewModel.undoPaths
+    val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
     private val contentResolver = activity.contentResolver
     private val bitmapProcessor = BitmapProcessor()
     private val saveOptions = canvasViewModel.imageSaveOptions
+    val isTouchEventActive = mutableStateOf(false)
     val imageSaver = ImageSaver(captureController, activity)
     val canvasSize = mutableStateOf(IntSize(0, 0))
     val backgroundImage = canvasViewModel.backgroundImage

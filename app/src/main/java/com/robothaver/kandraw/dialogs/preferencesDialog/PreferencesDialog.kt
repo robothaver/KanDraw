@@ -2,12 +2,9 @@ package com.robothaver.kandraw.dialogs.preferencesDialog
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,9 +18,11 @@ import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelecto
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.CustomColorSelector
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.mainScreen.MainScreen
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.saveDrawing.SaveDrawing
+import com.robothaver.kandraw.dialogs.preferencesDialog.pages.toolbarSettings.ToolbarSettingsPage
 import com.robothaver.kandraw.dialogs.scaleIntoContainer
 import com.robothaver.kandraw.dialogs.scaleOutOfContainer
 import com.robothaver.kandraw.domain.canvasController.CanvasController
+import com.robothaver.kandraw.utils.backgroundDefaultColors
 import com.robothaver.kandraw.utils.windowInfo.WindowInfo
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 
@@ -38,10 +37,16 @@ fun PreferencesDialog(
         ColorSelectorData(
             viewModel.backgroundColor.value,
             ColorSelectorIds.BackgroundColor,
-            listOf(Color(0xFFF2F2F2), Color(0xFF151515), Color(0xFFffff99), Color(0xFF274c43), Color(0xFF9DB2BF))
+            backgroundDefaultColors
         ),
-        ColorSelectorData(viewModel.gridSettings.value.smallCellColor, ColorSelectorIds.SmallCellColor),
-        ColorSelectorData(viewModel.gridSettings.value.largeCellColor, ColorSelectorIds.LargeCellColor)
+        ColorSelectorData(
+            viewModel.gridSettings.value.smallCellColor,
+            ColorSelectorIds.SmallCellColor
+        ),
+        ColorSelectorData(
+            viewModel.gridSettings.value.largeCellColor,
+            ColorSelectorIds.LargeCellColor
+        )
     )
     val size = getDialogSize(windowInfo.screenWidthInfo, windowInfo.screenHeightInfo)
 
@@ -59,7 +64,7 @@ fun PreferencesDialog(
             popExitTransition = { scaleOutOfContainer() }
         ) {
             composable(route = Screen.MainScreen.route) {
-                MainScreen {
+                MainScreen(screenWidthInfo = windowInfo.screenWidthInfo) {
                     navController.navigate(it)
                 }
             }
@@ -68,14 +73,9 @@ fun PreferencesDialog(
                     navController.popBackStack()
                 }
             }
-            composable(route = Screen.Other.route) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Text(text = "OTHER PAGE")
-                }
-            }
             composable(route = Screen.ToolbarPreferencesScreen.route) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Text(text = "TOOLBAR PAGE")
+                ToolbarSettingsPage(viewModel.toolbarSettings) {
+                    navController.popBackStack()
                 }
             }
             composable(route = Screen.BackgroundImageScreen.route) {
