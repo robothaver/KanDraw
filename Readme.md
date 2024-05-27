@@ -5,7 +5,7 @@ KanDraw is a simple Android drawing app developed with Kotlin and Jetpack Compos
 
 # System requirements
 - Android 9 or up
-- 20,00 MB of storage
+- 35,00 MB of storage
 
 # Features
 - Drawing
