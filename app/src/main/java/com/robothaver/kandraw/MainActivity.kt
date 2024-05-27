@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            KanDrawTheme(dynamicColor = true, theme = newFilcTheme) {
+            KanDrawTheme(dynamicColor = false, theme = newFilcTheme) {
                 val windowManager = WindowManager(window)
                 windowManager.hideSystemBars()
                 val windowInfo = getWindowInfo()

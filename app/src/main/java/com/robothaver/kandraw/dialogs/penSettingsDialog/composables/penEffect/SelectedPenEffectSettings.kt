@@ -7,12 +7,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
 import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.Effects
+import com.robothaver.kandraw.dialogs.penSettingsDialog.utils.updateEffect
 import com.robothaver.kandraw.viewModel.data.PenSettings
 
 @Composable
@@ -29,7 +30,7 @@ fun SelectedPenEffectSettings(penSettings: MutableState<PenSettings>) {
             Effects.Default -> Unit
             Effects.Dashed -> {
                 Column {
-                    Text(text = "Space between")
+                    Text(text = "Space between", color = MaterialTheme.colorScheme.onBackground)
                     Slider(
                         value = penSettings.value.penEffectSettings.spaceBetween,
                         onValueChange = {
@@ -42,7 +43,7 @@ fun SelectedPenEffectSettings(penSettings: MutableState<PenSettings>) {
                         },
                         valueRange = 1f..200f,
                     )
-                    Text(text = "Line length")
+                    Text(text = "Line length", color = MaterialTheme.colorScheme.onBackground)
                     Slider(
                         value = penSettings.value.penEffectSettings.lineLength,
                         onValueChange = {
@@ -58,7 +59,7 @@ fun SelectedPenEffectSettings(penSettings: MutableState<PenSettings>) {
 
             Effects.Stamped -> {
                 Column {
-                    Text(text = "Line length")
+                    Text(text = "Line length", color = MaterialTheme.colorScheme.onBackground)
                     Slider(
                         value = penSettings.value.penEffectSettings.spaceBetween,
                         onValueChange = {

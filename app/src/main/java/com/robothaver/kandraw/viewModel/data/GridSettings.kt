@@ -4,7 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 
 data class GridSettings(
-    val isGridEnabled: Boolean = true,
+    val isGridEnabled: Boolean = false,
     val isLargeCellEnabled: Boolean = true,
     val gridOffset: Offset = Offset(0f, 0f),
     val smallCellSize: Float = 80f,

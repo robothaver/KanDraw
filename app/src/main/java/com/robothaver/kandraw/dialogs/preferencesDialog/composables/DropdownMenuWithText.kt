@@ -33,15 +33,16 @@ fun DropdownMenuWithText(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .clickable {
+                onSelected()
+            }
             .border(
                 width = 3.dp,
                 shape = RoundedCornerShape(12.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
-            .padding(12.dp)
-            .clickable {
-                onSelected()
-            },
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Title(text = title, fontSize = 18.sp)

@@ -18,10 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.robothaver.kandraw.dialogs.preferencesDialog.composables.DropdownMenuWithText
 import com.robothaver.kandraw.dialogs.penSettingsDialog.composables.Title
 import com.robothaver.kandraw.dialogs.preferencesDialog.Screen
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.CheckboxWithText
+import com.robothaver.kandraw.dialogs.preferencesDialog.composables.DropdownMenuWithText
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesBody
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.SwitchWithText
 import com.robothaver.kandraw.viewModel.data.ToolbarSettings
@@ -111,6 +111,7 @@ fun ToolbarSettingsPage(toolbarSettings: MutableState<ToolbarSettings>, onNaviga
                     toolbarSettings.value = toolbarSettings.value.copy(
                         size = size
                     )
+                    isExpanded.value = false
                 })
             }
         }

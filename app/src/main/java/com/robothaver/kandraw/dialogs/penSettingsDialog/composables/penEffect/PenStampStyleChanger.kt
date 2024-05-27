@@ -37,7 +37,7 @@ fun PenStampStyleChanger(penSettings: MutableState<PenSettings>) {
     Text(
         text = "Selected style",
         fontSize = 12.sp,
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = MaterialTheme.colorScheme.onBackground
     )
     Box(
         modifier = Modifier

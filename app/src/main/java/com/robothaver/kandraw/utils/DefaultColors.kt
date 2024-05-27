@@ -16,7 +16,7 @@ val penDefaultColors = listOf(
 
 val backgroundDefaultColors = listOf(
     Color(0xFFF2F2F2),
-    Color(0xFF151515),
+    Color(0xFF1E1E1E),
     Color(0xFFffff99),
     Color(0xFF274c43),
     Color(0xFF9DB2BF)
