@@ -1,7 +1,7 @@
 <img src="Assets/Banner.png"/>
 
 # KanDraw
-KanDraw is a simple drawing app for android created with Kotlin and Jetpack Compose for my physics teacher.
+KanDraw is a simple Android drawing app developed with Kotlin and Jetpack Compose for my physics teacher.
 
 # System requirements
 - Android 9 or up
@@ -43,5 +43,5 @@ KanDraw is a simple drawing app for android created with Kotlin and Jetpack Comp
 </p>
 
 # Thanks to
-[Skydoves](https://github.com/skydoves) for the beautiful [color picker](https://github.com/skydoves/colorpicker-compose) used in KanDraw
-[PatilShreyas](https://github.com/PatilShreyas) for the [Capturable](https://github.com/PatilShreyas/Capturable) utility used to save drawings
+- [Skydoves](https://github.com/skydoves) for the beautiful [color picker](https://github.com/skydoves/colorpicker-compose) used in KanDraw
+- [PatilShreyas](https://github.com/PatilShreyas) for the [Capturable](https://github.com/PatilShreyas/Capturable) utility used to save drawings
