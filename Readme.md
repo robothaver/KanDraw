@@ -9,14 +9,14 @@ KanDraw is a simple Android drawing app developed with Kotlin and Jetpack Compos
 
 # Features
 - Drawing
-  - Select any color using HSV color picker or from defualts
-  - Select pen settings (width, cap, alpha etc.)
-  - Select and customize pen effects (stripped, custom shapes, etc.)
+  - Select any color using HSV color picker or from defaults
+  - Select pen settings (width, cap, alpha, etc.)
+  - Select and customize pen effects (striped, custom shapes, etc.)
 - Erasing
   - Select eraser width
 - Import image
 - Save drawing
-  - The app can create its own album or just save it to pictures.
+  - The app can create its own album or just save it to pictures
   - Support for exporting with a transparent background
 - Select custom color
 - Undo
@@ -26,7 +26,7 @@ KanDraw is a simple Android drawing app developed with Kotlin and Jetpack Compos
 - Color picker
   - Pick colors from your drawing or from an imported image
 - Infinite canvas
-  - Draw anywhere on the canvas, giving you endless space to create. 
+  - Draw anywhere on the canvas, giving you endless space to create
 - Large screen support
 
 # Demo
