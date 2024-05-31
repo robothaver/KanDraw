@@ -14,29 +14,8 @@ class CanvasEventHandler(
     private val canvasController: CanvasController,
     private val viewPortPosition: MutableState<Offset>
 ) {
-    fun tap(offset: Offset) {
-        when (activeTool.value) {
-            Tools.Eraser -> {
-                selectedPosition.value = offset
-                canvasController.eraseSelectedPath(getOffset(offset))
-            }
-
-            Tools.ColorPicker -> {
-                selectedPosition.value = offset
-                val color = canvasController.getSelectedPathColor(getOffset(offset), offset)
-                setSelectedColor(canvasController, color)
-                activeTool.value = Tools.Pen
-            }
-
-            Tools.Pen -> {
-                canvasController.addNewPath(getOffset(offset))
-            }
-
-            else -> Unit
-        }
-    }
-
     fun dragStart(offset: Offset) {
+        println("DRAG STARTED")
         isTouchEventActive.value = true
         if (activeTool.value == Tools.Pen) {
             canvasController.addNewPath(
@@ -45,42 +24,48 @@ class CanvasEventHandler(
         }
     }
 
-    fun drag(change: Offset, offset: Offset) = when (activeTool.value) {
-        Tools.Eraser -> {
-            selectedPosition.value = change
-            canvasController.eraseSelectedPath(getOffset(change))
-        }
+    fun drag(change: Offset, previousPosition: Offset) {
+        println("DRAGGING")
+        when (activeTool.value) {
+            Tools.Eraser -> {
+                selectedPosition.value = change
+                canvasController.eraseSelectedPath(getOffset(change))
+            }
 
-        Tools.ColorPicker -> {
-            selectedPosition.value = change
-            val color = canvasController.getSelectedPathColor(getOffset(change), change)
-            setSelectedColor(canvasController, color)
-        }
+            Tools.ColorPicker -> {
+                selectedPosition.value = change
+                val color = canvasController.getSelectedPathColor(getOffset(change), change)
+                setSelectedColor(canvasController, color)
+            }
 
-        Tools.Mover -> {
-            viewPortPosition.value += offset
-        }
+            Tools.Mover -> {
+                viewPortPosition.value += change - previousPosition
+            }
 
-        else -> {
-            canvasController.expandPath(getOffset(change))
-        }
-    }
-
-    fun dragEnd() {
-        isTouchEventActive.value = false
-        if (activeTool.value == Tools.ColorPicker) {
-            activeTool.value = Tools.Pen
+            else -> {
+                canvasController.expandPath(getOffset(change))
+            }
         }
     }
 
-    private fun setSelectedColor(canvasController: CanvasController, selectedColor: Color) {
-        canvasController.penSettings.value = canvasController.penSettings.value.copy(
-            customColor = selectedColor,
-        )
-        setColorToCustom(canvasController.penSettings, selectedColor, true)
-    }
+        fun dragEnd() {
+            isTouchEventActive.value = false
+            if (activeTool.value == Tools.ColorPicker) {
+                activeTool.value = Tools.Pen
+            }
+        }
 
-    private fun getOffset(newPoint: Offset): Offset {
-        return Offset(newPoint.x - viewPortPosition.value.x, newPoint.y - viewPortPosition.value.y)
+        private fun setSelectedColor(canvasController: CanvasController, selectedColor: Color) {
+            canvasController.penSettings.value = canvasController.penSettings.value.copy(
+                customColor = selectedColor,
+            )
+            setColorToCustom(canvasController.penSettings, selectedColor, true)
+        }
+
+        private fun getOffset(newPoint: Offset): Offset {
+            return Offset(
+                newPoint.x - viewPortPosition.value.x,
+                newPoint.y - viewPortPosition.value.y
+            )
+        }
     }
-}

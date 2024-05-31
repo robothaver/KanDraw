@@ -1,8 +1,6 @@
 package com.robothaver.kandraw.composables.canvas
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -20,6 +18,7 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
 import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasDrawer
 import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasEventHandler
+import com.robothaver.kandraw.composables.canvas.canvasCore.detectTouchEvent
 import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.tools.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.tools.Eraser
@@ -53,18 +52,7 @@ fun Canvas(
         .fillMaxSize()
         .clipToBounds()
         .pointerInput(Unit) {
-            detectDragGestures(onDragStart = { offset ->
-                canvasEventHandler.dragStart(offset)
-            }, onDrag = { change, offset ->
-                canvasEventHandler.drag(change.position, offset)
-            }, onDragEnd = {
-                canvasEventHandler.dragEnd()
-            })
-        }
-        .pointerInput(Unit) {
-            detectTapGestures { offset ->
-                canvasEventHandler.tap(offset)
-            }
+            detectTouchEvent(canvasEventHandler)
         }
         .drawBehind {
             val canvasDrawer = CanvasDrawer(gridSettings, this, image, viewPortPosition.value)
