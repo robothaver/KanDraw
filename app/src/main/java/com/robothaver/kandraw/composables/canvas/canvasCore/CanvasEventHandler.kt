@@ -14,6 +14,27 @@ class CanvasEventHandler(
     private val canvasController: CanvasController,
     private val viewPortPosition: MutableState<Offset>
 ) {
+    fun tap(offset: Offset) {
+        selectedPosition.value = offset
+        isTouchEventActive.value = true
+        when (activeTool.value) {
+            Tools.Eraser -> {
+                canvasController.eraseSelectedPath(getOffset(offset))
+            }
+
+            Tools.ColorPicker -> {
+                val color = canvasController.getSelectedPathColor(getOffset(offset), offset)
+                setSelectedColor(canvasController, color)
+            }
+
+            Tools.Pen -> {
+                canvasController.addNewPath(getOffset(offset))
+            }
+
+            else -> Unit
+        }
+    }
+
     fun dragStart(offset: Offset) {
         println("DRAG STARTED")
         isTouchEventActive.value = true
@@ -40,6 +61,7 @@ class CanvasEventHandler(
 
             Tools.Mover -> {
                 viewPortPosition.value += change - previousPosition
+                canvasController.getVisiblePaths()
             }
 
             else -> {

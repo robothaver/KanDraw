@@ -2,11 +2,16 @@ package com.robothaver.kandraw.composables.canvas.canvasCore
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.IntSize
+import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.viewModel.data.GridSettings
+import com.robothaver.kandraw.viewModel.data.PathData
+import com.robothaver.kandraw.viewModel.data.Tools
 import com.robothaver.kandraw.viewModel.data.backgroundImage.BackgroundImage
 import com.robothaver.kandraw.viewModel.data.backgroundImage.ImageAlignments
 
@@ -25,6 +30,30 @@ class CanvasDrawer(
     private val smallCellStrokeWidth = gridSettings.smallCellStrokeWidth
     private val largeCellStrokeWidth = gridSettings.largeCellStrokeWidth
 
+    fun drawPaths(canvasController: CanvasController, activeTool: Tools) {
+        if (canvasController.visiblePaths.isEmpty()) {
+            canvasController.getVisiblePaths()
+        }
+        drawScope.paths(canvasController.visiblePaths)
+    }
+
+    private fun DrawScope.paths(visiblePaths: List<PathData>) {
+        translate(left = viewportOffset.x, top = viewportOffset.y) {
+            visiblePaths.forEach { path ->
+                drawPath(
+                    path = path.path,
+                    color = path.color,
+                    style = Stroke(
+                        width = path.strokeWidth,
+                        cap = path.cap,
+                        join = StrokeJoin.Round,
+                        pathEffect = path.style
+                    ), alpha = path.alpha
+                )
+            }
+        }
+    }
+    
     fun drawBackgroundImage() {
         if (backgroundImage.image == null || !backgroundImage.isVisible) return
         drawScope.backgroundImage()

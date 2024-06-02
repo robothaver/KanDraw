@@ -85,6 +85,7 @@ fun PreferencesDialog(
             }
             composable(route = Screen.BackgroundSettings.route) {
                 BackgroundSettings(
+                    canvasController = canvasController,
                     viewPortPosition = viewModel.viewportPosition,
                     backgroundColor = viewModel.backgroundColor.value.color,
                     gridSettings = viewModel.gridSettings,

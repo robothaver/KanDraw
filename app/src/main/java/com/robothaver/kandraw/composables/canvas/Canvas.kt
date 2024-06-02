@@ -12,14 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
 import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasDrawer
 import com.robothaver.kandraw.composables.canvas.canvasCore.CanvasEventHandler
 import com.robothaver.kandraw.composables.canvas.canvasCore.detectTouchEvent
-import com.robothaver.kandraw.composables.canvas.canvasCore.getPathsToDraw
 import com.robothaver.kandraw.composables.canvas.tools.ColorPickerTool
 import com.robothaver.kandraw.composables.canvas.tools.Eraser
 import com.robothaver.kandraw.domain.canvasController.CanvasController
@@ -59,27 +55,13 @@ fun Canvas(
 
             canvasDrawer.drawBackgroundGrid()
             canvasDrawer.drawBackgroundImage()
+            canvasDrawer.drawPaths(canvasController, activeTool.value)
 
-            translate(left = viewPortPosition.value.x, top = viewPortPosition.value.y) {
-                val pathsToDraw = getPathsToDraw(
-                    activeTool, canvasController, viewPortPosition, size
-                )
-                pathsToDraw.forEach { path ->
-                    drawPath(
-                        path = path.path, color = path.color, style = Stroke(
-                            width = path.strokeWidth,
-                            cap = path.cap,
-                            join = StrokeJoin.Round,
-                            pathEffect = path.style
-                        ), alpha = path.alpha
-                    )
-                }
-            }
         }) {
         if (canvasController.isTouchEventActive.value && activeTool.value == Tools.ColorPicker) {
-            ColorPickerTool(canvasController = canvasController, selectedPosition.value)
+            ColorPickerTool(canvasController, selectedPosition.value)
         } else if (canvasController.isTouchEventActive.value && activeTool.value == Tools.Eraser) {
-            Eraser(selectedPosition = selectedPosition, canvasController.eraserWidth)
+            Eraser(selectedPosition, canvasController.eraserWidth)
         }
     }
 }

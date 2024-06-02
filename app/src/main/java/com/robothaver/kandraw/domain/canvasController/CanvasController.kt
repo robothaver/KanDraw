@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.IntSize
+import com.robothaver.kandraw.composables.canvas.canvasCore.PathProcessor
 import com.robothaver.kandraw.domain.canvasController.penEffect.getPenEffect
 import com.robothaver.kandraw.viewModel.CanvasViewModel
 import com.robothaver.kandraw.viewModel.data.Actions
@@ -23,12 +24,13 @@ class CanvasController(
     val visiblePaths: SnapshotStateList<PathData>
 ) {
     private val maxUndoSteps = 64
-    val undoPaths = canvasViewModel.undoPaths
-    val redoPaths = canvasViewModel.redoPaths
     private val allPathBackup = canvasViewModel.allPathBackup
     private val contentResolver = activity.contentResolver
     private val bitmapProcessor = BitmapProcessor()
     private val saveOptions = canvasViewModel.imageSaveOptions
+    private val viewportPosition = canvasViewModel.viewportPosition
+    val undoPaths = canvasViewModel.undoPaths
+    val redoPaths = canvasViewModel.redoPaths
     val isTouchEventActive = mutableStateOf(false)
     val imageSaver = ImageSaver(captureController, activity)
     val canvasSize = mutableStateOf(IntSize(0, 0))
@@ -38,6 +40,14 @@ class CanvasController(
     val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth
     val gridSettings = canvasViewModel.gridSettings
+
+    fun getVisiblePaths() {
+        // Find the paths currently visible on the screen
+        visiblePaths.clear()
+        visiblePaths.addAll(
+            PathProcessor(allPaths, viewportPosition.value, canvasSize.value).processPaths()
+        )
+    }
 
     fun resizeBitmap() {
         backgroundImage.value = backgroundImage.value.copy(
@@ -125,11 +135,6 @@ class CanvasController(
                 originalImage = bitmap
             )
         }
-    }
-
-    fun addVisiblePaths(newVisiblePaths: List<PathData>) {
-        visiblePaths.clear()
-        visiblePaths.addAll(newVisiblePaths)
     }
 
     fun undo() {

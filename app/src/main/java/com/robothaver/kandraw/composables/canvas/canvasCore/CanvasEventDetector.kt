@@ -8,7 +8,7 @@ import androidx.compose.ui.input.pointer.PointerInputScope
 suspend fun PointerInputScope.detectTouchEvent(canvasEventHandler: CanvasEventHandler) {
     awaitEachGesture {
         val pointer = awaitFirstDown()
-        canvasEventHandler.dragStart(pointer.position)
+        canvasEventHandler.tap(pointer.position)
         do {
             val event = awaitDragOrCancellation(pointer.id)
             if (event != null && event.pressed) {

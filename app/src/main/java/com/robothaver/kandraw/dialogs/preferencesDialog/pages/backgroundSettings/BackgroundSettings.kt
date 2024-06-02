@@ -12,10 +12,12 @@ import androidx.compose.ui.graphics.Color
 import com.robothaver.kandraw.dialogs.preferencesDialog.Screen
 import com.robothaver.kandraw.dialogs.preferencesDialog.composables.PreferencesBody
 import com.robothaver.kandraw.dialogs.preferencesDialog.pages.customColorSelector.ColorSelectorIds
+import com.robothaver.kandraw.domain.canvasController.CanvasController
 import com.robothaver.kandraw.viewModel.data.GridSettings
 
 @Composable
 fun BackgroundSettings(
+    canvasController: CanvasController,
     viewPortPosition: MutableState<Offset>,
     backgroundColor: Color,
     gridSettings: MutableState<GridSettings>,
@@ -28,7 +30,10 @@ fun BackgroundSettings(
         }
 
         FilledTonalButton(
-            onClick = { viewPortPosition.value = Offset(0f, 0f) },
+            onClick = {
+                viewPortPosition.value = Offset(0f, 0f)
+                canvasController.getVisiblePaths()
+                      },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Reset viewport position")
