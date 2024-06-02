@@ -35,18 +35,7 @@ class CanvasEventHandler(
         }
     }
 
-    fun dragStart(offset: Offset) {
-        println("DRAG STARTED")
-        isTouchEventActive.value = true
-        if (activeTool.value == Tools.Pen) {
-            canvasController.addNewPath(
-                getOffset(offset)
-            )
-        }
-    }
-
     fun drag(change: Offset, previousPosition: Offset) {
-        println("DRAGGING")
         when (activeTool.value) {
             Tools.Eraser -> {
                 selectedPosition.value = change
