@@ -38,9 +38,9 @@ fun ToolBarItem(
                 .size(size)
                 .padding(padding),
             contentDescription = null,
-            tint = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(
-                alpha = 0.2f
-            )
+            tint = if (enabled) {
+                MaterialTheme.colorScheme.primary
+            } else MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
         )
     }
 }

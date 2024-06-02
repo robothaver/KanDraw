@@ -29,13 +29,13 @@ class CanvasController(
     private val bitmapProcessor = BitmapProcessor()
     private val saveOptions = canvasViewModel.imageSaveOptions
     private val viewportPosition = canvasViewModel.viewportPosition
+    private val allPaths = canvasViewModel.allPaths
     val undoPaths = canvasViewModel.undoPaths
     val redoPaths = canvasViewModel.redoPaths
-    val isTouchEventActive = mutableStateOf(false)
+    val touchActive = mutableStateOf(false)
     val imageSaver = ImageSaver(captureController, activity)
     val canvasSize = mutableStateOf(IntSize(0, 0))
     val backgroundImage = canvasViewModel.backgroundImage
-    val allPaths = canvasViewModel.allPaths
     val penSettings = canvasViewModel.penSettings
     val backgroundColor = canvasViewModel.backgroundColor
     val eraserWidth = canvasViewModel.eraserWidth

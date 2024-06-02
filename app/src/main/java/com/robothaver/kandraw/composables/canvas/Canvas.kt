@@ -37,7 +37,7 @@ fun Canvas(
     val selectedPosition = remember { mutableStateOf(Offset(0f, 0f)) }
     val canvasEventHandler = CanvasEventHandler(
         selectedPosition,
-        canvasController.isTouchEventActive,
+        canvasController.touchActive,
         activeTool,
         canvasController,
         viewPortPosition
@@ -58,9 +58,9 @@ fun Canvas(
             canvasDrawer.drawPaths(canvasController, activeTool.value)
 
         }) {
-        if (canvasController.isTouchEventActive.value && activeTool.value == Tools.ColorPicker) {
+        if (canvasController.touchActive.value && activeTool.value == Tools.ColorPicker) {
             ColorPickerTool(canvasController, selectedPosition.value)
-        } else if (canvasController.isTouchEventActive.value && activeTool.value == Tools.Eraser) {
+        } else if (canvasController.touchActive.value && activeTool.value == Tools.Eraser) {
             Eraser(selectedPosition, canvasController.eraserWidth)
         }
     }

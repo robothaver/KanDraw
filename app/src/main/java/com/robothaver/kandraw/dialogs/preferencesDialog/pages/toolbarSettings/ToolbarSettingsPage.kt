@@ -48,7 +48,7 @@ fun ToolbarSettingsPage(toolbarSettings: MutableState<ToolbarSettings>, onNaviga
         CheckboxWithText(
             isChecked = toolbarSettings.value.hideOnDraw,
             title = "Hide toolbar on draw",
-            description = "The toolbar will disappear whenever you draw or erase"
+            description = "The toolbar will disappear whenever you interact with the canvas"
         ) {
             toolbarSettings.value = toolbarSettings.value.copy(
                 hideOnDraw = it
