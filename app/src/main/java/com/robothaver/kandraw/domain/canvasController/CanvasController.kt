@@ -151,10 +151,14 @@ class CanvasController(
                 }
             } else if (undoPaths.last().action == Actions.Erase) {
                 allPaths.add(undoPaths.last().index, undoPaths.last())
-                visiblePaths.add(undoPaths.last().index, undoPaths.last())
+                if (visiblePaths.isNotEmpty()) {
+                    visiblePaths.add(undoPaths.last().index, undoPaths.last())
+                }
             } else {
                 allPaths.removeLast()
-                visiblePaths.removeLast()
+                if (visiblePaths.isNotEmpty()) {
+                    visiblePaths.removeLast()
+                }
             }
             undoPaths.removeLast()
         }
@@ -174,7 +178,9 @@ class CanvasController(
 
             } else if (redoPaths.last().action == Actions.Erase) {
                 allPaths.removeAt(redoPaths.last().index)
-                visiblePaths.removeAt(redoPaths.last().index)
+                if (visiblePaths.isNotEmpty() || redoPaths.last().index != visiblePaths.lastIndex) {
+                    visiblePaths.removeAt(redoPaths.last().index)
+                }
             } else {
                 allPaths.add(redoPaths.last())
                 visiblePaths.add(redoPaths.last())
