@@ -39,12 +39,8 @@ fun SaveDrawing(
 ) {
     val options = saveOptions.value
     val scope = rememberCoroutineScope()
-    val showDialog = remember {
-        mutableStateOf(false)
-    }
-    val hasAsked = remember {
-        mutableStateOf(false)
-    }
+    val showDialog = remember { mutableStateOf(false) }
+    val hasAsked = remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->

@@ -36,5 +36,4 @@ class WindowManager(
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
         }
     }
-
 }
