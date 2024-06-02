@@ -103,9 +103,12 @@ class CanvasController(
     }
 
     suspend fun saveDrawing() {
-        toggleElements(false)
+        val wasBgImageEnabled = backgroundImage.value.isVisible
+        val wasGridEnabled = gridSettings.value.isGridEnabled
+
+        toggleElements(isBgImageVisible = false, isGirdVisible = false)
         imageSaver.saveImage(saveOptions.value, backgroundColor.value.color)
-        toggleElements(true)
+        toggleElements(isBgImageVisible = wasBgImageEnabled, isGirdVisible = wasGridEnabled)
     }
 
     /**
@@ -180,15 +183,15 @@ class CanvasController(
         }
     }
 
-    private fun toggleElements(visible: Boolean) {
+    private fun toggleElements(isBgImageVisible: Boolean, isGirdVisible: Boolean) {
         if (!saveOptions.value.includeBackgroundImage) {
             backgroundImage.value = backgroundImage.value.copy(
-                isVisible = visible
+                isVisible = isBgImageVisible
             )
         }
         if (!saveOptions.value.includeGrid) {
             gridSettings.value = gridSettings.value.copy(
-                isGridEnabled = visible
+                isGridEnabled = isGirdVisible
             )
         }
     }
